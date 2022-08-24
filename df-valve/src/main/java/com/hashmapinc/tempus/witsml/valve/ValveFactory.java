@@ -16,6 +16,7 @@
 package com.hashmapinc.tempus.witsml.valve;
 
 import com.hashmapinc.tempus.witsml.valve.mock.MockObjLogsValve;
+import com.hashmapinc.tempus.witsml.valve.mock.csv.CsvObjLogsGenerator;
 import com.hashmapinc.tempus.witsml.valve.mock.random.RandomObjLogsGenerator;
 import java.util.Map;
 import lombok.experimental.UtilityClass;
@@ -29,10 +30,10 @@ public final class ValveFactory {
                 return new com.hashmapinc.tempus.witsml.valve.dot.DotValve(config);
             case "mock-random":
                 return new MockObjLogsValve(new RandomObjLogsGenerator(config));
+            case "mock-csv":
+                return new MockObjLogsValve(new CsvObjLogsGenerator(config));
             default:
                return null;
        }
     }
-
-
 }
