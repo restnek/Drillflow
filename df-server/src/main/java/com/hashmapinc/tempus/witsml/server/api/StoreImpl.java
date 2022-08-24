@@ -296,10 +296,8 @@ public class StoreImpl implements IStore {
             resp.setResult((short) 1);
         } catch (ValveException e) {
             resp.setSuppMsgOut(e.getMessage());
-            if (e.getErrorCode() != null){
-                resp.setResult(e.getErrorCode());
-                resp.setSuppMsgOut(witsmlApiConfigUtil.getProperty("basemessages." + e.getErrorCode()));
-            }
+            resp.setResult(e.getErrorCode());
+            resp.setSuppMsgOut(witsmlApiConfigUtil.getProperty("basemessages." + e.getErrorCode()));
             return resp;
         } catch (Exception ex){
             resp.setSuppMsgOut(ex.getMessage());

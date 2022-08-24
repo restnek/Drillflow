@@ -15,17 +15,23 @@
  */
 package com.hashmapinc.tempus.witsml.valve;
 
+import com.hashmapinc.tempus.witsml.valve.mock.MockObjLogsValve;
+import com.hashmapinc.tempus.witsml.valve.mock.random.RandomObjLogsGenerator;
 import java.util.Map;
+import lombok.experimental.UtilityClass;
 
-public class ValveFactory {
+@UtilityClass
+public final class ValveFactory {
 
     public static IValve buildValve(String valveType, Map<String,String> config) throws ValveAuthException {
         switch (valveType) {
             case "DoT":
                 return new com.hashmapinc.tempus.witsml.valve.dot.DotValve(config);
+            case "mock-random":
+                return new MockObjLogsValve(new RandomObjLogsGenerator(config));
             default:
-                return null;
-        }
+               return null;
+       }
     }
 
 
