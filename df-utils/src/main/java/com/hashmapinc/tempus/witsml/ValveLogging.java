@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018-2019 Hashmap, Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,95 +13,78 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.hashmapinc.tempus.witsml;
 
 import com.hashmapinc.tempus.WitsmlObjects.AbstractWitsmlObject;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.request.HttpRequest;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.stream.Collectors;
 
 public class ValveLogging {
 
-	private static String delimiter = " ";
-	public static String getLogMsg(
-		String id,
-		String message,
-		AbstractWitsmlObject abstObject
-	) {
-		return 	"ExchangeId: " +
-				id + delimiter +
-				"Message: " + message +
-				delimiter +
-				"For Object: " + abstObject.toString();
-	}
+  private static final String delimiter = " ";
 
+  public static String getLogMsg(String id, String message, AbstractWitsmlObject abstObject) {
+    return "ExchangeId: " + id + delimiter
+        + "Message: " + message + delimiter
+        + "For Object: " + abstObject.toString();
+  }
 
-	public static String getLogMsg(
-			String message
-	) {
-		return 	getLogMsg("n/a", message);
-	}
-	public static String getLogMsg(
-			String id,
-			String message
-	) {
-		return "ExchangeId: " +
-				id + delimiter +
-				"Message: " + message;
-	}
+  public static String getLogMsg(String message) {
+    return getLogMsg("n/a", message);
+  }
 
-	public static String getLogMsg(
-			String id,
-			String message,
-			HttpRequest request
-	) {
-		try {
-			String req = "";
-			try {
-				if (request != null && request.getBody() != null)
-						req = convert(request.getBody().getEntity().getContent(), Charset.defaultCharset());
-			} catch (IOException e) {
-				req = "Could not parse request";
-			}
-			return "ExchangeId: " + id + delimiter+
-					"Message: " + message + delimiter +
-					"Address: " + request.getUrl() + delimiter +
-					"Headers: " + request.getHeaders() + delimiter +
-					"Method: " + request.getHttpMethod().name() + delimiter +
-					"Payload: " + req;
-		} catch (Exception ex){
-			return "done";
-		}
-	}
+  public static String getLogMsg(String id, String message) {
+    return "ExchangeId: " + id + delimiter + "Message: " + message;
+  }
 
-	public static String getLogRespMsg(
-			String id,
-			String message,
-			HttpResponse<String> response
-	) {
-		String body;
-		if (response.getBody() != null){
-			body = response.getBody().replace(System.lineSeparator(), "");
-		} else {
-			body = "";
-		}
-		return 	"ExchangeId: " + id + delimiter +
-				"Message: " + message + delimiter +
-				"Headers: " + response.getHeaders() + delimiter +
-				"Status Code:" + response.getStatus() + delimiter +
-				"Status Text: " + response.getStatusText() + delimiter +
-				"Response Body: " + body;
-	}
+  public static String getLogMsg(String id, String message, HttpRequest request) {
+    try {
+      String req = "";
+      try {
+        if (request != null && request.getBody() != null)
+          req = convert(request.getBody().getEntity().getContent(), Charset.defaultCharset());
+      } catch (IOException e) {
+        req = "Could not parse request";
+      }
+      return "ExchangeId: " + id + delimiter
+          + "Message: " + message + delimiter
+          + "Address: " + request.getUrl() + delimiter
+          + "Headers: " + request.getHeaders() + delimiter
+          + "Method: " + request.getHttpMethod().name() + delimiter
+          + "Payload: " + req;
+    } catch (Exception ex) {
+      return "done";
+    }
+  }
 
-	private static String convert(InputStream inputStream, Charset charset) throws IOException {
+  public static String getLogRespMsg(String id, String message, HttpResponse<String> response) {
+    String body;
+    if (response.getBody() != null) {
+      body = response.getBody().replace(System.lineSeparator(), "");
+    } else {
+      body = "";
+    }
+    return "ExchangeId: " + id + delimiter
+        + "Message: " + message + delimiter
+        + "Headers: " + response.getHeaders() + delimiter
+        + "Status Code:" + response.getStatus() + delimiter
+        + "Status Text: " + response.getStatusText() + delimiter
+        + "Response Body: " + body;
+  }
 
-		try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, charset))) {
-			return br.lines().collect(Collectors.joining(delimiter));
-		} catch (Exception ex){
-			return "Could not parse request";
-		}
-	}
+  private static String convert(InputStream inputStream, Charset charset) throws IOException {
+
+    try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, charset))) {
+      return br.lines().collect(Collectors.joining(delimiter));
+    } catch (Exception ex) {
+      return "Could not parse request";
+    }
+  }
 }
