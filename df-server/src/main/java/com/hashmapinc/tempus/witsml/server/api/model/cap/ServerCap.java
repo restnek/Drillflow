@@ -280,16 +280,6 @@ public class ServerCap {
   }
 
   /**
-   * Removes a function from the capabilities. If the function exists it will be removed, otherwise
-   * nothing will happen
-   *
-   * @param functionName The name of the function to remove
-   */
-  public void removeFunction(String functionName) {
-    functions.remove(functionName);
-  }
-
-  /**
    * Returns the WITSML object in the version specified
    *
    * @param version The version of the XML that should be returned
@@ -298,6 +288,7 @@ public class ServerCap {
    */
   public String getWitsmlObject(String version)
       throws JAXBException, UnsupportedOperationException {
+
     if (!"1.3.1.1".equals(version) && !"1.4.1.1".equals(version)) {
       throw new UnsupportedOperationException("Version not supported by the capabilites object");
     }
@@ -338,9 +329,7 @@ public class ServerCap {
 
     // Create functions
     List<CsFunction> function = server.getFunction();
-    Iterator<Map.Entry<String, List<DataObject>>> it = functions.entrySet().iterator();
-    while (it.hasNext()) {
-      Map.Entry<String, List<DataObject>> pair = it.next();
+    for (Map.Entry<String, List<DataObject>> pair : functions.entrySet()) {
       CsFunction localFunction = new CsFunction();
       localFunction.setName(pair.getKey());
 
@@ -367,7 +356,7 @@ public class ServerCap {
 
     // Create object factory and the root element
     ObjectFactory factory = new ObjectFactory();
-    JAXBElement finalServers = factory.createCapServers(servers);
+    JAXBElement<ObjCapServers> finalServers = factory.createCapServers(servers);
 
     // Create and return the XML string
     jaxbMarshaller.marshal(finalServers, writer);
@@ -426,10 +415,7 @@ public class ServerCap {
     // Add functions
     List<com.hashmapinc.tempus.witsml.server.api.model.cap.v1411.CsFunction> function =
         server.getFunction();
-    Iterator<Map.Entry<String, List<DataObject>>> it = functions.entrySet().iterator();
-    while (it.hasNext()) {
-      Map.Entry<String, List<DataObject>> pair = it.next();
-
+    for (Map.Entry<String, List<DataObject>> pair : functions.entrySet()) {
       // Add Function Support
       com.hashmapinc.tempus.witsml.server.api.model.cap.v1411.CsFunction localFunction =
           new com.hashmapinc.tempus.witsml.server.api.model.cap.v1411.CsFunction();
@@ -469,7 +455,8 @@ public class ServerCap {
     // Create object factory and root element
     com.hashmapinc.tempus.witsml.server.api.model.cap.v1411.ObjectFactory factory =
         new com.hashmapinc.tempus.witsml.server.api.model.cap.v1411.ObjectFactory();
-    JAXBElement finalServers = factory.createCapServers(servers);
+    JAXBElement<com.hashmapinc.tempus.witsml.server.api.model.cap.v1411.ObjCapServers> finalServers =
+        factory.createCapServers(servers);
 
     // Create and return the XML the string
     jaxbMarshaller.marshal(finalServers, writer);

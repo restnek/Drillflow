@@ -18,15 +18,13 @@ package com.hashmapinc.tempus.witsml.server.api.interceptors;
 
 import java.util.Base64;
 import java.util.Map;
+import lombok.RequiredArgsConstructor;
 import org.apache.cxf.ext.logging.event.LogEvent;
 import org.apache.cxf.ext.logging.event.LogEventSender;
 
+@RequiredArgsConstructor
 public class SoapLogEventSender implements LogEventSender {
   private final LogEventSender next;
-
-  public SoapLogEventSender(LogEventSender next) {
-    this.next = next;
-  }
 
   @Override
   public void send(LogEvent event) {

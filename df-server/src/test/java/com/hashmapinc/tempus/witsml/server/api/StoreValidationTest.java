@@ -68,14 +68,13 @@ public class StoreValidationTest {
                 + "\t\t<name>Well Test</name>\n"
                 + "</well>\n"
                 + "</wells>",
-            null,
             valve);
     assertThat(resp).isEqualTo((short) 1);
   }
 
   @Test
   public void test408ShouldErrorEmptyMultiLine() {
-    short resp = StoreValidator.validateAddToStore("well", "", null, valve);
+    short resp = StoreValidator.validateAddToStore("well", "", valve);
     assertThat(resp).isEqualTo((short) -408);
   }
 
@@ -88,7 +87,6 @@ public class StoreValidationTest {
                 + "<wellbore  uid=\"uid12333\">\n"
                 + "</wellbore>\n"
                 + "</wellbores>",
-            null,
             valve);
     assertThat(resp).isEqualTo((short) -486);
   }
@@ -102,7 +100,6 @@ public class StoreValidationTest {
                 + "<log  uid=\"uid12333\">\n"
                 + "</log>\n"
                 + "</logs>",
-            null,
             valve);
     assertThat(resp).isEqualTo((short) -486);
   }
@@ -116,7 +113,6 @@ public class StoreValidationTest {
                 + "<iceCream  uid=\"uid12333\">\n"
                 + "</iceCream>\n"
                 + "</iceCreams>",
-            null,
             valve);
     assertThat(resp).isEqualTo((short) -487);
   }
@@ -125,7 +121,7 @@ public class StoreValidationTest {
   public void test401DoesNotContainPluralRootElementError() {
       short resp =
         StoreValidator.validateAddToStore(
-            "well", "<well uid=\"uid12333\" ><name>test</name></well>", null, valve);
+            "well", "<well uid=\"uid12333\" ><name>test</name></well>", valve);
     assertThat(resp).isEqualTo((short) -401);
   }
 
@@ -139,7 +135,6 @@ public class StoreValidationTest {
                 + "\t\t<name>Well Test</name>\n"
                 + "</well>\n"
                 + "</wells>",
-            null,
             valve);
     assertThat(resp).isEqualTo((short) -468);
   }
@@ -154,7 +149,6 @@ public class StoreValidationTest {
                 + "\t\t<name>Well Test</name>\n"
                 + "</well>\n"
                 + "</wells>",
-            null,
             valve);
     assertThat(resp).isEqualTo((short) -403);
   }
@@ -182,52 +176,33 @@ public class StoreValidationTest {
   // *****************GET FROM STORE TESTS***************** //
 
   @Test
-  public void getFromStoreGoodKeyGoodValueShouldSuceed() throws Exception {
-    Map<String, String> testMap =
-        new HashMap<>() {
-          {
-            put("requestObjectSelectionCapability", "true");
-          }
-        };
+  public void getFromStoreGoodKeyGoodValueShouldSuceed() {
+    Map<String, String> testMap = Map.of("requestObjectSelectionCapability", "true");
     short resp =
         StoreValidator.validateGetFromStore("well", minWellQueryTemplate, testMap, this.valve);
     assertThat(resp).isEqualTo((short) 1);
   }
 
   @Test
-  public void getFromStoreNoKeyNoValueShouldSuceed() throws Exception {
-    Map<String, String> testMap =
-        new HashMap<>() {
-          {
-          }
-        };
+  public void getFromStoreNoKeyNoValueShouldSuceed() {
+    Map<String, String> testMap = Map.of();
     short resp =
         StoreValidator.validateGetFromStore("well", minWellQueryTemplate, testMap, this.valve);
     assertThat(resp).isEqualTo((short) 1);
   }
 
   @Test
-  public void getFromStoreAnyOtherKeyAnyOtherValueShouldSucceed() throws Exception {
-    Map<String, String> testMap =
-        new HashMap<>() {
-          {
-            put("anyOtherKey", "anyOtherValue");
-          }
-        };
+  public void getFromStoreAnyOtherKeyAnyOtherValueShouldSucceed() {
+    Map<String, String> testMap = Map.of("anyOtherKey", "anyOtherValue");
     short resp =
         StoreValidator.validateGetFromStore("well", minWellQueryTemplate, testMap, this.valve);
     assertThat(resp).isEqualTo((short) 1);
   }
 
   @Test
-  public void getFromStoreAnyOtherKeyGoodValueShouldSucceed() throws Exception {
+  public void getFromStoreAnyOtherKeyGoodValueShouldSucceed() {
     // String WMLtypeIn, String xmlIn, Map<String,String> optionsIn, IValve valve;
-    Map<String, String> testMap =
-        new HashMap<String, String>() {
-          {
-            put("anyOtherKey", "true");
-          }
-        };
+    Map<String, String> testMap = Map.of("anyOtherKey", "true");
     short resp =
         StoreValidator.validateGetFromStore(
             "well",
@@ -238,81 +213,53 @@ public class StoreValidationTest {
   }
 
   @Test
-  public void getFromStoreGoodKeyAnyOtherValueExceptWhitespaceOrEmptyShouldSucceed()
-      throws Exception {
-    Map<String, String> testMap =
-        new HashMap<String, String>() {
-          {
-            put("requestObjectSelectionCapability", "anyOtherValue");
-          }
-        };
+  public void getFromStoreGoodKeyAnyOtherValueExceptWhitespaceOrEmptyShouldSucceed() {
+    Map<String, String> testMap = Map.of("requestObjectSelectionCapability", "anyOtherValue");
     short resp =
         StoreValidator.validateGetFromStore("well", minWellQueryTemplate, testMap, this.valve);
     assertThat(resp).isEqualTo((short) 1);
   }
 
   @Test
-  public void getFromStoreGoodKeyEmptyValueShouldFail() throws Exception {
-    Map<String, String> testMap =
-        new HashMap<String, String>() {
-          {
-            put("requestObjectSelectionCapability", "");
-          }
-        };
+  public void getFromStoreGoodKeyEmptyValueShouldFail() {
+    Map<String, String> testMap = Map.of("requestObjectSelectionCapability", "");
     short resp =
         StoreValidator.validateGetFromStore("well", minWellQueryTemplate, testMap, this.valve);
     assertThat(resp).isEqualTo((short) -1001);
   }
 
   @Test
-  public void getFromStoreGoodKeyNullValueShouldFail() throws Exception {
-    Map<String, String> testMap =
-        new HashMap<>() {
-          {
-            // Will this get caught by invalid XML (can there be a null key value?)
-            put("requestObjectSelectionCapability", null);
-          }
-        };
+  public void getFromStoreGoodKeyNullValueShouldFail() {
+    Map<String, String> testMap = new HashMap<>();
+    // Will this get caught by invalid XML (can there be a null key value?)
+    testMap.put("requestObjectSelectionCapability", null);
     short resp =
         StoreValidator.validateGetFromStore("well", minWellQueryTemplate, testMap, this.valve);
     assertThat(resp).isEqualTo((short) -1001);
   }
 
   @Test
-  public void getFromStoreNullKeyNullValueShouldSucceed() throws Exception {
-    Map<String, String> testMap =
-        new HashMap<>() {
-          {
-            put(null, null);
-          }
-        };
+  public void getFromStoreNullKeyNullValueShouldSucceed() {
+    Map<String, String> testMap = new HashMap<>();
+    testMap.put(null, null);
     short resp =
         StoreValidator.validateGetFromStore("well", minWellQueryTemplate, testMap, this.valve);
     assertThat(resp).isEqualTo((short) 1);
   }
 
   @Test
-  public void getFromStoreGoodKeyGoodValueMoreEntriesShouldFail() throws Exception {
-    Map<String, String> testMap =
-        new HashMap<>() {
-          {
-            put("requestObjectSelectionCapability", "true");
-            put("anotherKey", "anotherValue");
-          }
-        };
+  public void getFromStoreGoodKeyGoodValueMoreEntriesShouldFail() {
+    Map<String, String> testMap = Map.of(
+        "requestObjectSelectionCapability", "true",
+        "anotherKey", "anotherValue");
     short resp =
         StoreValidator.validateGetFromStore("well", minWellQueryTemplate, testMap, this.valve);
     assertThat(resp).isEqualTo((short) -427);
   }
 
   @Test
-  public void getFromStoreGoodKeyGoodValueButXMLInHasUIDShouldFail() throws Exception {
-    Map<String, String> testMap =
-        new HashMap<>() {
-          {
-            put("requestObjectSelectionCapability", "true");
-          }
-        };
+  public void getFromStoreGoodKeyGoodValueButXMLInHasUIDShouldFail() {
+    Map<String, String> testMap = Map.of("requestObjectSelectionCapability", "true");
     short resp =
         StoreValidator.validateGetFromStore(
             "well",

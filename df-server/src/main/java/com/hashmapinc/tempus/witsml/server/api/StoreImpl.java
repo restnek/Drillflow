@@ -22,28 +22,27 @@ import com.hashmapinc.tempus.witsml.ValveLogging;
 import com.hashmapinc.tempus.witsml.WitsmlObjectParser;
 import com.hashmapinc.tempus.witsml.WitsmlUtil;
 import com.hashmapinc.tempus.witsml.server.WitsmlApiConfig;
-import com.hashmapinc.tempus.witsml.server.api.model.WMLS_AddToStoreResponse;
-import com.hashmapinc.tempus.witsml.server.api.model.WMLS_DeleteFromStoreResponse;
-import com.hashmapinc.tempus.witsml.server.api.model.WMLS_GetBaseMsgResponse;
-import com.hashmapinc.tempus.witsml.server.api.model.WMLS_GetCapResponse;
-import com.hashmapinc.tempus.witsml.server.api.model.WMLS_GetFromStoreResponse;
-import com.hashmapinc.tempus.witsml.server.api.model.WMLS_GetVersionResponse;
-import com.hashmapinc.tempus.witsml.server.api.model.WMLS_UpdateInStoreResponse;
+import com.hashmapinc.tempus.witsml.server.api.model.WmlsAddToStoreResponse;
+import com.hashmapinc.tempus.witsml.server.api.model.WmlsDeleteFromStoreResponse;
+import com.hashmapinc.tempus.witsml.server.api.model.WmlsGetBaseMsgResponse;
+import com.hashmapinc.tempus.witsml.server.api.model.WmlsGetCapResponse;
+import com.hashmapinc.tempus.witsml.server.api.model.WmlsGetFromStoreResponse;
+import com.hashmapinc.tempus.witsml.server.api.model.WmlsGetVersionResponse;
+import com.hashmapinc.tempus.witsml.server.api.model.WmlsUpdateInStoreResponse;
 import com.hashmapinc.tempus.witsml.server.api.model.cap.DataObject;
 import com.hashmapinc.tempus.witsml.server.api.model.cap.ServerCap;
 import com.hashmapinc.tempus.witsml.valve.IValve;
 import com.hashmapinc.tempus.witsml.valve.ValveAuthException;
 import com.hashmapinc.tempus.witsml.valve.ValveException;
 import com.hashmapinc.tempus.witsml.valve.ValveFactory;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import javax.jws.WebService;
 import javax.xml.bind.JAXBException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.cxf.ext.logging.event.LogEvent;
 import org.apache.cxf.feature.Features;
 import org.apache.cxf.message.Message;
@@ -53,6 +52,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @WebService(
     serviceName = "WMLS",
@@ -61,7 +61,6 @@ import org.springframework.stereotype.Service;
     endpointInterface = "com.hashmapinc.tempus.witsml.server.api.IStore")
 @Features(features = "com.hashmapinc.tempus.witsml.server.api.interceptors.PrettyLoggingFeature")
 public class StoreImpl implements IStore {
-  private static final Logger LOG = Logger.getLogger(StoreImpl.class.getName());
 
   private ServerCap cap;
   private WitsmlApiConfig witsmlApiConfigUtil;
@@ -95,7 +94,7 @@ public class StoreImpl implements IStore {
     try {
       valve = ValveFactory.buildValve(valveName, config.getConfiguration());
     } catch (ValveAuthException e) {
-      LOG.info("Error creating the valve: " + e.getMessage());
+      LOGGER.info("Error creating the valve: " + e.getMessage());
     }
 
     // =====================================================================
@@ -103,18 +102,17 @@ public class StoreImpl implements IStore {
     // =====================================================================
     // get the valve capabilities
     Map<String, AbstractWitsmlObject[]> valveCaps = valve.getCap();
-    LOG.info(
+    LOGGER.info(
         ValveLogging.getLogMsg(
             "Received the following capabilities from valve: " + valveCaps.toString()));
 
     // populate the cap object from the valveCaps
-    for (String key : valveCaps.keySet()) {
+    for (Map.Entry<String, AbstractWitsmlObject[]> entry : valveCaps.entrySet()) {
       // get list of data objects
-      List<AbstractWitsmlObject> supportedAbstractObjects = Arrays.asList(valveCaps.get(key));
       List<DataObject> supportedDataObjects =
-          supportedAbstractObjects.stream()
+          Stream.of(entry.getValue())
               .map(
-                  (awo) -> {
+                  awo -> {
                     DataObject dataObject = new DataObject();
                     dataObject.setName(awo.getObjectType());
                     return dataObject;
@@ -122,7 +120,7 @@ public class StoreImpl implements IStore {
               .collect(Collectors.toList());
 
       // add function to cap
-      this.cap.addFunction(key, supportedDataObjects);
+      this.cap.addFunction(entry.getKey(), supportedDataObjects);
     }
     // =====================================================================
   }
@@ -137,33 +135,33 @@ public class StoreImpl implements IStore {
   }
 
   @Override
-  public WMLS_AddToStoreResponse addToStore(
-      String WMLtypeIn, String XMLin, String OptionsIn, String CapabilitiesIn) {
-    LOG.fine(ValveLogging.getLogMsg(getExchangeId(), "Executing addToStore for query"));
+  public WmlsAddToStoreResponse addToStore(
+      String wmlTypeIn, String xmlIn, String optionsIn, String capabilitiesIn) {
+
+    LOGGER.debug(ValveLogging.getLogMsg(getExchangeId(), "Executing addToStore for query"));
     // try to add to store
     List<AbstractWitsmlObject> witsmlObjects;
     String uid;
-    WMLS_AddToStoreResponse response = new WMLS_AddToStoreResponse();
+    WmlsAddToStoreResponse response = new WmlsAddToStoreResponse();
     try {
       // build the query context
-      Map<String, String> optionsMap = WitsmlUtil.parseOptionsIn(OptionsIn);
-      short validationResult =
-          StoreValidator.validateAddToStore(WMLtypeIn, XMLin, optionsMap, valve);
+      Map<String, String> optionsMap = WitsmlUtil.parseOptionsIn(optionsIn);
+      short validationResult = StoreValidator.validateAddToStore(wmlTypeIn, xmlIn, valve);
       if (validationResult != 1) {
         response.setResult(validationResult);
         return response;
       }
-      String version = WitsmlUtil.getVersionFromXML(XMLin);
+      String versionFromXml = WitsmlUtil.getVersionFromXML(xmlIn);
       // create the correct Object model (e.g. ObjFluidsReport) for the version from the raw XML
-      witsmlObjects = WitsmlObjectParser.parse(WMLtypeIn, XMLin, version);
+      witsmlObjects = WitsmlObjectParser.parse(wmlTypeIn, xmlIn, versionFromXml);
       ValveUser user =
           (ValveUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
       QueryContext qc =
           new QueryContext(
-              version,
-              WMLtypeIn,
+              versionFromXml,
+              wmlTypeIn,
               optionsMap,
-              XMLin,
+              xmlIn,
               witsmlObjects,
               user.getUserName(),
               user.getPassword(),
@@ -172,7 +170,7 @@ public class StoreImpl implements IStore {
       uid = valve.createObject(qc).get();
     } catch (ValveException ve) {
       // TODO: handle exception
-      LOG.warning(ValveLogging.getLogMsg(getExchangeId(), "ValveException in addToStore: " + ve));
+      LOGGER.warn(ValveLogging.getLogMsg(getExchangeId(), "ValveException in addToStore: " + ve));
       if (ve.getErrorCode() != -1) {
         response.setSuppMsgOut(
             witsmlApiConfigUtil.getProperty("basemessages." + ve.getErrorCode()));
@@ -184,7 +182,7 @@ public class StoreImpl implements IStore {
       return response;
     } catch (Exception e) {
       // TODO: handle exception
-      LOG.warning(
+      LOGGER.warn(
           ValveLogging.getLogMsg(
               getExchangeId(), "Could not add WITSML object to store: \n" + "Error: " + e));
       response.setSuppMsgOut("Error adding to store: " + e.getMessage());
@@ -200,34 +198,34 @@ public class StoreImpl implements IStore {
   }
 
   @Override
-  public WMLS_UpdateInStoreResponse updateInStore(
-      String WMLtypeIn, String XMLin, String OptionsIn, String CapabilitiesIn) {
-    LOG.fine(ValveLogging.getLogMsg(getExchangeId(), "Executing updateInStore"));
+  public WmlsUpdateInStoreResponse updateInStore(
+      String wmlTypeIn, String xmlIn, String optionsIn, String capabilitiesIn) {
+    LOGGER.debug(ValveLogging.getLogMsg(getExchangeId(), "Executing updateInStore"));
     // try to update in store
     List<AbstractWitsmlObject> witsmlObjects;
-    WMLS_UpdateInStoreResponse response = new WMLS_UpdateInStoreResponse();
+    WmlsUpdateInStoreResponse response = new WmlsUpdateInStoreResponse();
     try {
       // build the query context
-      Map<String, String> optionsMap = WitsmlUtil.parseOptionsIn(OptionsIn);
+      Map<String, String> optionsMap = WitsmlUtil.parseOptionsIn(optionsIn);
       short validationResult =
-          StoreValidator.validateUpdateInStore(WMLtypeIn, XMLin, optionsMap, valve);
+          StoreValidator.validateUpdateInStore(wmlTypeIn, xmlIn, optionsMap, valve);
       if (validationResult != 1) {
         response.setResult(validationResult);
         response.setSuppMsgOut(
             witsmlApiConfigUtil.getProperty("basemessages." + response.getResult()));
         return response;
       }
-      String version = WitsmlUtil.getVersionFromXML(XMLin);
+      String versionFromXml = WitsmlUtil.getVersionFromXML(xmlIn);
       // create the correct Object model (e.g. ObjFluidsReport) for the version from the raw XML
-      witsmlObjects = WitsmlObjectParser.parse(WMLtypeIn, XMLin, version);
+      witsmlObjects = WitsmlObjectParser.parse(wmlTypeIn, xmlIn, versionFromXml);
       ValveUser user =
           (ValveUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
       QueryContext qc =
           new QueryContext(
-              version,
-              WMLtypeIn,
+              versionFromXml,
+              wmlTypeIn,
               optionsMap,
-              XMLin,
+              xmlIn,
               witsmlObjects,
               user.getUserName(),
               user.getPassword(),
@@ -237,7 +235,7 @@ public class StoreImpl implements IStore {
       valve.updateObject(qc).get();
     } catch (ValveException ve) {
       // TODO: handle exception
-      LOG.warning(
+      LOGGER.warn(
           ValveLogging.getLogMsg(
               getExchangeId(), "Valve Exception in updateInStore: " + ve.getMessage()));
       response.setSuppMsgOut(ve.getMessage());
@@ -245,7 +243,7 @@ public class StoreImpl implements IStore {
       return response;
     } catch (Exception e) {
       // TODO: handle exception
-      LOG.warning(
+      LOGGER.warn(
           ValveLogging.getLogMsg(
               getExchangeId(), "Could not add WITSML object to store: \n" + "Error: " + e));
       response.setSuppMsgOut("Error updating in store: " + e.getMessage());
@@ -259,16 +257,16 @@ public class StoreImpl implements IStore {
   }
 
   @Override
-  public WMLS_DeleteFromStoreResponse deleteFromStore(
-      String WMLtypeIn, String QueryIn, String OptionsIn, String CapabilitiesIn) {
-    LOG.fine(ValveLogging.getLogMsg(getExchangeId(), "Deleting object from store."));
-    WMLS_DeleteFromStoreResponse resp = new WMLS_DeleteFromStoreResponse();
+  public WmlsDeleteFromStoreResponse deleteFromStore(
+      String wmlTypeIn, String queryIn, String optionsIn, String capabilitiesIn) {
+    LOGGER.debug(ValveLogging.getLogMsg(getExchangeId(), "Deleting object from store."));
+    WmlsDeleteFromStoreResponse resp = new WmlsDeleteFromStoreResponse();
     // set initial ERROR state for resp
     resp.setResult((short) -1);
 
-    Map<String, String> optionsMap = WitsmlUtil.parseOptionsIn(OptionsIn);
+    Map<String, String> optionsMap = WitsmlUtil.parseOptionsIn(optionsIn);
     short validationResult =
-        StoreValidator.validateDeleteFromStore(WMLtypeIn, QueryIn, optionsMap, valve);
+        StoreValidator.validateDeleteFromStore(wmlTypeIn, queryIn, optionsMap, valve);
     if (validationResult != 1) {
       resp.setResult(validationResult);
       resp.setSuppMsgOut(witsmlApiConfigUtil.getProperty("basemessages." + resp.getResult()));
@@ -277,19 +275,19 @@ public class StoreImpl implements IStore {
     // try to deserialize
     List<AbstractWitsmlObject> witsmlObjects;
     try {
-      String clientVersion = WitsmlUtil.getVersionFromXML(QueryIn);
+      String clientVersion = WitsmlUtil.getVersionFromXML(queryIn);
       // create the correct Object model (e.g. ObjFluidsReport) for the version from the raw XML
-      witsmlObjects = WitsmlObjectParser.parse(WMLtypeIn, QueryIn, clientVersion);
+      witsmlObjects = WitsmlObjectParser.parse(wmlTypeIn, queryIn, clientVersion);
     } catch (Exception e) {
       // TODO: handle exception
-      LOG.warning(
+      LOGGER.warn(
           ValveLogging.getLogMsg(
               getExchangeId(),
               "could not deserialize witsml object: \n"
-                  + "WMLtypeIn: " + WMLtypeIn + " \n"
-                  + "QueryIn: " + QueryIn + " \n"
-                  + "OptionsIn: " + OptionsIn + " \n"
-                  + "CapabilitiesIn: " + CapabilitiesIn));
+                  + "WMLtypeIn: " + wmlTypeIn + " \n"
+                  + "QueryIn: " + queryIn + " \n"
+                  + "OptionsIn: " + optionsIn + " \n"
+                  + "CapabilitiesIn: " + capabilitiesIn));
       resp.setSuppMsgOut("Bad QueryIn. Got error message: " + e.getMessage());
       return resp;
     }
@@ -303,9 +301,9 @@ public class StoreImpl implements IStore {
       QueryContext qc =
           new QueryContext(
               null, // client version not needed
-              WMLtypeIn,
+              wmlTypeIn,
               optionsMap,
-              QueryIn,
+              queryIn,
               witsmlObjects,
               user.getUserName(),
               user.getPassword(),
@@ -330,43 +328,43 @@ public class StoreImpl implements IStore {
   }
 
   @Override
-  public WMLS_GetVersionResponse getVersion() {
-    LOG.fine(ValveLogging.getLogMsg(getExchangeId(), "Executing GetVersion"));
-    WMLS_GetVersionResponse resp = new WMLS_GetVersionResponse();
+  public WmlsGetVersionResponse getVersion() {
+    LOGGER.debug(ValveLogging.getLogMsg(getExchangeId(), "Executing GetVersion"));
+    WmlsGetVersionResponse resp = new WmlsGetVersionResponse();
     resp.setResult(version);
     return resp;
   }
 
   @Override
-  public WMLS_GetCapResponse getCap(String OptionsIn) {
-    LOG.fine(ValveLogging.getLogMsg(getExchangeId(), "Executing GetCap"));
-    WMLS_GetCapResponse resp = new WMLS_GetCapResponse();
-    short validationResult = StoreValidator.validateGetCap(OptionsIn);
+  public WmlsGetCapResponse getCap(String optionsIn) {
+    LOGGER.debug(ValveLogging.getLogMsg(getExchangeId(), "Executing GetCap"));
+    WmlsGetCapResponse resp = new WmlsGetCapResponse();
+    short validationResult = StoreValidator.validateGetCap(optionsIn);
     if (validationResult != 1) {
       resp.setResult(validationResult);
       resp.setSuppMsgOut(witsmlApiConfigUtil.getProperty("basemessages." + resp.getResult()));
       return resp;
     }
-    HashMap<String, String> options = WitsmlUtil.parseOptionsIn(OptionsIn);
+    Map<String, String> options = WitsmlUtil.parseOptionsIn(optionsIn);
     String requestedVersion = options.get("dataVersion");
 
     resp.setSuppMsgOut("");
     try {
       // get cap string and populate response data
       String data = cap.getWitsmlObject(requestedVersion);
-      LOG.fine(ValveLogging.getLogMsg(getExchangeId(), "Returning cap: " + data));
+      LOGGER.debug(ValveLogging.getLogMsg(getExchangeId(), "Returning cap: " + data));
       resp.setCapabilitiesOut(data);
       resp.setResult((short) 1);
     } catch (UnsupportedOperationException e) {
       resp.setResult((short) -424);
-      LOG.warning(
+      LOGGER.warn(
           ValveLogging.getLogMsg(
               getExchangeId(), "Unsupported version requested: " + e.getMessage()));
     } catch (JAXBException e) {
       resp.setResult((short) -1001);
       resp.setSuppMsgOut(
           "Unable to generate the capabilities object due to misconfiguration of the server");
-      LOG.warning(
+      LOGGER.warn(
           ValveLogging.getLogMsg(
               getExchangeId(),
               "Unable to generate the capabilities object due to misconfiguration of the server: "
@@ -377,30 +375,30 @@ public class StoreImpl implements IStore {
   }
 
   @Override
-  public WMLS_GetBaseMsgResponse getBaseMsg(Short returnValueIn) {
-    LOG.fine(ValveLogging.getLogMsg(getExchangeId(), "Executing GetBaseMsg"));
+  public WmlsGetBaseMsgResponse getBaseMsg(Short returnValueIn) {
+    LOGGER.debug(ValveLogging.getLogMsg(getExchangeId(), "Executing GetBaseMsg"));
 
     String errMsg = witsmlApiConfigUtil.getProperty("basemessages." + returnValueIn);
     if (errMsg == null) {
       errMsg = witsmlApiConfigUtil.getProperty("basemessages.-999");
     }
 
-    WMLS_GetBaseMsgResponse response = new WMLS_GetBaseMsgResponse();
+    WmlsGetBaseMsgResponse response = new WmlsGetBaseMsgResponse();
     response.setResult(errMsg);
 
     return response;
   }
 
   @Override
-  public WMLS_GetFromStoreResponse getFromStore(
-      String WMLtypeIn, String QueryIn, String OptionsIn, String CapabilitiesIn) {
-    WMLS_GetFromStoreResponse resp = new WMLS_GetFromStoreResponse();
+  public WmlsGetFromStoreResponse getFromStore(
+      String wmlTypeIn, String queryIn, String optionsIn, String capabilitiesIn) {
+    WmlsGetFromStoreResponse resp = new WmlsGetFromStoreResponse();
     // try to deserialize
-    Map<String, String> optionsMap = WitsmlUtil.parseOptionsIn(OptionsIn);
+    Map<String, String> optionsMap = WitsmlUtil.parseOptionsIn(optionsIn);
     if (!optionsMap.containsKey("returnElements")) optionsMap.put("returnElements", "requested");
     // validates to make sure conditions are met
     short validationResult =
-        StoreValidator.validateGetFromStore(WMLtypeIn, QueryIn, optionsMap, valve);
+        StoreValidator.validateGetFromStore(wmlTypeIn, queryIn, optionsMap, valve);
     if (validationResult != 1) {
       resp.setResult(validationResult);
       resp.setSuppMsgOut(witsmlApiConfigUtil.getProperty("basemessages." + resp.getResult()));
@@ -413,7 +411,7 @@ public class StoreImpl implements IStore {
     // predefined constant that returns the capabilities of the server due to type
     if (optionsMap.containsKey("requestObjectSelectionCapability")
         && optionsMap.get("requestObjectSelectionCapability").equals("true")) {
-      xmlOut = valve.getObjectSelectionCapability(WMLtypeIn);
+      xmlOut = valve.getObjectSelectionCapability(wmlTypeIn);
     } else {
       if (optionsMap.containsKey("requestObjectSelectionCapability")
           && !optionsMap.get("requestObjectSelectionCapability").equals("none")) {
@@ -421,7 +419,7 @@ public class StoreImpl implements IStore {
         resp.setSuppMsgOut(witsmlApiConfigUtil.getProperty("basemessages." + resp.getResult()));
         return resp;
       }
-      if (OptionsIn.contains("requestObjectSelectionCapability")
+      if (optionsIn.contains("requestObjectSelectionCapability")
           && !optionsMap.containsKey("requestObjectSelectionCapability")) {
         // value of the key must have been null since the parse never placed the key/value pair
         // into the map
@@ -432,19 +430,19 @@ public class StoreImpl implements IStore {
       List<AbstractWitsmlObject> witsmlObjects;
       String clientVersion;
       try {
-        clientVersion = WitsmlUtil.getVersionFromXML(QueryIn);
+        clientVersion = WitsmlUtil.getVersionFromXML(queryIn);
         // create the correct Object model (e.g. ObjFluidsReport) for the version from the raw XML
-        witsmlObjects = WitsmlObjectParser.parse(WMLtypeIn, QueryIn, clientVersion);
+        witsmlObjects = WitsmlObjectParser.parse(wmlTypeIn, queryIn, clientVersion);
       } catch (Exception e) {
         // TODO: handle exception
-        LOG.warning(
+        LOGGER.warn(
             ValveLogging.getLogMsg(
                 getExchangeId(),
                 "Could not deserialize witsml object: \n"
-                    + "WMLtypeIn: " + WMLtypeIn + " \n"
-                    + "QueryIn: " + QueryIn + " \n"
-                    + "OptionsIn: " + OptionsIn + " \n"
-                    + "CapabilitiesIn: " + CapabilitiesIn));
+                    + "WMLtypeIn: " + wmlTypeIn + " \n"
+                    + "QueryIn: " + queryIn + " \n"
+                    + "OptionsIn: " + optionsIn + " \n"
+                    + "CapabilitiesIn: " + capabilitiesIn));
 
         resp.setSuppMsgOut("Error parsing input: " + e.getMessage());
         resp.setResult((short) -1);
@@ -460,9 +458,9 @@ public class StoreImpl implements IStore {
         qc =
             new QueryContext(
                 clientVersion,
-                WMLtypeIn,
+                wmlTypeIn,
                 optionsMap,
-                QueryIn,
+                queryIn,
                 witsmlObjects,
                 user.getUserName(),
                 user.getPassword(),
@@ -485,16 +483,16 @@ public class StoreImpl implements IStore {
       } catch (ValveException ve) {
         resp.setResult((short) -425);
         if (qc != null)
-          LOG.warning(
+          LOGGER.warn(
               ValveLogging.getLogMsg(
                   qc.EXCHANGE_ID, "Valve Exception in GetFromStore: " + ve.getMessage()));
         else
-          LOG.warning(
+          LOGGER.warn(
               ValveLogging.getLogMsg("Valve Exception in GetFromStore: " + ve.getMessage()));
         resp.setSuppMsgOut(ve.getMessage());
       } catch (Exception e) {
         resp.setResult((short) -425);
-        LOG.warning(ValveLogging.getLogMsg("Valve Exception in GetFromStore: " + e.getMessage()));
+        LOGGER.warn(ValveLogging.getLogMsg("Valve Exception in GetFromStore: " + e.getMessage()));
       }
     }
 
@@ -502,7 +500,7 @@ public class StoreImpl implements IStore {
     if (null != xmlOut) {
       resp.setSuppMsgOut("");
       resp.setResult((short) 1);
-      resp.setXMLout(xmlOut);
+      resp.setXmlOut(xmlOut);
     } else {
       resp.setSuppMsgOut("No Data Found.");
       resp.setResult((short) 1);

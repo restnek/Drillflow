@@ -16,7 +16,10 @@
 
 package com.hashmapinc.tempus.witsml.server;
 
+import lombok.experimental.UtilityClass;
+
 /** App Constants */
+@UtilityClass
 public class AsyncAppConstants {
 
   /** CorePoolSize is the initial number of threads that will be running tasks in the pool */

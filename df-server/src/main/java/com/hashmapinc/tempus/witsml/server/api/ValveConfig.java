@@ -18,19 +18,12 @@ package com.hashmapinc.tempus.witsml.server.api;
 
 import java.util.HashMap;
 import java.util.Map;
+import lombok.Getter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 
-@Component
-@Configuration
-@EnableConfigurationProperties
 @ConfigurationProperties(prefix = "valve")
 public class ValveConfig {
-  private final Map<String, String> configuration = new HashMap<>();
 
-  public Map<String, String> getConfiguration() {
-    return this.configuration;
-  }
+  @Getter
+  private final Map<String, String> configuration = new HashMap<>();
 }

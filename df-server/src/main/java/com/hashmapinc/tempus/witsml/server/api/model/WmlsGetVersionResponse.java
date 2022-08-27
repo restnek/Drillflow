@@ -19,36 +19,14 @@ package com.hashmapinc.tempus.witsml.server.api.model;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "WMLS_GetFromStoreResponse")
-public class WMLS_GetFromStoreResponse {
+@XmlRootElement(name = "WmlsGetVersionResponse")
+public class WmlsGetVersionResponse {
 
-  private Short Result;
-  private String XMLout;
-  private String SuppMsgOut;
-
-  public Short getResult() {
-    return Result;
-  }
-
-  public void setResult(Short result) {
-    Result = result;
-  }
-
-  public String getXMLout() {
-    return XMLout;
-  }
-
-  public void setXMLout(String XMLout) {
-    this.XMLout = XMLout;
-  }
-
-  public String getSuppMsgOut() {
-    return SuppMsgOut;
-  }
-
-  public void setSuppMsgOut(String suppMsgOut) {
-    SuppMsgOut = suppMsgOut;
-  }
+  private String result;
 }

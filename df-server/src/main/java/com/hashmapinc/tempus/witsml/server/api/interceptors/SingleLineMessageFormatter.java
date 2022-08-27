@@ -17,11 +17,12 @@
 package com.hashmapinc.tempus.witsml.server.api.interceptors;
 
 import javax.xml.namespace.QName;
+import lombok.experimental.UtilityClass;
 import org.apache.cxf.common.util.StringUtils;
 import org.apache.cxf.ext.logging.event.LogEvent;
 
+@UtilityClass
 public final class SingleLineMessageFormatter {
-  private SingleLineMessageFormatter() {}
 
   public static String format(LogEvent event) {
     StringBuilder b = new StringBuilder();
@@ -55,7 +56,11 @@ public final class SingleLineMessageFormatter {
 
   private static void write(StringBuilder b, String key, String value) {
     if (value != null) {
-      b.append("    ").append(key).append(": ").append(value).append(" ");
+      b.append("    ")
+          .append(key)
+          .append(": ")
+          .append(value)
+          .append(" ");
     }
   }
 }

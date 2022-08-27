@@ -20,15 +20,14 @@ import com.hashmapinc.tempus.WitsmlObjects.AbstractWitsmlObject;
 import com.hashmapinc.tempus.WitsmlObjects.Util.WitsmlMarshal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
+import lombok.experimental.UtilityClass;
 
 /**
  * WitsmlObjectParser is a class that provides simple static methods for parsing witsml objects into
  * AbstractWitsmlObjects
  */
+@UtilityClass
 public class WitsmlObjectParser {
-  // get logger
-  private static final Logger LOG = Logger.getLogger(WitsmlObjectParser.class.getName());
 
   /**
    * this method parses log objects
@@ -40,32 +39,22 @@ public class WitsmlObjectParser {
   public static List<AbstractWitsmlObject> parseLogObject(String rawXML, String version)
       throws Exception {
 
-    List<AbstractWitsmlObject> witsmlObjects = new ArrayList<>();
-
     // handle version 1.3.1.1
     if ("1.3.1.1".equals(version)) {
       com.hashmapinc.tempus.WitsmlObjects.v1311.ObjLogs objs =
           WitsmlMarshal.deserialize(
               rawXML, com.hashmapinc.tempus.WitsmlObjects.v1311.ObjLogs.class);
-      for (com.hashmapinc.tempus.WitsmlObjects.v1311.ObjLog obj : objs.getLog()) {
-        witsmlObjects.add(obj);
-      }
+      return new ArrayList<>(objs.getLog());
 
       // handle version 1.4.1.1
     } else if ("1.4.1.1".equals(version)) {
       com.hashmapinc.tempus.WitsmlObjects.v1411.ObjLogs objs =
           WitsmlMarshal.deserialize(
               rawXML, com.hashmapinc.tempus.WitsmlObjects.v1411.ObjLogs.class);
-      for (com.hashmapinc.tempus.WitsmlObjects.v1411.ObjLog obj : objs.getLog()) {
-        witsmlObjects.add(obj);
-      }
-
+      return new ArrayList<>(objs.getLog());
     } else {
-      throw new WitsmlException("unsupported witsml version " + version);
+      throw new UnsupportedWitsmlVersionException(version);
     }
-
-    // return the objects
-    return witsmlObjects;
   }
 
   /**
@@ -77,32 +66,24 @@ public class WitsmlObjectParser {
    */
   public static List<AbstractWitsmlObject> parseTrajectoryObject(String rawXML, String version)
       throws Exception {
-    List<AbstractWitsmlObject> witsmlObjects = new ArrayList<AbstractWitsmlObject>();
 
     // handle version 1.3.1.1
     if ("1.3.1.1".equals(version)) {
       com.hashmapinc.tempus.WitsmlObjects.v1311.ObjTrajectorys objs =
           WitsmlMarshal.deserialize(
               rawXML, com.hashmapinc.tempus.WitsmlObjects.v1311.ObjTrajectorys.class);
-      for (com.hashmapinc.tempus.WitsmlObjects.v1311.ObjTrajectory obj : objs.getTrajectory()) {
-        witsmlObjects.add(obj);
-      }
+      return new ArrayList<>(objs.getTrajectory());
 
       // handle version 1.4.1.1
     } else if ("1.4.1.1".equals(version)) {
       com.hashmapinc.tempus.WitsmlObjects.v1411.ObjTrajectorys objs =
           WitsmlMarshal.deserialize(
               rawXML, com.hashmapinc.tempus.WitsmlObjects.v1411.ObjTrajectorys.class);
-      for (com.hashmapinc.tempus.WitsmlObjects.v1411.ObjTrajectory obj : objs.getTrajectory()) {
-        witsmlObjects.add(obj);
-      }
+      return new ArrayList<>(objs.getTrajectory());
 
     } else {
-      throw new Exception("unsupported witsml version " + version);
+      throw new UnsupportedWitsmlVersionException(version);
     }
-
-    // return the objects
-    return witsmlObjects;
   }
 
   /**
@@ -114,32 +95,24 @@ public class WitsmlObjectParser {
    */
   public static List<AbstractWitsmlObject> parseWellObject(String rawXML, String version)
       throws Exception {
-    List<AbstractWitsmlObject> witsmlObjects = new ArrayList<AbstractWitsmlObject>();
 
     // handle version 1.3.1.1
     if ("1.3.1.1".equals(version)) {
       com.hashmapinc.tempus.WitsmlObjects.v1311.ObjWells objs =
           WitsmlMarshal.deserialize(
               rawXML, com.hashmapinc.tempus.WitsmlObjects.v1311.ObjWells.class);
-      for (com.hashmapinc.tempus.WitsmlObjects.v1311.ObjWell obj : objs.getWell()) {
-        witsmlObjects.add(obj);
-      }
+      return new ArrayList<>(objs.getWell());
 
       // handle version 1.4.1.1
     } else if ("1.4.1.1".equals(version)) {
       com.hashmapinc.tempus.WitsmlObjects.v1411.ObjWells objs =
           WitsmlMarshal.deserialize(
               rawXML, com.hashmapinc.tempus.WitsmlObjects.v1411.ObjWells.class);
-      for (com.hashmapinc.tempus.WitsmlObjects.v1411.ObjWell obj : objs.getWell()) {
-        witsmlObjects.add(obj);
-      }
+      return new ArrayList<>(objs.getWell());
 
     } else {
-      throw new Exception("unsupported witsml version " + version);
+      throw new UnsupportedWitsmlVersionException(version);
     }
-
-    // return the objects
-    return witsmlObjects;
   }
 
   /**
@@ -151,32 +124,23 @@ public class WitsmlObjectParser {
    */
   public static List<AbstractWitsmlObject> parseWellboreObject(String rawXML, String version)
       throws Exception {
-    List<AbstractWitsmlObject> witsmlObjects = new ArrayList<AbstractWitsmlObject>();
 
     // handle version 1.3.1.1
     if ("1.3.1.1".equals(version)) {
       com.hashmapinc.tempus.WitsmlObjects.v1311.ObjWellbores objs =
           WitsmlMarshal.deserialize(
               rawXML, com.hashmapinc.tempus.WitsmlObjects.v1311.ObjWellbores.class);
-      for (com.hashmapinc.tempus.WitsmlObjects.v1311.ObjWellbore obj : objs.getWellbore()) {
-        witsmlObjects.add(obj);
-      }
+      return new ArrayList<>(objs.getWellbore());
 
       // handle version 1.4.1.1
     } else if ("1.4.1.1".equals(version)) {
       com.hashmapinc.tempus.WitsmlObjects.v1411.ObjWellbores objs =
           WitsmlMarshal.deserialize(
               rawXML, com.hashmapinc.tempus.WitsmlObjects.v1411.ObjWellbores.class);
-      for (com.hashmapinc.tempus.WitsmlObjects.v1411.ObjWellbore obj : objs.getWellbore()) {
-        witsmlObjects.add(obj);
-      }
-
+      return new ArrayList<>(objs.getWellbore());
     } else {
-      throw new Exception("unsupported witsml version " + version);
+      throw new UnsupportedWitsmlVersionException(version);
     }
-
-    // return the objects
-    return witsmlObjects;
   }
 
   /**
@@ -188,32 +152,23 @@ public class WitsmlObjectParser {
    */
   public static List<AbstractWitsmlObject> parseFluidsReportObject(String rawXML, String version)
       throws Exception {
-    List<AbstractWitsmlObject> witsmlObjects = new ArrayList<AbstractWitsmlObject>();
 
     // handle version 1.3.1.1
     if ("1.3.1.1".equals(version)) {
       com.hashmapinc.tempus.WitsmlObjects.v1311.ObjFluidsReports objs =
           WitsmlMarshal.deserialize(
               rawXML, com.hashmapinc.tempus.WitsmlObjects.v1311.ObjFluidsReports.class);
-      for (com.hashmapinc.tempus.WitsmlObjects.v1311.ObjFluidsReport obj : objs.getFluidsReport()) {
-        witsmlObjects.add(obj);
-      }
+      return new ArrayList<>(objs.getFluidsReport());
 
       // handle version 1.4.1.1
     } else if ("1.4.1.1".equals(version)) {
       com.hashmapinc.tempus.WitsmlObjects.v1411.ObjFluidsReports objs =
           WitsmlMarshal.deserialize(
               rawXML, com.hashmapinc.tempus.WitsmlObjects.v1411.ObjFluidsReports.class);
-      for (com.hashmapinc.tempus.WitsmlObjects.v1411.ObjFluidsReport obj : objs.getFluidsReport()) {
-        witsmlObjects.add(obj);
-      }
-
+      return new ArrayList<>(objs.getFluidsReport());
     } else {
-      throw new Exception("unsupported witsml version " + version);
+      throw new UnsupportedWitsmlVersionException(version);
     }
-
-    // return the objects
-    return witsmlObjects;
   }
 
   /**
@@ -226,6 +181,7 @@ public class WitsmlObjectParser {
    */
   public static List<AbstractWitsmlObject> parse(String objectType, String rawXML, String version)
       throws Exception {
+
     // parse the object
     switch (objectType) {
       case "log":
@@ -239,7 +195,7 @@ public class WitsmlObjectParser {
       case "fluidsReport":
         return parseFluidsReportObject(rawXML, version);
       default:
-        throw new WitsmlException("unsupported witsml object type: " + objectType);
+        throw new WitsmlException("Unsupported witsml object type: " + objectType);
     }
   }
 }

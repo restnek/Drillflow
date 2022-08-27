@@ -19,6 +19,7 @@ package com.hashmapinc.tempus.witsml;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.HashMap;
+import java.util.Map;
 import org.junit.Test;
 
 public class WitsmlUtilTests {
@@ -35,18 +36,12 @@ public class WitsmlUtilTests {
     correctMap.put("chillOption", "chillvalue");
 
     // get parsed map
-    HashMap<String, String> parsedMap = WitsmlUtil.parseOptionsIn(optionsIn);
+    Map<String, String> parsedMap = WitsmlUtil.parseOptionsIn(optionsIn);
 
-    // compare the correct and parsed maps. They should be equal.
-    boolean mapsAreEqual = parsedMap.equals(correctMap);
-    assertThat(mapsAreEqual).isEqualTo(true);
-
-    // create an incorrect map
-    HashMap<String, String> incorrectMap = correctMap;
-    incorrectMap.put("incorrectOption", "incorrectValue");
-
-    // compare the incorrect and parsed maps. They should not be equal.
-    mapsAreEqual = parsedMap.equals(incorrectMap);
-    assertThat(mapsAreEqual).isEqualTo(false);
+    // compare the correct and parsed maps - they should be equal
+    // compare the incorrect and parsed maps - they should not be equal
+    assertThat(parsedMap)
+        .isEqualTo(correctMap)
+        .isNotEqualTo(Map.of("incorrectOption", "incorrectValue"));
   }
 }

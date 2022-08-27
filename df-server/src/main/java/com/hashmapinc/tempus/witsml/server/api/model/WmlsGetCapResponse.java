@@ -19,18 +19,16 @@ package com.hashmapinc.tempus.witsml.server.api.model;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "WMLS_GetBaseMsgResponse")
-public class WMLS_GetBaseMsgResponse {
+@XmlRootElement(name = "WmlsGetCapResponse")
+public class WmlsGetCapResponse {
 
-  private String Result;
-
-  public String getResult() {
-    return Result;
-  }
-
-  public void setResult(String result) {
-    this.Result = result;
-  }
+  private Short result;
+  private String capabilitiesOut;
+  private String suppMsgOut;
 }

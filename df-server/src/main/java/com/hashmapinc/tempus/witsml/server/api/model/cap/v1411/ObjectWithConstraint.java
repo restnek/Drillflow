@@ -21,6 +21,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlValue;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Java class for objectWithConstraint complex type.
@@ -38,47 +40,22 @@ import javax.xml.bind.annotation.XmlValue;
  * &lt;/complexType>
  * </pre>
  */
+@Getter
+@Setter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(
     name = "objectWithConstraint",
     propOrder = {"value"})
 public class ObjectWithConstraint {
 
-  @XmlValue protected String value;
+  @XmlValue
+  protected String value;
 
   @XmlAttribute(name = "maxDataNodes")
   protected Integer maxDataNodes;
 
   @XmlAttribute(name = "maxDataPoints")
   protected Integer maxDataPoints;
-
-  /**
-   * The intended abstract supertype of all 64 character string types. This type should not be used
-   * directly except to derive another type.
-   *
-   * @return possible object is {@link String }
-   */
-  public String getValue() {
-    return value;
-  }
-
-  /**
-   * Sets the value of the value property.
-   *
-   * @param value allowed object is {@link String }
-   */
-  public void setValue(String value) {
-    this.value = value;
-  }
-
-  /**
-   * Gets the value of the maxDataNodes property.
-   *
-   * @return possible object is {@link Integer }
-   */
-  public Integer getMaxDataNodes() {
-    return maxDataNodes;
-  }
 
   /**
    * Sets the value of the maxDataNodes property.
@@ -89,15 +66,6 @@ public class ObjectWithConstraint {
     // Check to avoid setting < 0 in the xml
     if (value <= 0) return;
     this.maxDataNodes = value;
-  }
-
-  /**
-   * Gets the value of the maxDataPoints property.
-   *
-   * @return possible object is {@link Integer }
-   */
-  public Integer getMaxDataPoints() {
-    return maxDataPoints;
   }
 
   /**

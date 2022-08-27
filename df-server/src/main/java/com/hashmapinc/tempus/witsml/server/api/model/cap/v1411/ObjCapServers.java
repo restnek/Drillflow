@@ -16,10 +16,13 @@
 
 package com.hashmapinc.tempus.witsml.server.api.model.cap.v1411;
 
+import java.util.Objects;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Java class for obj_capServers complex type.
@@ -39,6 +42,8 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;/complexType>
  * </pre>
  */
+@Getter
+@Setter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(
     name = "obj_capServers",
@@ -50,43 +55,7 @@ public class ObjCapServers {
   @XmlAttribute(name = "version")
   protected String version;
 
-  /**
-   * Gets the value of the capServer property.
-   *
-   * @return possible object is {@link ObjCapServer }
-   */
-  public ObjCapServer getCapServer() {
-    return capServer;
-  }
-
-  /**
-   * Sets the value of the capServer property.
-   *
-   * @param value allowed object is {@link ObjCapServer }
-   */
-  public void setCapServer(ObjCapServer value) {
-    capServer = value;
-  }
-
-  /**
-   * Gets the value of the version property.
-   *
-   * @return possible object is {@link String }
-   */
   public String getVersion() {
-    if (version == null) {
-      return "1.4.1";
-    } else {
-      return version;
-    }
-  }
-
-  /**
-   * Sets the value of the version property.
-   *
-   * @param value allowed object is {@link String }
-   */
-  public void setVersion(String value) {
-    this.version = value;
+    return Objects.requireNonNullElse(version, "1.4.1");
   }
 }

@@ -16,13 +16,13 @@
 
 package com.hashmapinc.tempus.witsml;
 
+import lombok.experimental.StandardException;
+
 /**
  * Catch-all exception for any witsml exception.
  *
  * <p>"Only you can prevent bad exception messages!"
  */
-public class WitsmlException extends Exception {
-  public WitsmlException(String errorMessage) {
-    super(errorMessage);
-  }
+@StandardException
+public class WitsmlException extends RuntimeException {
 }

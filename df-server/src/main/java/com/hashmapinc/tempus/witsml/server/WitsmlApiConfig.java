@@ -17,6 +17,7 @@
 package com.hashmapinc.tempus.witsml.server;
 
 import com.hashmapinc.tempus.witsml.server.api.StoreImpl;
+import java.io.IOException;
 import java.net.URL;
 import javax.xml.ws.Endpoint;
 import org.apache.cxf.Bus;
@@ -32,11 +33,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassPathResource;
 
 @Configuration
 public class WitsmlApiConfig {
 
-  private final String XSLT_REQUEST_PATH = "interceptor/removeReturn.xsl";
+  private static final String XSLT_REQUEST_PATH = "interceptor/removeReturn.xsl";
 
   private Bus bus;
   private Environment env;
@@ -61,14 +63,14 @@ public class WitsmlApiConfig {
   }
 
   @Bean
-  public Endpoint endpoint() {
+  public Endpoint endpoint() throws IOException {
     EndpointImpl endpoint = new EndpointImpl(bus, storeImpl);
     if (compression) endpoint.getOutInterceptors().add(new GZIPOutInterceptor());
 
     // Removes the <return> element that causes the certification test to fail
     XSLTOutInterceptor returnRemoval =
         new XSLTOutInterceptor(Phase.PRE_STREAM, StaxOutInterceptor.class, null, XSLT_REQUEST_PATH);
-    URL wsdl = getClass().getResource("/schema/WMLS.WSDL");
+    URL wsdl = new ClassPathResource("/schema/WMLS.WSDL").getURL();
     endpoint.getOutInterceptors().add(returnRemoval);
     endpoint.setWsdlLocation(wsdl.toString());
     endpoint.publish("/WMLS");
@@ -80,8 +82,7 @@ public class WitsmlApiConfig {
 
   @Bean(name = Bus.DEFAULT_BUS_ID)
   public SpringBus springBus() {
-    SpringBus springBus = new SpringBus();
-    return springBus;
+    return new SpringBus();
   }
 
   public String getProperty(String pPropertyKey) {

@@ -33,7 +33,7 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
 
-  private static final QName _CapServers_QNAME =
+  private static final QName CAP_SERVERS_QNAME =
       new QName("http://www.witsml.org/api/141", "capServers");
 
   /** Create an instance of {@link ObjCapServers } */
@@ -69,6 +69,6 @@ public class ObjectFactory {
   /** Create an instance of {@link JAXBElement }{@code <}{@link ObjCapServers }{@code >}} */
   @XmlElementDecl(namespace = "http://www.witsml.org/api/141", name = "capServers")
   public JAXBElement<ObjCapServers> createCapServers(ObjCapServers value) {
-    return new JAXBElement<ObjCapServers>(_CapServers_QNAME, ObjCapServers.class, null, value);
+    return new JAXBElement<>(CAP_SERVERS_QNAME, ObjCapServers.class, null, value);
   }
 }

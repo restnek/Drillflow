@@ -18,7 +18,6 @@ package com.hashmapinc.tempus.witsml.server.api;
 
 import com.hashmapinc.tempus.witsml.valve.IValve;
 import com.hashmapinc.tempus.witsml.valve.ValveAuthException;
-import com.hashmapinc.tempus.witsml.valve.ValveException;
 import com.hashmapinc.tempus.witsml.valve.ValveFactory;
 import java.util.ArrayList;
 import javax.annotation.PostConstruct;
@@ -48,13 +47,12 @@ public class ValveAuthenticationProvider implements AuthenticationProvider {
   }
 
   @PostConstruct
-  private void setValve() throws ValveException, ValveAuthException {
+  private void setValve() throws ValveAuthException {
     valve = ValveFactory.buildValve(valveName, config.getConfiguration());
   }
 
   @Override
   public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-
     String name = authentication.getName();
     UsernamePasswordAuthenticationToken account =
         (UsernamePasswordAuthenticationToken) authentication;
