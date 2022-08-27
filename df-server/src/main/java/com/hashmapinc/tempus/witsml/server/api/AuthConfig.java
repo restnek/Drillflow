@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018-2019 Hashmap, Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.hashmapinc.tempus.witsml.server.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,29 +27,29 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 @EnableWebSecurity
 public class AuthConfig extends WebSecurityConfigurerAdapter {
 
-    private ValveAuthenticationProvider valveAuthenticationProvider;
+  private ValveAuthenticationProvider valveAuthenticationProvider;
 
-    @Autowired
-    public void setValveAuthenticationProvider(ValveAuthenticationProvider valveAuthenticationProvider) {
-        this.valveAuthenticationProvider = valveAuthenticationProvider;
-    }
+  @Autowired
+  public void setValveAuthenticationProvider(
+      ValveAuthenticationProvider valveAuthenticationProvider) {
+    this.valveAuthenticationProvider = valveAuthenticationProvider;
+  }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-                .csrf()
-                .disable()
-                .authorizeRequests()
-                .anyRequest()
-                .permitAll()
-                .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authenticationProvider(valveAuthenticationProvider)
-                .httpBasic()
-                .and()
-                .anonymous()
-                .disable();
-    }
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+    http.csrf()
+        .disable()
+        .authorizeRequests()
+        .anyRequest()
+        .permitAll()
+        .and()
+        .sessionManagement()
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .and()
+        .authenticationProvider(valveAuthenticationProvider)
+        .httpBasic()
+        .and()
+        .anonymous()
+        .disable();
+  }
 }

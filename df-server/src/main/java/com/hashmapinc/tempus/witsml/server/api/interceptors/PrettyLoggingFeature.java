@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018-2019 Hashmap, Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.hashmapinc.tempus.witsml.server.api.interceptors;
 
 import org.apache.cxf.ext.logging.LoggingFeature;
@@ -20,9 +21,9 @@ import org.apache.cxf.ext.logging.event.LogEventSender;
 
 public class PrettyLoggingFeature extends LoggingFeature {
 
-    public PrettyLoggingFeature(){
-        LogEventSender sender = new SensitiveEventSender();
-        super.setSender(new SoapLogEventSender(sender));
-        super.setOutSender(new SoapLogEventSender(sender));
-    }
+  public PrettyLoggingFeature() {
+    LogEventSender sender = new SensitiveEventSender();
+    super.setSender(new SoapLogEventSender(sender));
+    super.setOutSender(new SoapLogEventSender(sender));
+  }
 }

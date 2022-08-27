@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018-2019 Hashmap, Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- package com.hashmapinc.tempus.witsml;
+
+package com.hashmapinc.tempus.witsml;
 
 /**
- * Catch-all exception for any witsml exception. 
- * 
- * "Only you can prevent bad exception messages!"
+ * Catch-all exception for any witsml exception.
+ *
+ * <p>"Only you can prevent bad exception messages!"
  */
-public class WitsmlException extends Exception { 
-    public WitsmlException(String errorMessage) {
-        super(errorMessage);
-    }
+public class WitsmlException extends Exception {
+  public WitsmlException(String errorMessage) {
+    super(errorMessage);
+  }
 }

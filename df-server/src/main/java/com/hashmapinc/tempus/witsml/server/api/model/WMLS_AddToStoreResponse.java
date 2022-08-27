@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018-2019 Hashmap, Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.hashmapinc.tempus.witsml.server.api.model;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -20,25 +21,25 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name="WMLS_AddToStoreResponse")
+@XmlRootElement(name = "WMLS_AddToStoreResponse")
 public class WMLS_AddToStoreResponse {
 
-    private short Result;
-    private String SuppMsgOut;
+  private short Result;
+  private String SuppMsgOut;
 
-    public short getResult() {
-        return Result;
-    }
+  public short getResult() {
+    return Result;
+  }
 
-    public void setResult(short result) {
-        Result = result;
-    }
+  public void setResult(short result) {
+    Result = result;
+  }
 
-    public String getSuppMsgOut() {
-        return SuppMsgOut;
-    }
+  public String getSuppMsgOut() {
+    return SuppMsgOut;
+  }
 
-    public void setSuppMsgOut(String suppMsgOut) {
-        SuppMsgOut = suppMsgOut;
-    }
+  public void setSuppMsgOut(String suppMsgOut) {
+    SuppMsgOut = suppMsgOut;
+  }
 }

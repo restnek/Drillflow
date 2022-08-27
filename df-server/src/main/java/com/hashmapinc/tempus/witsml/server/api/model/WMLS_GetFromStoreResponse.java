@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018-2019 Hashmap, Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.hashmapinc.tempus.witsml.server.api.model;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -20,34 +21,34 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name="WMLS_GetFromStoreResponse")
+@XmlRootElement(name = "WMLS_GetFromStoreResponse")
 public class WMLS_GetFromStoreResponse {
 
-    private Short Result;
-    private String XMLout;
-    private String SuppMsgOut;
+  private Short Result;
+  private String XMLout;
+  private String SuppMsgOut;
 
-    public Short getResult() {
-        return Result;
-    }
+  public Short getResult() {
+    return Result;
+  }
 
-    public void setResult(Short result) {
-        Result = result;
-    }
+  public void setResult(Short result) {
+    Result = result;
+  }
 
-    public String getXMLout() {
-        return XMLout;
-    }
+  public String getXMLout() {
+    return XMLout;
+  }
 
-    public void setXMLout(String XMLout) {
-        this.XMLout = XMLout;
-    }
+  public void setXMLout(String XMLout) {
+    this.XMLout = XMLout;
+  }
 
-    public String getSuppMsgOut() {
-        return SuppMsgOut;
-    }
+  public String getSuppMsgOut() {
+    return SuppMsgOut;
+  }
 
-    public void setSuppMsgOut(String suppMsgOut) {
-        SuppMsgOut = suppMsgOut;
-    }
+  public void setSuppMsgOut(String suppMsgOut) {
+    SuppMsgOut = suppMsgOut;
+  }
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018-2019 Hashmap, Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,24 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.hashmapinc.tempus.witsml.server.api;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 @Configuration
 @EnableConfigurationProperties
 @ConfigurationProperties(prefix = "valve")
 public class ValveConfig {
-    private final Map<String, String> configuration = new HashMap<>();
+  private final Map<String, String> configuration = new HashMap<>();
 
-    public Map<String, String> getConfiguration(){
-        return this.configuration;
-    }
+  public Map<String, String> getConfiguration() {
+    return this.configuration;
+  }
 }

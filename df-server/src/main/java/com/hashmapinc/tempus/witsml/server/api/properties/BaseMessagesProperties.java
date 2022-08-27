@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018-2019 Hashmap, Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.hashmapinc.tempus.witsml.server.api.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -23,14 +24,13 @@ import org.springframework.context.annotation.PropertySource;
 @PropertySource("classpath:basemessages.properties")
 @ConfigurationProperties(prefix = "basemessages")
 public class BaseMessagesProperties {
-    private String value;
+  private String value;
 
+  public String getValue() {
+    return value;
+  }
 
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
+  public void setValue(String value) {
+    this.value = value;
+  }
 }

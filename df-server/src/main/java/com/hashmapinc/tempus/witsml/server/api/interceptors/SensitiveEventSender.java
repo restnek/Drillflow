@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018-2019 Hashmap, Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,21 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.hashmapinc.tempus.witsml.server.api.interceptors;
 
 import org.apache.cxf.ext.logging.event.LogEvent;
-import org.apache.cxf.ext.logging.event.LogMessageFormatter;
 import org.apache.cxf.ext.logging.slf4j.Slf4jEventSender;
 
 public class SensitiveEventSender extends Slf4jEventSender {
 
-    @Override
-    protected String getLogMessage(LogEvent event) {
-        String message = SingleLineMessageFormatter.format(event);
-        if (event.getHeaders().containsKey("Authorization")){
-            return message.replace(event.getHeaders().get("Authorization"), "*****");
-        }
-        return SingleLineMessageFormatter.format(event);
+  @Override
+  protected String getLogMessage(LogEvent event) {
+    String message = SingleLineMessageFormatter.format(event);
+    if (event.getHeaders().containsKey("Authorization")) {
+      return message.replace(event.getHeaders().get("Authorization"), "*****");
     }
-
+    return SingleLineMessageFormatter.format(event);
+  }
 }

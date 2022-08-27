@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018-2019 Hashmap, Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.hashmapinc.tempus.witsml.server;
 
 import org.springframework.boot.Banner;
@@ -27,22 +28,22 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @EnableAsync(proxyTargetClass = true)
 public class WitsmlServerApplication {
 
-	public static void main(String[] args) {
-		SpringApplication drillFlow = new SpringApplication(WitsmlServerApplication.class);
-		drillFlow.setBannerMode(Banner.Mode.OFF);
-		drillFlow.run(args);
-	}
+  public static void main(String[] args) {
+    SpringApplication drillFlow = new SpringApplication(WitsmlServerApplication.class);
+    drillFlow.setBannerMode(Banner.Mode.OFF);
+    drillFlow.run(args);
+  }
 
-	@Bean("asyncCustomTaskExecutor")
-	public TaskExecutor getAsyncExecutor() {
-		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-		executor.setCorePoolSize(AsyncAppConstants.CORE_POOL_SIZE);
-		executor.setMaxPoolSize(AsyncAppConstants.MAX_POOL_SIZE);
-		executor.setQueueCapacity(AsyncAppConstants.QUEUE_CAPACITY);
-		executor.setKeepAliveSeconds(AsyncAppConstants.KEEP_ALIVE_TIME_IN_SEC);
-		executor.setWaitForTasksToCompleteOnShutdown(true);
-		executor.setThreadNamePrefix(AsyncAppConstants.ASYNC_THREAD_NAME);
-		executor.initialize();
-		return executor;
-	}
+  @Bean("asyncCustomTaskExecutor")
+  public TaskExecutor getAsyncExecutor() {
+    ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+    executor.setCorePoolSize(AsyncAppConstants.CORE_POOL_SIZE);
+    executor.setMaxPoolSize(AsyncAppConstants.MAX_POOL_SIZE);
+    executor.setQueueCapacity(AsyncAppConstants.QUEUE_CAPACITY);
+    executor.setKeepAliveSeconds(AsyncAppConstants.KEEP_ALIVE_TIME_IN_SEC);
+    executor.setWaitForTasksToCompleteOnShutdown(true);
+    executor.setThreadNamePrefix(AsyncAppConstants.ASYNC_THREAD_NAME);
+    executor.initialize();
+    return executor;
+  }
 }

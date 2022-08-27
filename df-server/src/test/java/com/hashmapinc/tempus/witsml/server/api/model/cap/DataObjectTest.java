@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018-2019 Hashmap, Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.hashmapinc.tempus.witsml.server.api.model.cap;
 
-import org.junit.Test;
+package com.hashmapinc.tempus.witsml.server.api.model.cap;
 
 import static org.junit.Assert.assertNotNull;
 
+import org.junit.Test;
+
 public class DataObjectTest {
 
-    @Test
-    public void createDataObject(){
-        DataObject dataObject = new DataObject();
-        assertNotNull(dataObject);
-    }
-
+  @Test
+  public void createDataObject() {
+    DataObject dataObject = new DataObject();
+    assertNotNull(dataObject);
+  }
 }

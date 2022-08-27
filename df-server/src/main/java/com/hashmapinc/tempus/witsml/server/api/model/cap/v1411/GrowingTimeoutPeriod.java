@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018-2019 Hashmap, Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.hashmapinc.tempus.witsml.server.api.model.cap.v1411;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -21,12 +22,11 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlValue;
 
-
 /**
- * <p>Java class for growingTimeoutPeriod complex type.
- * 
+ * Java class for growingTimeoutPeriod complex type.
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="growingTimeoutPeriod">
  *   &lt;simpleContent>
@@ -36,59 +36,46 @@ import javax.xml.bind.annotation.XmlValue;
  *   &lt;/simpleContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "growingTimeoutPeriod", propOrder = {
-    "value"
-})
+@XmlType(
+    name = "growingTimeoutPeriod",
+    propOrder = {"value"})
 public class GrowingTimeoutPeriod {
 
-    @XmlValue
-    protected int value;
-    @XmlAttribute(name = "dataObject", required = true)
-    protected String dataObject;
+  @XmlValue protected int value;
 
-    /**
-     * The intended abstract supertype of all xsd:int types which must be positive.
-     * 			This type should not be used directly except to derive another type.
-     * 
-     */
-    public int getValue() {
-        return value;
-    }
+  @XmlAttribute(name = "dataObject", required = true)
+  protected String dataObject;
 
-    /**
-     * Sets the value of the value property.
-     * 
-     */
-    public void setValue(int value) {
-        this.value = value;
-    }
+  /**
+   * The intended abstract supertype of all xsd:int types which must be positive. This type should
+   * not be used directly except to derive another type.
+   */
+  public int getValue() {
+    return value;
+  }
 
-    /**
-     * Gets the value of the DDataObject property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getDataObject() {
-        return dataObject;
-    }
+  /** Sets the value of the value property. */
+  public void setValue(int value) {
+    this.value = value;
+  }
 
-    /**
-     * Sets the value of the DDataObject property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setDataObject(String value) {
-        this.dataObject = value;
-    }
+  /**
+   * Gets the value of the DDataObject property.
+   *
+   * @return possible object is {@link String }
+   */
+  public String getDataObject() {
+    return dataObject;
+  }
 
+  /**
+   * Sets the value of the DDataObject property.
+   *
+   * @param value allowed object is {@link String }
+   */
+  public void setDataObject(String value) {
+    this.dataObject = value;
+  }
 }

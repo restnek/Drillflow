@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018-2019 Hashmap, Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,41 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.hashmapinc.tempus.witsml;
 
-import java.util.HashMap;
-
-import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.HashMap;
+import org.junit.Test;
 
 public class WitsmlUtilTests {
 
-	@Test
-	public void parseOptionsIn_shouldParseValidInputString() {
-        // create input
-        String optionsIn = 
-            "coolOption=coolValue;awesomeOption=awesomeValue;chillOption=chillValue";
-        
-        // create correct map
-        HashMap<String,String> correctMap = new HashMap<>();
-        correctMap.put("coolOption", "coolvalue");
-        correctMap.put("awesomeOption", "awesomevalue");
-        correctMap.put("chillOption", "chillvalue");
+  @Test
+  public void parseOptionsIn_shouldParseValidInputString() {
+    // create input
+    String optionsIn = "coolOption=coolValue;awesomeOption=awesomeValue;chillOption=chillValue";
 
-        // get parsed map
-        HashMap<String,String> parsedMap = WitsmlUtil.parseOptionsIn(optionsIn);
+    // create correct map
+    HashMap<String, String> correctMap = new HashMap<>();
+    correctMap.put("coolOption", "coolvalue");
+    correctMap.put("awesomeOption", "awesomevalue");
+    correctMap.put("chillOption", "chillvalue");
 
-        // compare the correct and parsed maps. They should be equal.
-        boolean mapsAreEqual = parsedMap.equals(correctMap);
-        assertThat(mapsAreEqual).isEqualTo(true);
+    // get parsed map
+    HashMap<String, String> parsedMap = WitsmlUtil.parseOptionsIn(optionsIn);
 
-        // create an incorrect map
-        HashMap<String,String> incorrectMap = correctMap;
-        incorrectMap.put("incorrectOption", "incorrectValue");
+    // compare the correct and parsed maps. They should be equal.
+    boolean mapsAreEqual = parsedMap.equals(correctMap);
+    assertThat(mapsAreEqual).isEqualTo(true);
 
-        // compare the incorrect and parsed maps. They should not be equal.
-        mapsAreEqual = parsedMap.equals(incorrectMap);
-        assertThat(mapsAreEqual).isEqualTo(false);
-    }
+    // create an incorrect map
+    HashMap<String, String> incorrectMap = correctMap;
+    incorrectMap.put("incorrectOption", "incorrectValue");
+
+    // compare the incorrect and parsed maps. They should not be equal.
+    mapsAreEqual = parsedMap.equals(incorrectMap);
+    assertThat(mapsAreEqual).isEqualTo(false);
+  }
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018-2019 Hashmap, Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,12 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.hashmapinc.tempus.witsml.server.api;
 
+import com.hashmapinc.tempus.witsml.valve.IValve;
+import com.hashmapinc.tempus.witsml.valve.ValveAuthException;
+import com.hashmapinc.tempus.witsml.valve.ValveException;
+import com.hashmapinc.tempus.witsml.valve.ValveFactory;
 import java.util.ArrayList;
-
 import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.ComponentScan;
@@ -29,57 +32,53 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
-import com.hashmapinc.tempus.witsml.valve.IValve;
-import com.hashmapinc.tempus.witsml.valve.ValveAuthException;
-import com.hashmapinc.tempus.witsml.valve.ValveException;
-import com.hashmapinc.tempus.witsml.valve.ValveFactory;
-
 @Component
 @ComponentScan(basePackages = "com.hashmapinc.tempus.witsml.valve")
 public class ValveAuthenticationProvider implements AuthenticationProvider {
 
-    private IValve valve;
-    private ValveConfig config;
+  private IValve valve;
+  private ValveConfig config;
 
-    @Value("${valve.name}")
-    private String valveName;
+  @Value("${valve.name}")
+  private String valveName;
 
-    @Autowired
-    private void setValveConfig(ValveConfig config){
-        this.config = config;
+  @Autowired
+  private void setValveConfig(ValveConfig config) {
+    this.config = config;
+  }
+
+  @PostConstruct
+  private void setValve() throws ValveException, ValveAuthException {
+    valve = ValveFactory.buildValve(valveName, config.getConfiguration());
+  }
+
+  @Override
+  public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+
+    String name = authentication.getName();
+    UsernamePasswordAuthenticationToken account =
+        (UsernamePasswordAuthenticationToken) authentication;
+    String password = (String) account.getCredentials();
+
+    try {
+      valve.authenticate(name, password);
+    } catch (ValveAuthException e) {
+      throw new BadCredentialsException(e.getMessage());
     }
 
-    @PostConstruct
-    private void setValve() throws ValveException, ValveAuthException {
-        valve = ValveFactory.buildValve(valveName,config.getConfiguration());
-    }
-    
-    @Override
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+    ValveUser user = new ValveUser();
+    user.setUserName(name);
+    user.setPassword(password);
+    user.setToken("testToken");
 
-        String name = authentication.getName();
-        UsernamePasswordAuthenticationToken account = (UsernamePasswordAuthenticationToken)authentication;
-        String password = (String)account.getCredentials();
+    UsernamePasswordAuthenticationToken auth;
+    auth = new UsernamePasswordAuthenticationToken(user, password, new ArrayList<>());
 
-        try {
-			valve.authenticate(name,password);
-		} catch (ValveAuthException e) {
-			throw new BadCredentialsException(e.getMessage());
-		}
+    return auth;
+  }
 
-        ValveUser user = new ValveUser();
-        user.setUserName(name);
-        user.setPassword(password);
-        user.setToken("testToken");
-
-        UsernamePasswordAuthenticationToken auth;
-        auth = new UsernamePasswordAuthenticationToken(user, password, new ArrayList<>());
-
-        return auth;
-    }
-
-    @Override
-    public boolean supports(Class<?> authentication) {
-        return authentication.equals(UsernamePasswordAuthenticationToken.class);
-    }
+  @Override
+  public boolean supports(Class<?> authentication) {
+    return authentication.equals(UsernamePasswordAuthenticationToken.class);
+  }
 }

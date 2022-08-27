@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018-2019 Hashmap, Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,24 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.hashmapinc.tempus.witsml.server.api.model;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name="WMLS_GetVersionResponse")
+@XmlRootElement(name = "WMLS_GetVersionResponse")
 public class WMLS_GetVersionResponse {
 
-    private String Result;
+  private String Result;
 
-    public String getResult() {
-        return Result;
-    }
+  public String getResult() {
+    return Result;
+  }
 
-    public void setResult(String result) {
-        this.Result = result;
-    }
+  public void setResult(String result) {
+    this.Result = result;
+  }
 }

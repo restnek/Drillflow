@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018-2019 Hashmap, Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.hashmapinc.tempus.witsml.server.api.model.cap.v1411;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -21,12 +22,11 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlValue;
 
-
 /**
- * <p>Java class for objectWithConstraint complex type.
- * 
+ * Java class for objectWithConstraint complex type.
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="objectWithConstraint">
  *   &lt;simpleContent>
@@ -37,99 +37,77 @@ import javax.xml.bind.annotation.XmlValue;
  *   &lt;/simpleContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "objectWithConstraint", propOrder = {
-    "value"
-})
+@XmlType(
+    name = "objectWithConstraint",
+    propOrder = {"value"})
 public class ObjectWithConstraint {
 
-    @XmlValue
-    protected String value;
-    @XmlAttribute(name = "maxDataNodes")
-    protected Integer maxDataNodes;
-    @XmlAttribute(name = "maxDataPoints")
-    protected Integer maxDataPoints;
+  @XmlValue protected String value;
 
-    /**
-     * The intended abstract supertype of all 64 character string types.
-     * 			This type should not be used directly except to derive another type.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getValue() {
-        return value;
-    }
+  @XmlAttribute(name = "maxDataNodes")
+  protected Integer maxDataNodes;
 
-    /**
-     * Sets the value of the value property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setValue(String value) {
-        this.value = value;
-    }
+  @XmlAttribute(name = "maxDataPoints")
+  protected Integer maxDataPoints;
 
-    /**
-     * Gets the value of the maxDataNodes property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Integer }
-     *     
-     */
-    public Integer getMaxDataNodes() {
-        return maxDataNodes;
-    }
+  /**
+   * The intended abstract supertype of all 64 character string types. This type should not be used
+   * directly except to derive another type.
+   *
+   * @return possible object is {@link String }
+   */
+  public String getValue() {
+    return value;
+  }
 
-    /**
-     * Sets the value of the maxDataNodes property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Integer } must be greater than 0
-     *     
-     */
-    public void setMaxDataNodes(Integer value) {
-        // Check to avoid setting < 0 in the xml
-        if (value <= 0)
-            return;
-        this.maxDataNodes = value;
-    }
+  /**
+   * Sets the value of the value property.
+   *
+   * @param value allowed object is {@link String }
+   */
+  public void setValue(String value) {
+    this.value = value;
+  }
 
-    /**
-     * Gets the value of the maxDataPoints property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Integer }
-     *     
-     */
-    public Integer getMaxDataPoints() {
-        return maxDataPoints;
-    }
+  /**
+   * Gets the value of the maxDataNodes property.
+   *
+   * @return possible object is {@link Integer }
+   */
+  public Integer getMaxDataNodes() {
+    return maxDataNodes;
+  }
 
-    /**
-     * Sets the value of the maxDataPoints property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Integer } must be greater than 0
-     *     
-     */
-    public void setMaxDataPoints(Integer value) {
-        // Check to avoid setting < 0 in the xml
-        if (value <= 0)
-            return;
-        this.maxDataPoints = value;
-    }
+  /**
+   * Sets the value of the maxDataNodes property.
+   *
+   * @param value allowed object is {@link Integer } must be greater than 0
+   */
+  public void setMaxDataNodes(Integer value) {
+    // Check to avoid setting < 0 in the xml
+    if (value <= 0) return;
+    this.maxDataNodes = value;
+  }
 
+  /**
+   * Gets the value of the maxDataPoints property.
+   *
+   * @return possible object is {@link Integer }
+   */
+  public Integer getMaxDataPoints() {
+    return maxDataPoints;
+  }
+
+  /**
+   * Sets the value of the maxDataPoints property.
+   *
+   * @param value allowed object is {@link Integer } must be greater than 0
+   */
+  public void setMaxDataPoints(Integer value) {
+    // Check to avoid setting < 0 in the xml
+    if (value <= 0) return;
+    this.maxDataPoints = value;
+  }
 }

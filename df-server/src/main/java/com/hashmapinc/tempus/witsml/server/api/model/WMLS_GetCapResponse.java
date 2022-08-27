@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018-2019 Hashmap, Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.hashmapinc.tempus.witsml.server.api.model;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -20,34 +21,34 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name="WMLS_GetCapResponse")
+@XmlRootElement(name = "WMLS_GetCapResponse")
 public class WMLS_GetCapResponse {
 
-    private Short Result;
-    private String CapabilitiesOut;
-    private String SuppMsgOut;
+  private Short Result;
+  private String CapabilitiesOut;
+  private String SuppMsgOut;
 
-    public String getSuppMsgOut() {
-        return SuppMsgOut;
-    }
+  public String getSuppMsgOut() {
+    return SuppMsgOut;
+  }
 
-    public void setSuppMsgOut(String suppMsgOut) {
-        this.SuppMsgOut = suppMsgOut;
-    }
+  public void setSuppMsgOut(String suppMsgOut) {
+    this.SuppMsgOut = suppMsgOut;
+  }
 
-    public Short getResult() {
-        return Result;
-    }
+  public Short getResult() {
+    return Result;
+  }
 
-    public void setResult(Short result) {
-        this.Result = result;
-    }
+  public void setResult(Short result) {
+    this.Result = result;
+  }
 
-    public String getCapabilitiesOut() {
-        return CapabilitiesOut;
-    }
+  public String getCapabilitiesOut() {
+    return CapabilitiesOut;
+  }
 
-    public void setCapabilitiesOut(String capabilitiesOut) {
-        this.CapabilitiesOut = capabilitiesOut;
-    }
+  public void setCapabilitiesOut(String capabilitiesOut) {
+    this.CapabilitiesOut = capabilitiesOut;
+  }
 }

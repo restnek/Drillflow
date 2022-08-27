@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018-2019 Hashmap, Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,5 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@javax.xml.bind.annotation.XmlSchema(namespace = "http://www.witsml.org/api/131", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
+
+@javax.xml.bind.annotation.XmlSchema(
+    namespace = "http://www.witsml.org/api/131",
+    elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package com.hashmapinc.tempus.witsml.server.api.model.cap.v1311;

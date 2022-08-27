@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018-2019 Hashmap, Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,72 +13,86 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.hashmapinc.tempus.witsml.server.api.model.cap;
-
-import org.junit.Test;
-
-import javax.xml.bind.JAXBException;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+
+import javax.xml.bind.JAXBException;
+import org.junit.Test;
 
 public class ServerCapTest {
 
-    @Test
-    public void createServerCapObject(){
-        ServerCap sc = new ServerCap();
-        assertNotNull(sc);
-    }
+  @Test
+  public void createServerCapObject() {
+    ServerCap sc = new ServerCap();
+    assertNotNull(sc);
+  }
 
-    @Test
-    public void generateDefault1311Object() throws JAXBException {
-        ServerCap sc = new ServerCap();
-        String obj = sc.getWitsmlObject("1.3.1.1");
-        assertNotNull(obj);
-        assertNotEquals(obj, "");
-        assertThat(obj, containsString("1.3.1.1"));
-    }
+  @Test
+  public void generateDefault1311Object() throws JAXBException {
+    ServerCap sc = new ServerCap();
+    String obj = sc.getWitsmlObject("1.3.1.1");
+    assertNotNull(obj);
+    assertNotEquals(obj, "");
+    assertThat(obj, containsString("1.3.1.1"));
+  }
 
-    @Test
-    public void generateDefault1411Object() throws JAXBException {
-        ServerCap sc = new ServerCap();
-        String obj = sc.getWitsmlObject("1.4.1.1");
-        assertNotNull(obj);
-        assertNotEquals(obj, "");
-        assertThat(obj, containsString("1.4.1.1"));
-    }
+  @Test
+  public void generateDefault1411Object() throws JAXBException {
+    ServerCap sc = new ServerCap();
+    String obj = sc.getWitsmlObject("1.4.1.1");
+    assertNotNull(obj);
+    assertNotEquals(obj, "");
+    assertThat(obj, containsString("1.4.1.1"));
+  }
 
-    @Test
-    public void addGrowingTimeout1411() throws JAXBException {
-        ServerCap sc = new ServerCap();
-        sc.addGrowingTimeoutPeriod("log", 1000);
-        String obj = sc.getWitsmlObject("1.4.1.1");
-        assertNotNull(obj);
-        assertNotEquals(obj, "");
-        assertThat(obj, containsString("<growingTimeoutPeriod dataObject=\"log\">1000</growingTimeoutPeriod>"));
-    }
+  @Test
+  public void addGrowingTimeout1411() throws JAXBException {
+    ServerCap sc = new ServerCap();
+    sc.addGrowingTimeoutPeriod("log", 1000);
+    String obj = sc.getWitsmlObject("1.4.1.1");
+    assertNotNull(obj);
+    assertNotEquals(obj, "");
+    assertThat(
+        obj,
+        containsString("<growingTimeoutPeriod dataObject=\"log\">1000</growingTimeoutPeriod>"));
+  }
 
-    @Test
-    public void removeGrowingTimeout1411() throws JAXBException {
-        ServerCap sc = new ServerCap();
-        sc.addGrowingTimeoutPeriod("log", 1000);
-        String obj = sc.getWitsmlObject("1.4.1.1");
-        assertNotNull(obj);
-        assertNotEquals(obj, "");
-        assertThat(obj, containsString("<growingTimeoutPeriod dataObject=\"log\">1000</growingTimeoutPeriod>"));
-        sc.removeGrowingTimeoutPeriod("log");
-        String obj2 = sc.getWitsmlObject("1.4.1.1");
-        assertThat(obj2, not(containsString("<growingTimeoutPeriod dataObject=\"log\">1000</growingTimeoutPeriod>")));
-    }
+  @Test
+  public void removeGrowingTimeout1411() throws JAXBException {
+    ServerCap sc = new ServerCap();
+    sc.addGrowingTimeoutPeriod("log", 1000);
+    String obj = sc.getWitsmlObject("1.4.1.1");
+    assertNotNull(obj);
+    assertNotEquals(obj, "");
+    assertThat(
+        obj,
+        containsString("<growingTimeoutPeriod dataObject=\"log\">1000</growingTimeoutPeriod>"));
+    sc.removeGrowingTimeoutPeriod("log");
+    String obj2 = sc.getWitsmlObject("1.4.1.1");
+    assertThat(
+        obj2,
+        not(
+            containsString(
+                "<growingTimeoutPeriod dataObject=\"log\">1000</growingTimeoutPeriod>")));
+  }
 
-    @Test
-    public void addGrowingTimeoutEnsureNotAppear1311() throws JAXBException {
-        ServerCap sc = new ServerCap();
-        sc.addGrowingTimeoutPeriod("log", 1000);
-        String obj = sc.getWitsmlObject("1.3.1.1");
-        assertNotNull(obj);
-        assertNotEquals(obj, "");
-        assertThat(obj, not(containsString("<growingTimeoutPeriod dataObject=\"log\">1000</growingTimeoutPeriod>")));
-    }
+  @Test
+  public void addGrowingTimeoutEnsureNotAppear1311() throws JAXBException {
+    ServerCap sc = new ServerCap();
+    sc.addGrowingTimeoutPeriod("log", 1000);
+    String obj = sc.getWitsmlObject("1.3.1.1");
+    assertNotNull(obj);
+    assertNotEquals(obj, "");
+    assertThat(
+        obj,
+        not(
+            containsString(
+                "<growingTimeoutPeriod dataObject=\"log\">1000</growingTimeoutPeriod>")));
+  }
 }
