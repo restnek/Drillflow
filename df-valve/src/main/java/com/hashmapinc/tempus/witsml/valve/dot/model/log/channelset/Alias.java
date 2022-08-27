@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018-2019 Hashmap, Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,68 +13,70 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.hashmapinc.tempus.witsml.valve.dot.model.log.channelset;
 
-import com.fasterxml.jackson.annotation.*;
-
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.HashMap;
 import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({
-    "identifier",
-    "description",
-    "authority"
-})
+@JsonPropertyOrder({"identifier", "description", "authority"})
 public class Alias {
 
-    @JsonProperty("identifier")
-    private String identifier;
-    @JsonProperty("description")
-    private String description;
-    @JsonProperty("authority")
-    private String authority;
-    @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+  @JsonProperty("identifier")
+  private String identifier;
 
-    @JsonProperty("identifier")
-    public String getIdentifier() {
-        return identifier;
-    }
+  @JsonProperty("description")
+  private String description;
 
-    @JsonProperty("identifier")
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
-    }
+  @JsonProperty("authority")
+  private String authority;
 
-    @JsonProperty("description")
-    public String getDescription() {
-        return description;
-    }
+  @JsonIgnore private final Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    @JsonProperty("description")
-    public void setDescription(String description) {
-        this.description = description;
-    }
+  @JsonProperty("identifier")
+  public String getIdentifier() {
+    return identifier;
+  }
 
-    @JsonProperty("authority")
-    public String getAuthority() {
-        return authority;
-    }
+  @JsonProperty("identifier")
+  public void setIdentifier(String identifier) {
+    this.identifier = identifier;
+  }
 
-    @JsonProperty("authority")
-    public void setAuthority(String authority) {
-        this.authority = authority;
-    }
+  @JsonProperty("description")
+  public String getDescription() {
+    return description;
+  }
 
-    @JsonAnyGetter
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
+  @JsonProperty("description")
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-    @JsonAnySetter
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
+  @JsonProperty("authority")
+  public String getAuthority() {
+    return authority;
+  }
 
+  @JsonProperty("authority")
+  public void setAuthority(String authority) {
+    this.authority = authority;
+  }
+
+  @JsonAnyGetter
+  public Map<String, Object> getAdditionalProperties() {
+    return this.additionalProperties;
+  }
+
+  @JsonAnySetter
+  public void setAdditionalProperty(String name, Object value) {
+    this.additionalProperties.put(name, value);
+  }
 }

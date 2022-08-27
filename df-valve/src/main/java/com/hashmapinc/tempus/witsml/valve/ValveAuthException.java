@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018-2019 Hashmap, Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,26 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.hashmapinc.tempus.witsml.valve;
 
 public class ValveAuthException extends Exception {
-	
-	/**
-	 * Exception thrown if user is not authenticated
-	 * 
-	 * @param message
-	 */
-	public ValveAuthException(String message) {
-		super(message);
-	}
-	
-	/**
-	 * Exception thrown if user is not authenticated
-	 * @param message
-	 * @param cause
-	 */
-	public ValveAuthException(String message, Throwable cause) {
-		super(message, cause);
-	}
 
+  /**
+   * Exception thrown if user is not authenticated
+   *
+   * @param message
+   */
+  public ValveAuthException(String message) {
+    super(message);
+  }
+
+  /**
+   * Exception thrown if user is not authenticated
+   *
+   * @param message
+   * @param cause
+   */
+  public ValveAuthException(String message, Throwable cause) {
+    super(message, cause);
+  }
 }

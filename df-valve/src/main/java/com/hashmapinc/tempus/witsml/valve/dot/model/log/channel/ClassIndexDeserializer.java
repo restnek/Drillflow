@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018-2019 Hashmap, Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,25 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.hashmapinc.tempus.witsml.valve.dot.model.log.channel;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
-
 import java.io.IOException;
 
 public class ClassIndexDeserializer extends JsonDeserializer<Short> {
-    @Override
-    public Short deserialize(JsonParser jp, DeserializationContext ctxt)
-            throws IOException, JsonProcessingException {
+  @Override
+  public Short deserialize(JsonParser jp, DeserializationContext ctxt)
+      throws IOException {
 
-        String text = jp.getText();
-        if (text == null || text.isEmpty()) {
-            return null;
-        } else {
-            return Short.valueOf(text);
-        }
+    String text = jp.getText();
+    if (text == null || text.isEmpty()) {
+      return null;
+    } else {
+      return Short.valueOf(text);
     }
+  }
 }

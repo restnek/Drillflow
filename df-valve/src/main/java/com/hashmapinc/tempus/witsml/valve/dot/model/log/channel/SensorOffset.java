@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018-2019 Hashmap, Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,110 +13,113 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.hashmapinc.tempus.witsml.valve.dot.model.log.channel;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({
-    "uom",
-    "value"
-})
+@JsonPropertyOrder({"uom", "value"})
 public class SensorOffset {
 
-    @JsonProperty("uom")
-    private String uom;
-    @JsonProperty("value")
-    private String value;
-    @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+  @JsonProperty("uom")
+  private String uom;
 
-    @JsonProperty("uom")
-    public String getUom() {
-        return uom;
-    }
+  @JsonProperty("value")
+  private String value;
 
-    @JsonProperty("uom")
-    public void setUom(String uom) {
-        this.uom = uom;
-    }
+  @JsonIgnore private final Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    @JsonProperty("value")
-    public String getValue() {
-        return value;
-    }
+  @JsonProperty("uom")
+  public String getUom() {
+    return uom;
+  }
 
-    @JsonProperty("value")
-    public void setValue(String value) {
-        this.value = value;
-    }
+  @JsonProperty("uom")
+  public void setUom(String uom) {
+    this.uom = uom;
+  }
 
-    @JsonAnyGetter
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
+  @JsonProperty("value")
+  public String getValue() {
+    return value;
+  }
 
-    @JsonAnySetter
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
+  @JsonProperty("value")
+  public void setValue(String value) {
+    this.value = value;
+  }
 
-    public static SensorOffset from1411(com.hashmapinc.tempus.WitsmlObjects.v1411.LengthMeasure sensorOffset){
-        if (sensorOffset == null)
-            return null;
+  @JsonAnyGetter
+  public Map<String, Object> getAdditionalProperties() {
+    return this.additionalProperties;
+  }
 
-        SensorOffset offset = new SensorOffset();
-        offset.setUom(sensorOffset.getUom());
-        offset.setValue(sensorOffset.getValue().toString());
-        return offset;
-    }
+  @JsonAnySetter
+  public void setAdditionalProperty(String name, Object value) {
+    this.additionalProperties.put(name, value);
+  }
 
-    public static SensorOffset from1311(com.hashmapinc.tempus.WitsmlObjects.v1311.LengthMeasure sensorOffset){
-        if (sensorOffset == null)
-            return null;
+  public static SensorOffset from1411(
+      com.hashmapinc.tempus.WitsmlObjects.v1411.LengthMeasure sensorOffset) {
+    if (sensorOffset == null) return null;
 
-        SensorOffset offset = new SensorOffset();
-        offset.setUom(sensorOffset.getUom());
-        offset.setValue(sensorOffset.getValue().toString());
-        return offset;
-    }
+    SensorOffset offset = new SensorOffset();
+    offset.setUom(sensorOffset.getUom());
+    offset.setValue(sensorOffset.getValue().toString());
+    return offset;
+  }
 
-    public static com.hashmapinc.tempus.WitsmlObjects.v1411.LengthMeasure to1411(SensorOffset sensorOffset){
-        if (sensorOffset == null)
-            return null;
+  public static SensorOffset from1311(
+      com.hashmapinc.tempus.WitsmlObjects.v1311.LengthMeasure sensorOffset) {
+    if (sensorOffset == null) return null;
 
-        com.hashmapinc.tempus.WitsmlObjects.v1411.LengthMeasure wmlOffset = 
-            new com.hashmapinc.tempus.WitsmlObjects.v1411.LengthMeasure();
-        wmlOffset.setUom(sensorOffset.getUom());
-        wmlOffset.setValue(Double.parseDouble(sensorOffset.getValue()));
-        return wmlOffset;
-    }
+    SensorOffset offset = new SensorOffset();
+    offset.setUom(sensorOffset.getUom());
+    offset.setValue(sensorOffset.getValue().toString());
+    return offset;
+  }
 
-    public static com.hashmapinc.tempus.WitsmlObjects.v1311.LengthMeasure to1311(SensorOffset sensorOffset){
-        if (sensorOffset == null)
-            return null;
+  public static com.hashmapinc.tempus.WitsmlObjects.v1411.LengthMeasure to1411(
+      SensorOffset sensorOffset) {
+    if (sensorOffset == null) return null;
 
-        com.hashmapinc.tempus.WitsmlObjects.v1311.LengthMeasure wmlOffset = 
-            new com.hashmapinc.tempus.WitsmlObjects.v1311.LengthMeasure();
-        wmlOffset.setUom(sensorOffset.getUom());
-        wmlOffset.setValue(Double.parseDouble(sensorOffset.getValue()));
-        return wmlOffset;
-    }
+    com.hashmapinc.tempus.WitsmlObjects.v1411.LengthMeasure wmlOffset =
+        new com.hashmapinc.tempus.WitsmlObjects.v1411.LengthMeasure();
+    wmlOffset.setUom(sensorOffset.getUom());
+    wmlOffset.setValue(Double.parseDouble(sensorOffset.getValue()));
+    return wmlOffset;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        SensorOffset that = (SensorOffset) o;
-        return Objects.equals(uom, that.uom) &&
-                Objects.equals(value, that.value);
-    }
+  public static com.hashmapinc.tempus.WitsmlObjects.v1311.LengthMeasure to1311(
+      SensorOffset sensorOffset) {
+    if (sensorOffset == null) return null;
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(uom, value);
-    }
+    com.hashmapinc.tempus.WitsmlObjects.v1311.LengthMeasure wmlOffset =
+        new com.hashmapinc.tempus.WitsmlObjects.v1311.LengthMeasure();
+    wmlOffset.setUom(sensorOffset.getUom());
+    wmlOffset.setValue(Double.parseDouble(sensorOffset.getValue()));
+    return wmlOffset;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    SensorOffset that = (SensorOffset) o;
+    return Objects.equals(uom, that.uom) && Objects.equals(value, that.value);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(uom, value);
+  }
 }

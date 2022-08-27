@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018-2019 Hashmap, Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,107 +13,108 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.hashmapinc.tempus.witsml.valve.dot.model.log.channelset;
 
-import com.fasterxml.jackson.annotation.*;
-
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({
-    "uom",
-    "value",
-    "datum"
-})
+@JsonPropertyOrder({"uom", "value", "datum"})
 public class Md {
 
-    @JsonProperty("uom")
-    private String uom;
-    @JsonProperty("value")
-    private String value;
-    @JsonProperty("datum")
-    private String datum;
-    @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+  @JsonProperty("uom")
+  private String uom;
 
-    @JsonProperty("uom")
-    public String getUom() {
-        return uom;
-    }
+  @JsonProperty("value")
+  private String value;
 
-    @JsonProperty("uom")
-    public void setUom(String uom) {
-        this.uom = uom;
-    }
+  @JsonProperty("datum")
+  private String datum;
 
-    @JsonProperty("value")
-    public String getValue() {
-        return value;
-    }
+  @JsonIgnore private final Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    @JsonProperty("value")
-    public void setValue(String value) {
-        this.value = value;
-    }
+  @JsonProperty("uom")
+  public String getUom() {
+    return uom;
+  }
 
-    @JsonProperty("datum")
-    public String getDatum() {
-        return datum;
-    }
+  @JsonProperty("uom")
+  public void setUom(String uom) {
+    this.uom = uom;
+  }
 
-    @JsonProperty("datum")
-    public void setDatum(String datum) {
-        this.datum = datum;
-    }
+  @JsonProperty("value")
+  public String getValue() {
+    return value;
+  }
 
-    @JsonAnyGetter
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
+  @JsonProperty("value")
+  public void setValue(String value) {
+    this.value = value;
+  }
 
-    @JsonAnySetter
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
+  @JsonProperty("datum")
+  public String getDatum() {
+    return datum;
+  }
 
-    public static Md from1411(com.hashmapinc.tempus.WitsmlObjects.v1411.MeasuredDepthCoord wmlMd){
-        if (wmlMd == null)
-            return null;
+  @JsonProperty("datum")
+  public void setDatum(String datum) {
+    this.datum = datum;
+  }
 
-        Md md = new Md();
-        md.setUom(wmlMd.getUom());
-        md.setValue(wmlMd.getValue().toString());
-        md.setDatum(wmlMd.getDatum());
-        return md;  
-    }
+  @JsonAnyGetter
+  public Map<String, Object> getAdditionalProperties() {
+    return this.additionalProperties;
+  }
 
-    public static com.hashmapinc.tempus.WitsmlObjects.v1411.MeasuredDepthCoord to1411(Md md){
-        if (md == null)
-            return null;
+  @JsonAnySetter
+  public void setAdditionalProperty(String name, Object value) {
+    this.additionalProperties.put(name, value);
+  }
 
-        com.hashmapinc.tempus.WitsmlObjects.v1411.MeasuredDepthCoord wmlMd = 
-            new com.hashmapinc.tempus.WitsmlObjects.v1411.MeasuredDepthCoord();
+  public static Md from1411(com.hashmapinc.tempus.WitsmlObjects.v1411.MeasuredDepthCoord wmlMd) {
+    if (wmlMd == null) return null;
 
-        wmlMd.setUom(wmlMd.getUom());
-        wmlMd.setValue(wmlMd.getValue());
-        wmlMd.setDatum(wmlMd.getDatum());
-        return wmlMd;  
-    }
+    Md md = new Md();
+    md.setUom(wmlMd.getUom());
+    md.setValue(wmlMd.getValue().toString());
+    md.setDatum(wmlMd.getDatum());
+    return md;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Md md = (Md) o;
-        return Objects.equals(uom, md.uom) &&
-                Objects.equals(value, md.value) &&
-                Objects.equals(datum, md.datum);
-    }
+  public static com.hashmapinc.tempus.WitsmlObjects.v1411.MeasuredDepthCoord to1411(Md md) {
+    if (md == null) return null;
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(uom, value, datum);
-    }
+    com.hashmapinc.tempus.WitsmlObjects.v1411.MeasuredDepthCoord wmlMd =
+        new com.hashmapinc.tempus.WitsmlObjects.v1411.MeasuredDepthCoord();
+
+    wmlMd.setUom(wmlMd.getUom());
+    wmlMd.setValue(wmlMd.getValue());
+    wmlMd.setDatum(wmlMd.getDatum());
+    return wmlMd;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Md md = (Md) o;
+    return Objects.equals(uom, md.uom)
+        && Objects.equals(value, md.value)
+        && Objects.equals(datum, md.datum);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(uom, value, datum);
+  }
 }

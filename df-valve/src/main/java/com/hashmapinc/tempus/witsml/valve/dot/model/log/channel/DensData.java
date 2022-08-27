@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018-2019 Hashmap, Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,111 +13,113 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.hashmapinc.tempus.witsml.valve.dot.model.log.channel;
 
-import com.fasterxml.jackson.annotation.*;
-
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({
-    "uom",
-    "value"
-})
+@JsonPropertyOrder({"uom", "value"})
 public class DensData {
 
-    @JsonProperty("uom")
-    private String uom;
-    @JsonProperty("value")
-    private String value;
-    @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+  @JsonProperty("uom")
+  private String uom;
 
-    @JsonProperty("uom")
-    public String getUom() {
-        return uom;
-    }
+  @JsonProperty("value")
+  private String value;
 
-    @JsonProperty("uom")
-    public void setUom(String uom) {
-        this.uom = uom;
-    }
+  @JsonIgnore private final Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    @JsonProperty("value")
-    public String getValue() {
-        return value;
-    }
+  @JsonProperty("uom")
+  public String getUom() {
+    return uom;
+  }
 
-    @JsonProperty("value")
-    public void setValue(String value) {
-        this.value = value;
-    }
+  @JsonProperty("uom")
+  public void setUom(String uom) {
+    this.uom = uom;
+  }
 
-    @JsonAnyGetter
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
+  @JsonProperty("value")
+  public String getValue() {
+    return value;
+  }
 
-    @JsonAnySetter
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
+  @JsonProperty("value")
+  public void setValue(String value) {
+    this.value = value;
+  }
 
-    public static DensData from1411(com.hashmapinc.tempus.WitsmlObjects.v1411.PerLengthMeasure densData){
-        if (densData == null)
-            return null;
-        
-        DensData dd = new DensData();
-        dd.setUom(densData.getUom());
-        dd.setValue(densData.toString());
-        return dd;
-    }
+  @JsonAnyGetter
+  public Map<String, Object> getAdditionalProperties() {
+    return this.additionalProperties;
+  }
 
-    public static DensData from1311(com.hashmapinc.tempus.WitsmlObjects.v1311.PerLengthMeasure densData){
-        if (densData == null)
-            return null;
-        
-        DensData dd = new DensData();
-        dd.setUom(densData.getUom());
-        dd.setValue(densData.toString());
-        return dd;
-    }
+  @JsonAnySetter
+  public void setAdditionalProperty(String name, Object value) {
+    this.additionalProperties.put(name, value);
+  }
 
-    public static com.hashmapinc.tempus.WitsmlObjects.v1411.PerLengthMeasure to1411(DensData densData){
-        if (densData == null)
-            return null;
-        
-        com.hashmapinc.tempus.WitsmlObjects.v1411.PerLengthMeasure wmlDensData =
-            new com.hashmapinc.tempus.WitsmlObjects.v1411.PerLengthMeasure();
-        wmlDensData.setUom(densData.getUom());
-        wmlDensData.setValue(Double.parseDouble(densData.getValue()));
-        return wmlDensData;
-    }
+  public static DensData from1411(
+      com.hashmapinc.tempus.WitsmlObjects.v1411.PerLengthMeasure densData) {
+    if (densData == null) return null;
 
-    public static com.hashmapinc.tempus.WitsmlObjects.v1311.PerLengthMeasure to1311(DensData densData){
-        if (densData == null)
-            return null;
-        
-        com.hashmapinc.tempus.WitsmlObjects.v1311.PerLengthMeasure wmlDensData =
-            new com.hashmapinc.tempus.WitsmlObjects.v1311.PerLengthMeasure();
-        wmlDensData.setUom(densData.getUom());
-        wmlDensData.setValue(Double.parseDouble(densData.getValue()));
-        return wmlDensData;
-    }
+    DensData dd = new DensData();
+    dd.setUom(densData.getUom());
+    dd.setValue(densData.toString());
+    return dd;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        DensData densData = (DensData) o;
-        return Objects.equals(uom, densData.uom) &&
-                Objects.equals(value, densData.value);
-    }
+  public static DensData from1311(
+      com.hashmapinc.tempus.WitsmlObjects.v1311.PerLengthMeasure densData) {
+    if (densData == null) return null;
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(uom, value);
-    }
+    DensData dd = new DensData();
+    dd.setUom(densData.getUom());
+    dd.setValue(densData.toString());
+    return dd;
+  }
+
+  public static com.hashmapinc.tempus.WitsmlObjects.v1411.PerLengthMeasure to1411(
+      DensData densData) {
+    if (densData == null) return null;
+
+    com.hashmapinc.tempus.WitsmlObjects.v1411.PerLengthMeasure wmlDensData =
+        new com.hashmapinc.tempus.WitsmlObjects.v1411.PerLengthMeasure();
+    wmlDensData.setUom(densData.getUom());
+    wmlDensData.setValue(Double.parseDouble(densData.getValue()));
+    return wmlDensData;
+  }
+
+  public static com.hashmapinc.tempus.WitsmlObjects.v1311.PerLengthMeasure to1311(
+      DensData densData) {
+    if (densData == null) return null;
+
+    com.hashmapinc.tempus.WitsmlObjects.v1311.PerLengthMeasure wmlDensData =
+        new com.hashmapinc.tempus.WitsmlObjects.v1311.PerLengthMeasure();
+    wmlDensData.setUom(densData.getUom());
+    wmlDensData.setValue(Double.parseDouble(densData.getValue()));
+    return wmlDensData;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    DensData densData = (DensData) o;
+    return Objects.equals(uom, densData.uom) && Objects.equals(value, densData.value);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(uom, value);
+  }
 }

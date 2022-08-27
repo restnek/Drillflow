@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018-2019 Hashmap, Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -11,39 +11,40 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License.   
+ * limitations under the License.
  */
+
 package com.hashmapinc.tempus.witsml.valve;
 
 /**
  * Catch-all exception for any valve exception.
  *
- * "Only you can prevent bad exception messages!"
+ * <p>"Only you can prevent bad exception messages!"
  */
 public class ValveException extends Exception {
-    
-    private Short errorCode = -1;
 
-    /**
-     * @return the errorCode
-     */
-    public Short getErrorCode() {
-        return errorCode;
-    }
+  private Short errorCode = -1;
 
-    /**
-     * @param errorCode the errorCode to set
-     */
-    public void setErrorCode(Short errorCode) {
-        this.errorCode = errorCode;
-    }
+  /**
+   * @return the errorCode
+   */
+  public Short getErrorCode() {
+    return errorCode;
+  }
 
-    public ValveException(String errorMessage) {
-        super(errorMessage);
-    }
+  /**
+   * @param errorCode the errorCode to set
+   */
+  public void setErrorCode(Short errorCode) {
+    this.errorCode = errorCode;
+  }
 
-    public ValveException(String errorMessage, Short errorCode) {
-        super(errorMessage);
-        this.errorCode = errorCode;
-    }
+  public ValveException(String errorMessage) {
+    super(errorMessage);
+  }
+
+  public ValveException(String errorMessage, Short errorCode) {
+    super(errorMessage);
+    this.errorCode = errorCode;
+  }
 }

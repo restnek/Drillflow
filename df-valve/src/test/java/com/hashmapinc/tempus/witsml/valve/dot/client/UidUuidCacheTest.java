@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018-2019 Hashmap, Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,68 +13,69 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.hashmapinc.tempus.witsml.valve.dot.client;
 
-import org.junit.Test;
+package com.hashmapinc.tempus.witsml.valve.dot.client;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import org.junit.Test;
+
 public class UidUuidCacheTest {
-    @Test
-    public void shouldCacheParentlessObjects() {
-        // set test values
-        String uid = "cool_uid_A";
-        String uuid = "cool_uuid_A";
+  @Test
+  public void shouldCacheParentlessObjects() {
+    // set test values
+    String uid = "cool_uid_A";
+    String uuid = "cool_uuid_A";
 
-        // assert null responses
-        assertNull(UidUuidCache.getUuid(uid));
-        assertNull(UidUuidCache.getUid(uuid));
+    // assert null responses
+    assertNull(UidUuidCache.getUuid(uid));
+    assertNull(UidUuidCache.getUid(uuid));
 
-        // cache data
-        UidUuidCache.putInCache(uuid, uid);
+    // cache data
+    UidUuidCache.putInCache(uuid, uid);
 
-        // assert responses match
-        assertEquals(uid, UidUuidCache.getUid(uuid));
-        assertEquals(uuid, UidUuidCache.getUuid(uid));
-    }
+    // assert responses match
+    assertEquals(uid, UidUuidCache.getUid(uuid));
+    assertEquals(uuid, UidUuidCache.getUuid(uid));
+  }
 
-    @Test
-    public void shouldCacheParentOnlyObjects() {
-        // set test values
-        String uid = "cool_uid_B";
-        String parentUid = "cool_parent_uid_B";
-        String uuid = "cool_uuid_B";
+  @Test
+  public void shouldCacheParentOnlyObjects() {
+    // set test values
+    String uid = "cool_uid_B";
+    String parentUid = "cool_parent_uid_B";
+    String uuid = "cool_uuid_B";
 
-        // assert null responses
-        assertNull(UidUuidCache.getUuid(uid, parentUid));
-        assertNull(UidUuidCache.getUid(uuid));
+    // assert null responses
+    assertNull(UidUuidCache.getUuid(uid, parentUid));
+    assertNull(UidUuidCache.getUid(uuid));
 
-        // cache data
-        UidUuidCache.putInCache(uuid, uid, parentUid);
+    // cache data
+    UidUuidCache.putInCache(uuid, uid, parentUid);
 
-        // assert responses match
-        assertEquals(uid, UidUuidCache.getUid(uuid));
-        assertEquals(uuid, UidUuidCache.getUuid(uid, parentUid));
-    }
+    // assert responses match
+    assertEquals(uid, UidUuidCache.getUid(uuid));
+    assertEquals(uuid, UidUuidCache.getUuid(uid, parentUid));
+  }
 
-    @Test
-    public void shouldCacheGrandprentOnlyObjects() {
-        // set test values
-        String uid = "cool_uid_C";
-        String parentUid = "cool_parent_uid_C";
-        String grandparentUid = "cool_grandparent_uid_C";
-        String uuid = "cool_uuid_C";
+  @Test
+  public void shouldCacheGrandprentOnlyObjects() {
+    // set test values
+    String uid = "cool_uid_C";
+    String parentUid = "cool_parent_uid_C";
+    String grandparentUid = "cool_grandparent_uid_C";
+    String uuid = "cool_uuid_C";
 
-        // assert null responses
-        assertNull(UidUuidCache.getUuid(uid, parentUid, grandparentUid));
-        assertNull(UidUuidCache.getUid(uuid));
+    // assert null responses
+    assertNull(UidUuidCache.getUuid(uid, parentUid, grandparentUid));
+    assertNull(UidUuidCache.getUid(uuid));
 
-        // cache data
-        UidUuidCache.putInCache(uuid, uid, parentUid, grandparentUid);
+    // cache data
+    UidUuidCache.putInCache(uuid, uid, parentUid, grandparentUid);
 
-        // assert responses match
-        assertEquals(uid, UidUuidCache.getUid(uuid));
-        assertEquals(uuid, UidUuidCache.getUuid(uid, parentUid, grandparentUid));
-    }
+    // assert responses match
+    assertEquals(uid, UidUuidCache.getUid(uuid));
+    assertEquals(uuid, UidUuidCache.getUuid(uid, parentUid, grandparentUid));
+  }
 }

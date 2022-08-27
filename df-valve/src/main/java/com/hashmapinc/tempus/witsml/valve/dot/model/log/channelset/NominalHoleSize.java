@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018-2019 Hashmap, Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,55 +13,57 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.hashmapinc.tempus.witsml.valve.dot.model.log.channelset;
 
-import com.fasterxml.jackson.annotation.*;
-
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.HashMap;
 import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({
-    "uom",
-    "value"
-})
+@JsonPropertyOrder({"uom", "value"})
 public class NominalHoleSize {
 
-    @JsonProperty("uom")
-    private String uom;
-    @JsonProperty("value")
-    private String value;
-    @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+  @JsonProperty("uom")
+  private String uom;
 
-    @JsonProperty("uom")
-    public String getUom() {
-        return uom;
-    }
+  @JsonProperty("value")
+  private String value;
 
-    @JsonProperty("uom")
-    public void setUom(String uom) {
-        this.uom = uom;
-    }
+  @JsonIgnore private final Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    @JsonProperty("value")
-    public String getValue() {
-        return value;
-    }
+  @JsonProperty("uom")
+  public String getUom() {
+    return uom;
+  }
 
-    @JsonProperty("value")
-    public void setValue(String value) {
-        this.value = value;
-    }
+  @JsonProperty("uom")
+  public void setUom(String uom) {
+    this.uom = uom;
+  }
 
-    @JsonAnyGetter
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
+  @JsonProperty("value")
+  public String getValue() {
+    return value;
+  }
 
-    @JsonAnySetter
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
+  @JsonProperty("value")
+  public void setValue(String value) {
+    this.value = value;
+  }
 
+  @JsonAnyGetter
+  public Map<String, Object> getAdditionalProperties() {
+    return this.additionalProperties;
+  }
+
+  @JsonAnySetter
+  public void setAdditionalProperty(String name, Object value) {
+    this.additionalProperties.put(name, value);
+  }
 }

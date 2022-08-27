@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018-2019 Hashmap, Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,110 +13,113 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.hashmapinc.tempus.witsml.valve.dot.model.log.channel;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({
-    "uidRef",
-    "value"
-})
+@JsonPropertyOrder({"uidRef", "value"})
 public class WellDatum {
 
-    @JsonProperty("uidRef")
-    private String uidRef;
-    @JsonProperty("value")
-    private String value;
-    @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+  @JsonProperty("uidRef")
+  private String uidRef;
 
-    @JsonProperty("uidRef")
-    public String getUidRef() {
-        return uidRef;
-    }
+  @JsonProperty("value")
+  private String value;
 
-    @JsonProperty("uidRef")
-    public void setUidRef(String uidRef) {
-        this.uidRef = uidRef;
-    }
+  @JsonIgnore private final Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    @JsonProperty("value")
-    public String getValue() {
-        return value;
-    }
+  @JsonProperty("uidRef")
+  public String getUidRef() {
+    return uidRef;
+  }
 
-    @JsonProperty("value")
-    public void setValue(String value) {
-        this.value = value;
-    }
+  @JsonProperty("uidRef")
+  public void setUidRef(String uidRef) {
+    this.uidRef = uidRef;
+  }
 
-    @JsonAnyGetter
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
+  @JsonProperty("value")
+  public String getValue() {
+    return value;
+  }
 
-    @JsonAnySetter
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
+  @JsonProperty("value")
+  public void setValue(String value) {
+    this.value = value;
+  }
 
-    public static WellDatum from1411(com.hashmapinc.tempus.WitsmlObjects.v1411.RefNameString wellDatum){
-        if (wellDatum == null)
-            return null;
+  @JsonAnyGetter
+  public Map<String, Object> getAdditionalProperties() {
+    return this.additionalProperties;
+  }
 
-        WellDatum datum = new WellDatum();
-        datum.setUidRef(wellDatum.getUidRef());
-        datum.setValue(wellDatum.getValue());
-        return datum;
-    }
+  @JsonAnySetter
+  public void setAdditionalProperty(String name, Object value) {
+    this.additionalProperties.put(name, value);
+  }
 
-    public static WellDatum from1311(com.hashmapinc.tempus.WitsmlObjects.v1311.RefNameString wellDatum){
-        if (wellDatum == null)
-            return null;
+  public static WellDatum from1411(
+      com.hashmapinc.tempus.WitsmlObjects.v1411.RefNameString wellDatum) {
+    if (wellDatum == null) return null;
 
-        WellDatum datum = new WellDatum();
-        datum.setUidRef(wellDatum.getUidRef());
-        datum.setValue(wellDatum.getValue());
-        return datum;
-    }
+    WellDatum datum = new WellDatum();
+    datum.setUidRef(wellDatum.getUidRef());
+    datum.setValue(wellDatum.getValue());
+    return datum;
+  }
 
-    public static com.hashmapinc.tempus.WitsmlObjects.v1411.RefNameString to1411(WellDatum wellDatum){
-        if (wellDatum == null)
-            return null;
+  public static WellDatum from1311(
+      com.hashmapinc.tempus.WitsmlObjects.v1311.RefNameString wellDatum) {
+    if (wellDatum == null) return null;
 
-        com.hashmapinc.tempus.WitsmlObjects.v1411.RefNameString wmlDatum = 
-            new com.hashmapinc.tempus.WitsmlObjects.v1411.RefNameString();
-        wmlDatum.setUidRef(wellDatum.getUidRef());
-        wmlDatum.setValue(wellDatum.getValue());
-        return wmlDatum;
-    }
+    WellDatum datum = new WellDatum();
+    datum.setUidRef(wellDatum.getUidRef());
+    datum.setValue(wellDatum.getValue());
+    return datum;
+  }
 
-    public static com.hashmapinc.tempus.WitsmlObjects.v1311.RefNameString to1311(WellDatum wellDatum){
-        if (wellDatum == null)
-            return null;
+  public static com.hashmapinc.tempus.WitsmlObjects.v1411.RefNameString to1411(
+      WellDatum wellDatum) {
+    if (wellDatum == null) return null;
 
-        com.hashmapinc.tempus.WitsmlObjects.v1311.RefNameString wmlDatum = 
-            new com.hashmapinc.tempus.WitsmlObjects.v1311.RefNameString();
-        wmlDatum.setUidRef(wellDatum.getUidRef());
-        wmlDatum.setValue(wellDatum.getValue());
-        return wmlDatum;
-    }
+    com.hashmapinc.tempus.WitsmlObjects.v1411.RefNameString wmlDatum =
+        new com.hashmapinc.tempus.WitsmlObjects.v1411.RefNameString();
+    wmlDatum.setUidRef(wellDatum.getUidRef());
+    wmlDatum.setValue(wellDatum.getValue());
+    return wmlDatum;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        WellDatum wellDatum = (WellDatum) o;
-        return Objects.equals(uidRef, wellDatum.uidRef) &&
-                Objects.equals(value, wellDatum.value);
-    }
+  public static com.hashmapinc.tempus.WitsmlObjects.v1311.RefNameString to1311(
+      WellDatum wellDatum) {
+    if (wellDatum == null) return null;
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(uidRef, value);
-    }
+    com.hashmapinc.tempus.WitsmlObjects.v1311.RefNameString wmlDatum =
+        new com.hashmapinc.tempus.WitsmlObjects.v1311.RefNameString();
+    wmlDatum.setUidRef(wellDatum.getUidRef());
+    wmlDatum.setValue(wellDatum.getValue());
+    return wmlDatum;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    WellDatum wellDatum = (WellDatum) o;
+    return Objects.equals(uidRef, wellDatum.uidRef) && Objects.equals(value, wellDatum.value);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(uidRef, value);
+  }
 }

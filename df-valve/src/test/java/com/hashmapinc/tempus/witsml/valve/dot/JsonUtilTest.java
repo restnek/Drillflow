@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018-2019 Hashmap, Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.hashmapinc.tempus.witsml.valve.dot;
 
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertTrue;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
 import org.json.JSONObject;
 import org.junit.Test;
 import org.powermock.api.mockito.PowerMockito;
@@ -27,52 +29,56 @@ import org.powermock.reflect.Whitebox;
 
 public class JsonUtilTest {
 
-    @Test
-    public void shouldProperlyMerge1311Well() throws Exception {
-        String destString = new String(Files.readAllBytes(Paths.get("src/test/resources/utilTest/well1311dest.json")));
-        String srcString = new String(Files.readAllBytes(Paths.get("src/test/resources/utilTest/well1311src.json")));
+  @Test
+  public void shouldProperlyMerge1311Well() throws Exception {
+    String destString =
+        new String(Files.readAllBytes(Paths.get("src/test/resources/utilTest/well1311dest.json")));
+    String srcString =
+        new String(Files.readAllBytes(Paths.get("src/test/resources/utilTest/well1311src.json")));
 
-        JSONObject dest = new JSONObject(destString);
-        JSONObject src = new JSONObject(srcString);
+    JSONObject dest = new JSONObject(destString);
+    JSONObject src = new JSONObject(srcString);
 
-        JSONObject merged = JsonUtil.merge(dest, src);
+    JSONObject merged = JsonUtil.merge(dest, src);
 
-        String actual = merged.toString(2);
-        String expected = new String(Files.readAllBytes(Paths.get("src/test/resources/utilTest/well1311merged.json")));
+    String actual = merged.toString(2);
+    String expected =
+        new String(
+            Files.readAllBytes(Paths.get("src/test/resources/utilTest/well1311merged.json")));
 
-        assertEquals(expected, actual);
-    }
+    assertEquals(expected, actual);
+  }
 
+  @Test
+  public void shouldReturnEmptyMergeObject() throws Exception {
+    String destString = "{\"fakeField\": null}";
+    String srcString =
+        new String(Files.readAllBytes(Paths.get("src/test/resources/utilTest/well1311src.json")));
 
-    @Test
-    public void shouldReturnEmptyMergeObject() throws Exception {
-        String destString = "{\"fakeField\": null}";
-        String srcString = new String(Files.readAllBytes(Paths.get("src/test/resources/utilTest/well1311src.json")));
+    JSONObject dest = new JSONObject(destString);
+    JSONObject src = new JSONObject(srcString);
+    JSONObject merged = JsonUtil.merge(dest, src);
 
-        JSONObject dest = new JSONObject(destString);
-        JSONObject src = new JSONObject(srcString);
-        JSONObject merged = JsonUtil.merge(dest, src);
+    String actual = merged.toString(2);
+    String expected = "{\"uid\": \"uid12333\"}";
 
-        String actual = merged.toString(2);
-        String expected = "{\"uid\": \"uid12333\"}";
+    assertEquals(expected, actual);
+  }
 
-        assertEquals(expected, actual);
-    }
-    
-	@Test
-	public void checkIsEmpty() throws Exception {
-		JsonUtil spy = PowerMockito.spy(new JsonUtil());
-		String methodToTest = "isEmpty";
+  @Test
+  public void checkIsEmpty() throws Exception {
+    JsonUtil spy = PowerMockito.spy(new JsonUtil());
+    String methodToTest = "isEmpty";
 
-		String srcString = new String(Files.readAllBytes(Paths.get("src/test/resources/utilTest/well1311src.json")));
-		JSONObject src = new JSONObject(srcString);
-		boolean result = Whitebox.invokeMethod(spy, methodToTest, src);
-		assertEquals(false, result);
+    String srcString =
+        new String(Files.readAllBytes(Paths.get("src/test/resources/utilTest/well1311src.json")));
+    JSONObject src = new JSONObject(srcString);
+    boolean result = Whitebox.invokeMethod(spy, methodToTest, src);
+      assertFalse(result);
 
-		String destString = "{\"fakeField\": null}";
-		JSONObject dest = new JSONObject(destString);
-		result = Whitebox.invokeMethod(spy, methodToTest, dest);
-		assertEquals(true, result);
-	}
+    String destString = "{\"fakeField\": null}";
+    JSONObject dest = new JSONObject(destString);
+    result = Whitebox.invokeMethod(spy, methodToTest, dest);
+      assertTrue(result);
+  }
 }
-

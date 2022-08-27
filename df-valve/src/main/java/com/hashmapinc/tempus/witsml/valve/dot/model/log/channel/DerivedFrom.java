@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018-2019 Hashmap, Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,107 +13,109 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.hashmapinc.tempus.witsml.valve.dot.model.log.channel;
 
-import com.fasterxml.jackson.annotation.*;
-
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.HashMap;
 import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({
-    "contentType",
-    "title",
-    "uuid",
-    "uuidAuthority",
-    "uri",
-    "versionString"
-})
+@JsonPropertyOrder({"contentType", "title", "uuid", "uuidAuthority", "uri", "versionString"})
 public class DerivedFrom {
 
-    @JsonProperty("contentType")
-    private String contentType;
-    @JsonProperty("title")
-    private String title;
-    @JsonProperty("uuid")
-    private String uuid;
-    @JsonProperty("uuidAuthority")
-    private String uuidAuthority;
-    @JsonProperty("uri")
-    private String uri;
-    @JsonProperty("versionString")
-    private String versionString;
-    @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+  @JsonProperty("contentType")
+  private String contentType;
 
-    @JsonProperty("contentType")
-    public String getContentType() {
-        return contentType;
-    }
+  @JsonProperty("title")
+  private String title;
 
-    @JsonProperty("contentType")
-    public void setContentType(String contentType) {
-        this.contentType = contentType;
-    }
+  @JsonProperty("uuid")
+  private String uuid;
 
-    @JsonProperty("title")
-    public String getTitle() {
-        return title;
-    }
+  @JsonProperty("uuidAuthority")
+  private String uuidAuthority;
 
-    @JsonProperty("title")
-    public void setTitle(String title) {
-        this.title = title;
-    }
+  @JsonProperty("uri")
+  private String uri;
 
-    @JsonProperty("uuid")
-    public String getUuid() {
-        return uuid;
-    }
+  @JsonProperty("versionString")
+  private String versionString;
 
-    @JsonProperty("uuid")
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
+  @JsonIgnore private final Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    @JsonProperty("uuidAuthority")
-    public String getUuidAuthority() {
-        return uuidAuthority;
-    }
+  @JsonProperty("contentType")
+  public String getContentType() {
+    return contentType;
+  }
 
-    @JsonProperty("uuidAuthority")
-    public void setUuidAuthority(String uuidAuthority) {
-        this.uuidAuthority = uuidAuthority;
-    }
+  @JsonProperty("contentType")
+  public void setContentType(String contentType) {
+    this.contentType = contentType;
+  }
 
-    @JsonProperty("uri")
-    public String getUri() {
-        return uri;
-    }
+  @JsonProperty("title")
+  public String getTitle() {
+    return title;
+  }
 
-    @JsonProperty("uri")
-    public void setUri(String uri) {
-        this.uri = uri;
-    }
+  @JsonProperty("title")
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-    @JsonProperty("versionString")
-    public String getVersionString() {
-        return versionString;
-    }
+  @JsonProperty("uuid")
+  public String getUuid() {
+    return uuid;
+  }
 
-    @JsonProperty("versionString")
-    public void setVersionString(String versionString) {
-        this.versionString = versionString;
-    }
+  @JsonProperty("uuid")
+  public void setUuid(String uuid) {
+    this.uuid = uuid;
+  }
 
-    @JsonAnyGetter
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
+  @JsonProperty("uuidAuthority")
+  public String getUuidAuthority() {
+    return uuidAuthority;
+  }
 
-    @JsonAnySetter
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
+  @JsonProperty("uuidAuthority")
+  public void setUuidAuthority(String uuidAuthority) {
+    this.uuidAuthority = uuidAuthority;
+  }
 
+  @JsonProperty("uri")
+  public String getUri() {
+    return uri;
+  }
+
+  @JsonProperty("uri")
+  public void setUri(String uri) {
+    this.uri = uri;
+  }
+
+  @JsonProperty("versionString")
+  public String getVersionString() {
+    return versionString;
+  }
+
+  @JsonProperty("versionString")
+  public void setVersionString(String versionString) {
+    this.versionString = versionString;
+  }
+
+  @JsonAnyGetter
+  public Map<String, Object> getAdditionalProperties() {
+    return this.additionalProperties;
+  }
+
+  @JsonAnySetter
+  public void setAdditionalProperty(String name, Object value) {
+    this.additionalProperties.put(name, value);
+  }
 }

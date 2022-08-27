@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018-2019 Hashmap, Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.hashmapinc.tempus.witsml.valve.dot.model.log;
 
 import com.hashmapinc.tempus.WitsmlObjects.AbstractWitsmlObject;
@@ -30,138 +31,164 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.HttpRequestWithBody;
-import org.json.JSONObject;
-
-import javax.xml.datatype.DatatypeConfigurationException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-
+import javax.xml.datatype.DatatypeConfigurationException;
+import org.json.JSONObject;
 
 public class LogConverterExtended extends com.hashmapinc.tempus.WitsmlObjects.Util.LogConverter {
-    private static final Logger LOG = Logger.getLogger(DotDelegator.class.getName());
+  private static final Logger LOG = Logger.getLogger(DotDelegator.class.getName());
 
-    /**
-     * convertToChannelSet1311 takes in a v1.3.1.1 JSON string that was produced
-     * client-side from SOAP WITSML XML & translates as necessary to adhere to DoT's
-     * "Create a new ChannelSet" API.
-     *
-     * @return JSON String representing the conversion
-     * @throws ParseException if the result cannot be parsed
-     * @throws DatatypeConfigurationException if the result cannot be parsed due to a data type issue
-     */
+  /**
+   * convertToChannelSet1311 takes in a v1.3.1.1 JSON string that was produced client-side from SOAP
+   * WITSML XML & translates as necessary to adhere to DoT's "Create a new ChannelSet" API.
+   *
+   * @return JSON String representing the conversion
+   * @throws ParseException if the result cannot be parsed
+   * @throws DatatypeConfigurationException if the result cannot be parsed due to a data type issue
+   */
+  public static ObjLog convertDotResponseToWitsml(
+      String wellSearchEndpoint,
+      String wellBoreSearchEndpoint,
+      DotClient client,
+      String username,
+      String password,
+      String exchangeID,
+      AbstractWitsmlObject witsmlObject,
+      String channelSet,
+      List<Channel> channels,
+      String channelsDepthResponse,
+      Boolean getAllChannels,
+      String indexType,
+      boolean getData)
+      throws DatatypeConfigurationException, ParseException, ValveException, ValveAuthException,
+          UnirestException {
 
-    public static ObjLog convertDotResponseToWitsml(String wellSearchEndpoint,String wellBoreSearchEndpoint,DotClient client, String username,
-                                                    String password, String exchangeID,AbstractWitsmlObject witsmlObject,String channelSet,
-                                                    List<Channel> channels,String channelsDepthResponse,Boolean getAllChannels,String indexType, boolean getData) throws
-            DatatypeConfigurationException, ParseException,ValveException, ValveAuthException, UnirestException {
+    ObjLog log;
 
-        ObjLog log;
+    List<ChannelSet> cs = ChannelSet.jsonToChannelSetList(channelSet);
+    log = ChannelSet.to1411(cs.get(0));
+    log.setUidWell(witsmlObject.getGrandParentUid());
+    log.setUidWellbore(witsmlObject.getParentUid());
+    log.setNameWell(
+        getWellName(wellSearchEndpoint, client, username, password, exchangeID, witsmlObject));
+    log.setNameWellbore(
+        getWelBorelName(
+            wellBoreSearchEndpoint, client, username, password, exchangeID, witsmlObject));
 
-        List<ChannelSet> cs = ChannelSet.jsonToChannelSetList(channelSet);
-        log = ChannelSet.to1411(cs.get(0));
-        log.setUidWell(witsmlObject.getGrandParentUid());
-        log.setUidWellbore(witsmlObject.getParentUid());
-        log.setNameWell(getWellName( wellSearchEndpoint,client,  username,password,  exchangeID,witsmlObject));
-        log.setNameWellbore(getWelBorelName( wellBoreSearchEndpoint,client,  username, password,  exchangeID,witsmlObject));
+    // LogData requested or not
+    if (getData) {
+      if (channelsDepthResponse != null) {
+        JSONObject logDataJsonObject = new JSONObject(channelsDepthResponse);
+        List<com.hashmapinc.tempus.WitsmlObjects.v1411.CsLogData> curves = new ArrayList<>();
+        var channelIndex = cs.get(0).getIndex().get(0);
+        curves.add(
+            DotLogDataHelper.convertTo1411FromDot(
+                logDataJsonObject, indexType, channelIndex.getMnemonic(), channelIndex.getUom()));
+        log.setLogData(curves);
+        List<com.hashmapinc.tempus.WitsmlObjects.v1411.CsLogCurveInfo> lcis =
+            Channel.to1411WithLogData(channels, logDataJsonObject, cs.get(0));
+        log.setLogCurveInfo(lcis);
+      }
+    } else {
+      List<com.hashmapinc.tempus.WitsmlObjects.v1411.CsLogCurveInfo> lcis =
+          Channel.to1411(channels, cs.get(0));
+      log.setLogCurveInfo(lcis);
+    }
+    return log;
+  }
 
-        //LogData requested or not
-        if (getData){
-            if (channelsDepthResponse != null) {
-                JSONObject logDataJsonObject = new JSONObject(channelsDepthResponse);
-                List<com.hashmapinc.tempus.WitsmlObjects.v1411.CsLogData> curves = new ArrayList<>();
-                var channelIndex = cs.get(0).getIndex().get(0);
-                curves.add(DotLogDataHelper.convertTo1411FromDot(logDataJsonObject,indexType, channelIndex.getMnemonic(), channelIndex.getUom()));
-                log.setLogData(curves);
-                List<com.hashmapinc.tempus.WitsmlObjects.v1411.CsLogCurveInfo> lcis = Channel.to1411WithLogData(channels,logDataJsonObject,cs.get(0));
-                log.setLogCurveInfo(lcis);
-            }
-        }else{
-            List<com.hashmapinc.tempus.WitsmlObjects.v1411.CsLogCurveInfo> lcis = Channel.to1411(channels,cs.get(0));
-            log.setLogCurveInfo(lcis);
-        }
-        return log;
+  private static String getWellName(
+      String wellSearchEndpoint,
+      DotClient client,
+      String username,
+      String password,
+      String exchangeID,
+      AbstractWitsmlObject witsmlObject)
+      throws ValveException, ValveAuthException, UnirestException {
+    // REST call
+    String wellName = null;
+    String query;
+    try {
+      query = GraphQLQueryConverter.getWellNameQuery(witsmlObject);
+      LOG.fine(
+          ValveLogging.getLogMsg(
+              exchangeID, System.lineSeparator() + "Graph QL Query: " + query, witsmlObject));
+    } catch (Exception ex) {
+      throw new ValveException(ex.getMessage());
     }
 
+    // build request
 
-    private static String getWellName(String wellSearchEndpoint,DotClient client, String username,
-                                      String password, String exchangeID,AbstractWitsmlObject witsmlObject) throws ValveException, ValveAuthException, UnirestException {
-        // REST call
-        String wellName=null;
-        String query;
-        try {
-            query = GraphQLQueryConverter.getWellNameQuery(witsmlObject);
-            LOG.fine(ValveLogging.getLogMsg(
-                    exchangeID,
-                    System.lineSeparator() + "Graph QL Query: " + query,
-                    witsmlObject)
-            );
-        } catch (Exception ex) {
-            throw new ValveException(ex.getMessage());
-        }
+    // String endpoint = this.getEndpoint("wellboresearch");
+    HttpRequestWithBody request = Unirest.post(wellSearchEndpoint);
+    request.header("Content-Type", "application/json");
+    request.body(query);
+    // LOG.info(ValveLogging.getLogMsg(exchangeID, logRequest(request), witsmlObject));
 
-        // build request
+    // get response
+    HttpResponse<String> response = client.makeRequest(request, username, password, exchangeID);
 
-        //String endpoint = this.getEndpoint("wellboresearch");
-        HttpRequestWithBody request = Unirest.post(wellSearchEndpoint);
-        request.header("Content-Type", "application/json");
-        request.body(query);
-        //LOG.info(ValveLogging.getLogMsg(exchangeID, logRequest(request), witsmlObject));
+    // check response status
+    int status = response.getStatus();
+    if (201 == status || 200 == status || 400 == status) {
+      // get the wellborename of the first wellbore in the response
+      wellName =
+          GraphQLRespConverter.getWellNameFromGraphqlResponse(new JSONObject(response.getBody()));
 
-        // get response
-        HttpResponse<String> response = client.makeRequest(request, username, password, exchangeID);
+      // cache the wellbore uuid/uid
+      // UidUuidCache.putInCache(wellName, witsmlObject.getParentUid(),
+      // witsmlObject.getGrandParentUid());
 
-        // check response status
-        int status = response.getStatus();
-        if (201 == status || 200 == status || 400 == status) {
-            // get the wellborename of the first wellbore in the response
-            wellName = GraphQLRespConverter.getWellNameFromGraphqlResponse(new JSONObject(response.getBody()));
+    }
+    return wellName;
+  }
 
-            // cache the wellbore uuid/uid
-            //UidUuidCache.putInCache(wellName, witsmlObject.getParentUid(), witsmlObject.getGrandParentUid());
-
-        }
-        return wellName;
+  private static String getWelBorelName(
+      String wellBoreSearchEndpoint,
+      DotClient client,
+      String username,
+      String password,
+      String exchangeID,
+      AbstractWitsmlObject witsmlObject)
+      throws ValveException, ValveAuthException, UnirestException {
+    // REST call
+    String wellboreName = null;
+    String query;
+    try {
+      query = GraphQLQueryConverter.getWellboreNameQuery(witsmlObject);
+      LOG.fine(
+          ValveLogging.getLogMsg(
+              exchangeID, System.lineSeparator() + "Graph QL Query: " + query, witsmlObject));
+    } catch (Exception ex) {
+      throw new ValveException(ex.getMessage());
     }
 
-    private static String getWelBorelName(String wellBoreSearchEndpoint,DotClient client, String username,
-                                          String password, String exchangeID,AbstractWitsmlObject witsmlObject) throws ValveException, ValveAuthException, UnirestException {
-        // REST call
-        String wellboreName=null;
-        String query;
-        try {
-            query = GraphQLQueryConverter.getWellboreNameQuery(witsmlObject);
-            LOG.fine(ValveLogging.getLogMsg(
-                    exchangeID,
-                    System.lineSeparator() + "Graph QL Query: " + query,
-                    witsmlObject)
-            );
-        } catch (Exception ex) {
-            throw new ValveException(ex.getMessage());
-        }
+    // build request
+    // String endpoint = this.getEndpoint("wellboresearch");
+    HttpRequestWithBody request = Unirest.post(wellBoreSearchEndpoint);
+    request.header("Content-Type", "application/json");
+    request.body(query);
+    // LOG.info(ValveLogging.getLogMsg(exchangeID, logRequest(request), witsmlObject));
 
-        // build request
-        //String endpoint = this.getEndpoint("wellboresearch");
-        HttpRequestWithBody request = Unirest.post(wellBoreSearchEndpoint);
-        request.header("Content-Type", "application/json");
-        request.body(query);
-        //LOG.info(ValveLogging.getLogMsg(exchangeID, logRequest(request), witsmlObject));
+    // get response
+    HttpResponse<String> response = client.makeRequest(request, username, password, exchangeID);
 
-        // get response
-        HttpResponse<String> response = client.makeRequest(request, username, password, exchangeID);
+    // check response status
+    int status = response.getStatus();
+    if (201 == status || 200 == status || 400 == status) {
+      // get the wellborename of the first wellbore in the response
+      wellboreName =
+          GraphQLRespConverter.getWellboreNameFromGraphqlResponse(
+              new JSONObject(response.getBody()));
 
-        // check response status
-        int status = response.getStatus();
-        if (201 == status || 200 == status || 400 == status) {
-            // get the wellborename of the first wellbore in the response
-            wellboreName = GraphQLRespConverter.getWellboreNameFromGraphqlResponse(new JSONObject(response.getBody()));
+      // cache the wellbore uuid/uid
+      // UidUuidCache.putInCache(wellboreName, witsmlObject.getParentUid(),
+      // witsmlObject.getGrandParentUid());
 
-            // cache the wellbore uuid/uid
-            //UidUuidCache.putInCache(wellboreName, witsmlObject.getParentUid(), witsmlObject.getGrandParentUid());
-
-        }
-        return wellboreName;
     }
-
+    return wellboreName;
+  }
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright © 2018-2019 Hashmap, Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,100 +13,102 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.hashmapinc.tempus.witsml.valve.dot.model.log.channel;
 
-import com.fasterxml.jackson.annotation.*;
-
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({
-    "namingSystem",
-    "value"
-})
+@JsonPropertyOrder({"namingSystem", "value"})
 public class MnemAlias {
 
-    @JsonProperty("namingSystem")
-    private String namingSystem;
-    @JsonProperty("value")
-    private String value;
-    @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+  @JsonProperty("namingSystem")
+  private String namingSystem;
 
-    @JsonProperty("namingSystem")
-    public String getNamingSystem() {
-        return namingSystem;
-    }
+  @JsonProperty("value")
+  private String value;
 
-    @JsonProperty("namingSystem")
-    public void setNamingSystem(String namingSystem) {
-        this.namingSystem = namingSystem;
-    }
+  @JsonIgnore private final Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    @JsonProperty("value")
-    public String getValue() {
-        return value;
-    }
+  @JsonProperty("namingSystem")
+  public String getNamingSystem() {
+    return namingSystem;
+  }
 
-    @JsonProperty("value")
-    public void setValue(String value) {
-        this.value = value;
-    }
+  @JsonProperty("namingSystem")
+  public void setNamingSystem(String namingSystem) {
+    this.namingSystem = namingSystem;
+  }
 
-    @JsonAnyGetter
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
+  @JsonProperty("value")
+  public String getValue() {
+    return value;
+  }
 
-    @JsonAnySetter
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
+  @JsonProperty("value")
+  public void setValue(String value) {
+    this.value = value;
+  }
 
-    public static MnemAlias from1411(com.hashmapinc.tempus.WitsmlObjects.v1411.ShortNameStruct mnemAlias){
-        if (mnemAlias == null) 
-            return null;
-        
-        MnemAlias alias = new MnemAlias();
-        alias.setValue(mnemAlias.getValue());
-        alias.setNamingSystem(mnemAlias.getNamingSystem());
-        return alias;
-    }
+  @JsonAnyGetter
+  public Map<String, Object> getAdditionalProperties() {
+    return this.additionalProperties;
+  }
 
-    //There is no ShortNameStruct in 1311 so just pass in the LogCurveInfo to build the MnemAlias
-    public static MnemAlias from1311(com.hashmapinc.tempus.WitsmlObjects.v1311.CsLogCurveInfo lci){
-        if (lci.getMnemAlias() == null) 
-            return null;
-        
-        MnemAlias alias = new MnemAlias();
-        alias.setValue(lci.getMnemAlias());
-        return alias;
-    }
+  @JsonAnySetter
+  public void setAdditionalProperty(String name, Object value) {
+    this.additionalProperties.put(name, value);
+  }
 
-    public static com.hashmapinc.tempus.WitsmlObjects.v1411.ShortNameStruct to1411(MnemAlias mnemAlias){
-        if (mnemAlias == null) 
-            return null;
-        
-            com.hashmapinc.tempus.WitsmlObjects.v1411.ShortNameStruct alias = 
-                new com.hashmapinc.tempus.WitsmlObjects.v1411.ShortNameStruct();
-        alias.setValue(mnemAlias.getValue());
-        alias.setNamingSystem(mnemAlias.getNamingSystem());
-        return alias;
-    }
+  public static MnemAlias from1411(
+      com.hashmapinc.tempus.WitsmlObjects.v1411.ShortNameStruct mnemAlias) {
+    if (mnemAlias == null) return null;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        MnemAlias mnemAlias = (MnemAlias) o;
-        return Objects.equals(namingSystem, mnemAlias.namingSystem) &&
-                Objects.equals(value, mnemAlias.value);
-    }
+    MnemAlias alias = new MnemAlias();
+    alias.setValue(mnemAlias.getValue());
+    alias.setNamingSystem(mnemAlias.getNamingSystem());
+    return alias;
+  }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(namingSystem, value);
-    }
+  // There is no ShortNameStruct in 1311 so just pass in the LogCurveInfo to build the MnemAlias
+  public static MnemAlias from1311(com.hashmapinc.tempus.WitsmlObjects.v1311.CsLogCurveInfo lci) {
+    if (lci.getMnemAlias() == null) return null;
+
+    MnemAlias alias = new MnemAlias();
+    alias.setValue(lci.getMnemAlias());
+    return alias;
+  }
+
+  public static com.hashmapinc.tempus.WitsmlObjects.v1411.ShortNameStruct to1411(
+      MnemAlias mnemAlias) {
+    if (mnemAlias == null) return null;
+
+    com.hashmapinc.tempus.WitsmlObjects.v1411.ShortNameStruct alias =
+        new com.hashmapinc.tempus.WitsmlObjects.v1411.ShortNameStruct();
+    alias.setValue(mnemAlias.getValue());
+    alias.setNamingSystem(mnemAlias.getNamingSystem());
+    return alias;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    MnemAlias mnemAlias = (MnemAlias) o;
+    return Objects.equals(namingSystem, mnemAlias.namingSystem)
+        && Objects.equals(value, mnemAlias.value);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(namingSystem, value);
+  }
 }
