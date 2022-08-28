@@ -22,16 +22,18 @@ import com.hashmapinc.tempus.witsml.valve.IValve;
 import com.hashmapinc.tempus.witsml.valve.ValveFactory;
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class StoreValidationTest {
+@ActiveProfiles("test")
+class StoreValidationTest {
 
   private IValve valve;
   private ValveConfig config;
@@ -47,8 +49,8 @@ public class StoreValidationTest {
     this.config = config;
   }
 
-  @Before
-  public void Setup() {
+  @BeforeEach
+  public void setup() {
     try {
       valve = ValveFactory.buildValve("DoT", config.getConfiguration());
     } catch (Exception e) {
@@ -59,7 +61,7 @@ public class StoreValidationTest {
   // *****************ADD TO STORE TESTS***************** //
 
   @Test
-  public void testSuccess() {
+  void testSuccess() {
     short resp =
         StoreValidator.validateAddToStore(
             "well",
@@ -73,13 +75,13 @@ public class StoreValidationTest {
   }
 
   @Test
-  public void test408ShouldErrorEmptyMultiLine() {
+  void test408ShouldErrorEmptyMultiLine() {
     short resp = StoreValidator.validateAddToStore("well", "", valve);
     assertThat(resp).isEqualTo((short) -408);
   }
 
   @Test
-  public void test486WithSubstring() {
+  void test486WithSubstring() {
     short resp =
         StoreValidator.validateAddToStore(
             "well",
@@ -92,7 +94,7 @@ public class StoreValidationTest {
   }
 
   @Test
-  public void test486WithoutSimilarSubstring() {
+  void test486WithoutSimilarSubstring() {
     short resp =
         StoreValidator.validateAddToStore(
             "well",
@@ -105,7 +107,7 @@ public class StoreValidationTest {
   }
 
   @Test
-  public void test487UnsupportedObjectShouldError() {
+  void test487UnsupportedObjectShouldError() {
       short resp =
         StoreValidator.validateAddToStore(
             "iceCream",
@@ -118,7 +120,7 @@ public class StoreValidationTest {
   }
 
   @Test
-  public void test401DoesNotContainPluralRootElementError() {
+  void test401DoesNotContainPluralRootElementError() {
       short resp =
         StoreValidator.validateAddToStore(
             "well", "<well uid=\"uid12333\" ><name>test</name></well>", valve);
@@ -126,7 +128,7 @@ public class StoreValidationTest {
   }
 
   @Test
-  public void test468DoesNotContainVersionElement() {
+  void test468DoesNotContainVersionElement() {
       short resp =
         StoreValidator.validateAddToStore(
             "well",
@@ -140,8 +142,8 @@ public class StoreValidationTest {
   }
 
   @Test
-  public void test403DoesNotContainADefaultNamespace() {
-      short resp =
+  void test403DoesNotContainADefaultNamespace() {
+    short resp =
         StoreValidator.validateAddToStore(
             "well",
             "<wells version=\"1.3.1.1\">\n"
@@ -156,19 +158,19 @@ public class StoreValidationTest {
   // *****************GET CAP TESTS***************** //
 
   @Test
-  public void test411InvalidOptionsIn() {
+  void test411InvalidOptionsIn() {
     short resp = StoreValidator.validateGetCap("dataVersion:123");
     assertThat(resp).isEqualTo((short) -411);
   }
 
   @Test
-  public void test424CheckForDataVersionExist() {
+  void test424CheckForDataVersionExist() {
     short resp = StoreValidator.validateGetCap("hello=123");
     assertThat(resp).isEqualTo((short) -424);
   }
 
   @Test
-  public void getCapShouldSuceed() {
+  void getCapShouldSuceed() {
     short resp = StoreValidator.validateGetCap("dataVersion=1.3.1.1");
     assertThat(resp).isEqualTo((short) 1);
   }
@@ -176,7 +178,7 @@ public class StoreValidationTest {
   // *****************GET FROM STORE TESTS***************** //
 
   @Test
-  public void getFromStoreGoodKeyGoodValueShouldSuceed() {
+  void getFromStoreGoodKeyGoodValueShouldSuceed() {
     Map<String, String> testMap = Map.of("requestObjectSelectionCapability", "true");
     short resp =
         StoreValidator.validateGetFromStore("well", minWellQueryTemplate, testMap, this.valve);
@@ -184,7 +186,7 @@ public class StoreValidationTest {
   }
 
   @Test
-  public void getFromStoreNoKeyNoValueShouldSuceed() {
+  void getFromStoreNoKeyNoValueShouldSuceed() {
     Map<String, String> testMap = Map.of();
     short resp =
         StoreValidator.validateGetFromStore("well", minWellQueryTemplate, testMap, this.valve);
@@ -192,7 +194,7 @@ public class StoreValidationTest {
   }
 
   @Test
-  public void getFromStoreAnyOtherKeyAnyOtherValueShouldSucceed() {
+  void getFromStoreAnyOtherKeyAnyOtherValueShouldSucceed() {
     Map<String, String> testMap = Map.of("anyOtherKey", "anyOtherValue");
     short resp =
         StoreValidator.validateGetFromStore("well", minWellQueryTemplate, testMap, this.valve);
@@ -200,7 +202,7 @@ public class StoreValidationTest {
   }
 
   @Test
-  public void getFromStoreAnyOtherKeyGoodValueShouldSucceed() {
+  void getFromStoreAnyOtherKeyGoodValueShouldSucceed() {
     // String WMLtypeIn, String xmlIn, Map<String,String> optionsIn, IValve valve;
     Map<String, String> testMap = Map.of("anyOtherKey", "true");
     short resp =
@@ -213,7 +215,7 @@ public class StoreValidationTest {
   }
 
   @Test
-  public void getFromStoreGoodKeyAnyOtherValueExceptWhitespaceOrEmptyShouldSucceed() {
+  void getFromStoreGoodKeyAnyOtherValueExceptWhitespaceOrEmptyShouldSucceed() {
     Map<String, String> testMap = Map.of("requestObjectSelectionCapability", "anyOtherValue");
     short resp =
         StoreValidator.validateGetFromStore("well", minWellQueryTemplate, testMap, this.valve);
@@ -221,7 +223,7 @@ public class StoreValidationTest {
   }
 
   @Test
-  public void getFromStoreGoodKeyEmptyValueShouldFail() {
+  void getFromStoreGoodKeyEmptyValueShouldFail() {
     Map<String, String> testMap = Map.of("requestObjectSelectionCapability", "");
     short resp =
         StoreValidator.validateGetFromStore("well", minWellQueryTemplate, testMap, this.valve);
@@ -229,7 +231,7 @@ public class StoreValidationTest {
   }
 
   @Test
-  public void getFromStoreGoodKeyNullValueShouldFail() {
+  void getFromStoreGoodKeyNullValueShouldFail() {
     Map<String, String> testMap = new HashMap<>();
     // Will this get caught by invalid XML (can there be a null key value?)
     testMap.put("requestObjectSelectionCapability", null);
@@ -239,7 +241,7 @@ public class StoreValidationTest {
   }
 
   @Test
-  public void getFromStoreNullKeyNullValueShouldSucceed() {
+  void getFromStoreNullKeyNullValueShouldSucceed() {
     Map<String, String> testMap = new HashMap<>();
     testMap.put(null, null);
     short resp =
@@ -248,7 +250,7 @@ public class StoreValidationTest {
   }
 
   @Test
-  public void getFromStoreGoodKeyGoodValueMoreEntriesShouldFail() {
+  void getFromStoreGoodKeyGoodValueMoreEntriesShouldFail() {
     Map<String, String> testMap = Map.of(
         "requestObjectSelectionCapability", "true",
         "anotherKey", "anotherValue");
@@ -258,7 +260,7 @@ public class StoreValidationTest {
   }
 
   @Test
-  public void getFromStoreGoodKeyGoodValueButXMLInHasUIDShouldFail() {
+  void getFromStoreGoodKeyGoodValueButXMLInHasUIDShouldFail() {
     Map<String, String> testMap = Map.of("requestObjectSelectionCapability", "true");
     short resp =
         StoreValidator.validateGetFromStore(

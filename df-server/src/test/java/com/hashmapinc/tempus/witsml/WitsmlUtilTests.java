@@ -20,12 +20,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class WitsmlUtilTests {
+class WitsmlUtilTests {
 
   @Test
-  public void parseOptionsIn_shouldParseValidInputString() {
+  void parseOptionsIn_shouldParseValidInputString() {
     // create input
     String optionsIn = "coolOption=coolValue;awesomeOption=awesomeValue;chillOption=chillValue";
 

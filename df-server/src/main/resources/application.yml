@@ -51,5 +51,9 @@ logging:
     config: ${LOGBACK_CONFIG_FILE:classpath:logback-spring.xml}
 
 spring:
+    config:
+        import: classpath:base-messages.yml
+    main:
+        banner-mode: off
     devtools:
         add-properties: false

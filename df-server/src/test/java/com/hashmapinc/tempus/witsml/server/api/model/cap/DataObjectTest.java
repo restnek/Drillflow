@@ -16,14 +16,14 @@
 
 package com.hashmapinc.tempus.witsml.server.api.model.cap;
 
-import static org.junit.Assert.assertNotNull;
+import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class DataObjectTest {
+class DataObjectTest {
 
   @Test
-  public void createDataObject() {
+  void createDataObject() {
     DataObject dataObject = new DataObject();
     assertNotNull(dataObject);
   }

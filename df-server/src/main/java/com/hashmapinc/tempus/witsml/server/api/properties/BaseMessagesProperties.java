@@ -16,18 +16,17 @@
 
 package com.hashmapinc.tempus.witsml.server.api.properties;
 
-import lombok.Getter;
-import lombok.Setter;
+import java.util.Map;
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 
-@Getter
-@Setter
-@Configuration
-@PropertySource("classpath:basemessages.properties")
-@ConfigurationProperties(prefix = "basemessages")
+@Data
+@ConfigurationProperties
 public class BaseMessagesProperties {
 
-  private String value;
+  private Map<Short, String> baseMessages;
+
+  public String getMessage(Short code) {
+    return baseMessages.get(code);
+  }
 }

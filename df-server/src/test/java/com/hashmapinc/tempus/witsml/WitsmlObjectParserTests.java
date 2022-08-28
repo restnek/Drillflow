@@ -24,12 +24,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class WitsmlObjectParserTests {
+class WitsmlObjectParserTests {
 
   @Test
-  public void parse_shouldParseValidXML_log1311() throws IOException {
+  void parse_shouldParseValidXML_log1311() throws IOException {
     String version = "1.3.1.1";
     String objectType = "log";
     String validXML = new String(Files.readAllBytes(Paths.get("src/test/resources/log1311.xml")));
@@ -50,7 +50,7 @@ public class WitsmlObjectParserTests {
   }
 
   @Test
-  public void parse_shouldParseValidXML_log1411() throws IOException {
+  void parse_shouldParseValidXML_log1411() throws IOException {
     String version = "1.4.1.1";
     String objectType = "log";
     String validXML = new String(Files.readAllBytes(Paths.get("src/test/resources/log1411.xml")));
@@ -71,7 +71,7 @@ public class WitsmlObjectParserTests {
   }
 
   @Test
-  public void parse_shouldParseValidXML_trajectory1311() throws IOException {
+  void parse_shouldParseValidXML_trajectory1311() throws IOException {
     String version = "1.3.1.1";
     String objectType = "trajectory";
     String validXML =
@@ -93,7 +93,7 @@ public class WitsmlObjectParserTests {
   }
 
   @Test
-  public void parse_shouldParseValidXML_trajectory1411() throws IOException {
+  void parse_shouldParseValidXML_trajectory1411() throws IOException {
     String version = "1.4.1.1";
     String objectType = "trajectory";
     String validXML =
@@ -115,7 +115,7 @@ public class WitsmlObjectParserTests {
   }
 
   @Test
-  public void parse_shouldParseValidXML_well1311() throws IOException {
+  void parse_shouldParseValidXML_well1311() throws IOException {
     String version = "1.3.1.1";
     String objectType = "well";
     String validXML = new String(Files.readAllBytes(Paths.get("src/test/resources/well1311.xml")));
@@ -136,7 +136,7 @@ public class WitsmlObjectParserTests {
   }
 
   @Test
-  public void parse_shouldParseValidXML_well1411() throws IOException {
+  void parse_shouldParseValidXML_well1411() throws IOException {
     String version = "1.4.1.1";
     String objectType = "well";
     String validXML = new String(Files.readAllBytes(Paths.get("src/test/resources/well1411.xml")));
@@ -157,7 +157,7 @@ public class WitsmlObjectParserTests {
   }
 
   @Test
-  public void parse_shouldParseValidXML_wellbore1311() throws IOException {
+  void parse_shouldParseValidXML_wellbore1311() throws IOException {
     String version = "1.3.1.1";
     String objectType = "wellbore";
     String validXML =
@@ -179,7 +179,7 @@ public class WitsmlObjectParserTests {
   }
 
   @Test
-  public void parse_shouldParseValidXML_wellbore1411() throws IOException {
+  void parse_shouldParseValidXML_wellbore1411() throws IOException {
     String version = "1.4.1.1";
     String objectType = "wellbore";
     String validXML =

@@ -16,7 +16,7 @@
 
 package com.hashmapinc.tempus.witsml.server.api;
 
-import static junit.framework.TestCase.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -30,21 +30,21 @@ import com.hashmapinc.tempus.witsml.valve.dot.DotValve;
 import com.hashmapinc.tempus.witsml.valve.dot.client.DotClient;
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-public class AsyncTest {
+class AsyncTest {
 
   private DotClient mockClient;
   private DotDelegator mockDelegator;
   private DotValve valve;
 
-  @Before
+  @BeforeEach
   public void doSetup() {
     this.mockClient = mock(DotClient.class);
     this.mockDelegator = mock(DotDelegator.class);
@@ -69,7 +69,7 @@ public class AsyncTest {
   }
 
   @Test
-  public void createObjectInAsync() throws Exception {
+  void createObjectInAsync() throws Exception {
     // build witsmlObjects list
     ArrayList<AbstractWitsmlObject> witsmlObjects;
     witsmlObjects = new ArrayList<>();

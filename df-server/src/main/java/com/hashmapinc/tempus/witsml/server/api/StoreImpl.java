@@ -21,7 +21,6 @@ import com.hashmapinc.tempus.witsml.QueryContext;
 import com.hashmapinc.tempus.witsml.ValveLogging;
 import com.hashmapinc.tempus.witsml.WitsmlObjectParser;
 import com.hashmapinc.tempus.witsml.WitsmlUtil;
-import com.hashmapinc.tempus.witsml.server.WitsmlApiConfig;
 import com.hashmapinc.tempus.witsml.server.api.model.WmlsAddToStoreResponse;
 import com.hashmapinc.tempus.witsml.server.api.model.WmlsDeleteFromStoreResponse;
 import com.hashmapinc.tempus.witsml.server.api.model.WmlsGetBaseMsgResponse;
@@ -31,6 +30,7 @@ import com.hashmapinc.tempus.witsml.server.api.model.WmlsGetVersionResponse;
 import com.hashmapinc.tempus.witsml.server.api.model.WmlsUpdateInStoreResponse;
 import com.hashmapinc.tempus.witsml.server.api.model.cap.DataObject;
 import com.hashmapinc.tempus.witsml.server.api.model.cap.ServerCap;
+import com.hashmapinc.tempus.witsml.server.api.properties.BaseMessagesProperties;
 import com.hashmapinc.tempus.witsml.valve.IValve;
 import com.hashmapinc.tempus.witsml.valve.ValveAuthException;
 import com.hashmapinc.tempus.witsml.valve.ValveException;
@@ -42,13 +42,14 @@ import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import javax.jws.WebService;
 import javax.xml.bind.JAXBException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.cxf.ext.logging.event.LogEvent;
 import org.apache.cxf.feature.Features;
 import org.apache.cxf.message.Message;
 import org.apache.cxf.phase.PhaseInterceptorChain;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -60,33 +61,20 @@ import org.springframework.stereotype.Service;
     targetNamespace = "http://www.witsml.org/wsdl/120",
     endpointInterface = "com.hashmapinc.tempus.witsml.server.api.IStore")
 @Features(features = "com.hashmapinc.tempus.witsml.server.api.interceptors.PrettyLoggingFeature")
+@RequiredArgsConstructor
 public class StoreImpl implements IStore {
 
-  private ServerCap cap;
-  private WitsmlApiConfig witsmlApiConfigUtil;
+  private final ServerCap cap;
+  private final ValveConfig config;
+  private final BaseMessagesProperties baseMessagesProperties;
+  private final Environment environment;
   private IValve valve;
-  private ValveConfig config;
 
   @Value("${wmls.version}")
   private String version;
 
   @Value("${valve.name}")
   private String valveName;
-
-  @Autowired
-  private void setServerCap(ServerCap cap) {
-    this.cap = cap;
-  }
-
-  @Autowired
-  private void setWitsmlApiConfig(WitsmlApiConfig witsmlApiConfigUtil) {
-    this.witsmlApiConfigUtil = witsmlApiConfigUtil;
-  }
-
-  @Autowired
-  private void setValveConfig(ValveConfig config) {
-    this.config = config;
-  }
 
   @PostConstruct
   private void setValve() {
@@ -172,8 +160,7 @@ public class StoreImpl implements IStore {
       // TODO: handle exception
       LOGGER.warn(ValveLogging.getLogMsg(getExchangeId(), "ValveException in addToStore: " + ve));
       if (ve.getErrorCode() != -1) {
-        response.setSuppMsgOut(
-            witsmlApiConfigUtil.getProperty("basemessages." + ve.getErrorCode()));
+        response.setSuppMsgOut(baseMessagesProperties.getMessage(ve.getErrorCode()));
         response.setResult(ve.getErrorCode());
       } else {
         response.setSuppMsgOut(ve.getMessage());
@@ -211,8 +198,7 @@ public class StoreImpl implements IStore {
           StoreValidator.validateUpdateInStore(wmlTypeIn, xmlIn, optionsMap, valve);
       if (validationResult != 1) {
         response.setResult(validationResult);
-        response.setSuppMsgOut(
-            witsmlApiConfigUtil.getProperty("basemessages." + response.getResult()));
+        response.setSuppMsgOut(baseMessagesProperties.getMessage(response.getResult()));
         return response;
       }
       String versionFromXml = WitsmlUtil.getVersionFromXML(xmlIn);
@@ -252,7 +238,7 @@ public class StoreImpl implements IStore {
     }
 
     response.setResult((short) 1);
-    response.setSuppMsgOut(witsmlApiConfigUtil.getProperty("basemessages." + response.getResult()));
+    response.setSuppMsgOut(baseMessagesProperties.getMessage(response.getResult()));
     return response;
   }
 
@@ -269,7 +255,7 @@ public class StoreImpl implements IStore {
         StoreValidator.validateDeleteFromStore(wmlTypeIn, queryIn, optionsMap, valve);
     if (validationResult != 1) {
       resp.setResult(validationResult);
-      resp.setSuppMsgOut(witsmlApiConfigUtil.getProperty("basemessages." + resp.getResult()));
+      resp.setSuppMsgOut(baseMessagesProperties.getMessage(resp.getResult()));
       return resp;
     }
     // try to deserialize
@@ -313,7 +299,7 @@ public class StoreImpl implements IStore {
     } catch (ValveException e) {
       resp.setSuppMsgOut(e.getMessage());
       resp.setResult(e.getErrorCode());
-      resp.setSuppMsgOut(witsmlApiConfigUtil.getProperty("basemessages." + e.getErrorCode()));
+      resp.setSuppMsgOut(baseMessagesProperties.getMessage(e.getErrorCode()));
       return resp;
     } catch (Exception ex) {
       resp.setSuppMsgOut(ex.getMessage());
@@ -321,7 +307,7 @@ public class StoreImpl implements IStore {
       return resp;
     }
 
-    resp.setSuppMsgOut(witsmlApiConfigUtil.getProperty("basemessages." + resp.getResult()));
+    resp.setSuppMsgOut(baseMessagesProperties.getMessage(resp.getResult()));
     return resp;
   }
 
@@ -340,7 +326,7 @@ public class StoreImpl implements IStore {
     short validationResult = StoreValidator.validateGetCap(optionsIn);
     if (validationResult != 1) {
       resp.setResult(validationResult);
-      resp.setSuppMsgOut(witsmlApiConfigUtil.getProperty("basemessages." + resp.getResult()));
+      resp.setSuppMsgOut(baseMessagesProperties.getMessage(resp.getResult()));
       return resp;
     }
     Map<String, String> options = WitsmlUtil.parseOptionsIn(optionsIn);
@@ -368,7 +354,7 @@ public class StoreImpl implements IStore {
               "Unable to generate the capabilities object due to misconfiguration of the server: "
                   + e.getMessage()));
     }
-    resp.setSuppMsgOut(witsmlApiConfigUtil.getProperty("basemessages." + resp.getResult()));
+    resp.setSuppMsgOut(baseMessagesProperties.getMessage(resp.getResult()));
     return resp;
   }
 
@@ -376,9 +362,9 @@ public class StoreImpl implements IStore {
   public WmlsGetBaseMsgResponse getBaseMsg(Short returnValueIn) {
     LOGGER.debug(ValveLogging.getLogMsg(getExchangeId(), "Executing GetBaseMsg"));
 
-    String errMsg = witsmlApiConfigUtil.getProperty("basemessages." + returnValueIn);
+    String errMsg = baseMessagesProperties.getMessage(returnValueIn);
     if (errMsg == null) {
-      errMsg = witsmlApiConfigUtil.getProperty("basemessages.-999");
+      errMsg = baseMessagesProperties.getMessage((short) -999);
     }
 
     WmlsGetBaseMsgResponse response = new WmlsGetBaseMsgResponse();
@@ -399,7 +385,7 @@ public class StoreImpl implements IStore {
         StoreValidator.validateGetFromStore(wmlTypeIn, queryIn, optionsMap, valve);
     if (validationResult != 1) {
       resp.setResult(validationResult);
-      resp.setSuppMsgOut(witsmlApiConfigUtil.getProperty("basemessages." + resp.getResult()));
+      resp.setSuppMsgOut(baseMessagesProperties.getMessage(resp.getResult()));
       return resp;
     }
 
@@ -414,7 +400,7 @@ public class StoreImpl implements IStore {
       if (optionsMap.containsKey("requestObjectSelectionCapability")
           && !optionsMap.get("requestObjectSelectionCapability").equals("none")) {
         resp.setResult((short) -427);
-        resp.setSuppMsgOut(witsmlApiConfigUtil.getProperty("basemessages." + resp.getResult()));
+        resp.setSuppMsgOut(baseMessagesProperties.getMessage(resp.getResult()));
         return resp;
       }
       if (optionsIn.contains("requestObjectSelectionCapability")
@@ -422,7 +408,7 @@ public class StoreImpl implements IStore {
         // value of the key must have been null since the parse never placed the key/value pair
         // into the map
         resp.setResult((short) -411);
-        resp.setSuppMsgOut(witsmlApiConfigUtil.getProperty("basemessages." + resp.getResult()));
+        resp.setSuppMsgOut(baseMessagesProperties.getMessage(resp.getResult()));
         return resp;
       }
       List<AbstractWitsmlObject> witsmlObjects;
@@ -506,7 +492,7 @@ public class StoreImpl implements IStore {
 
     // return response
     if (resp.getSuppMsgOut().isEmpty())
-      resp.setSuppMsgOut(witsmlApiConfigUtil.getProperty("basemessages." + resp.getResult()));
+      resp.setSuppMsgOut(baseMessagesProperties.getMessage(resp.getResult()));
 
     return resp;
   }

@@ -21,24 +21,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.hashmapinc.tempus.witsml.server.api.model.WmlsGetCapResponse;
 import com.hashmapinc.tempus.witsml.server.api.model.WmlsGetFromStoreResponse;
 import com.hashmapinc.tempus.witsml.valve.ObjectSelectionConstants;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class StoreImplTests {
-
-  @Autowired private StoreImpl witsmlServer;
+@ActiveProfiles("test")
+class StoreImplTests {
 
   private final String minWellQueryTemplate =
       "<wells xmlns=\"http://www.witsml.org/schemas/1series\" "
           + "version=\"1.4.1.1\">"
           + "<well/>"
           + "</wells>";
-
   private final String logQueryTemplate =
       "<logs xmlns=\"http://www.witsml.org/schemas/131\" version=\"1.3.1.1\">\n"
           + "<log uidWell=\"Energistics-well-0001\" uidWellbore=\"Energistics-w1-wellbore-0001\" uid=\"HM_fb49c4b1-6638-452d-8043-bba10f109179\">\n"
@@ -69,14 +68,15 @@ public class StoreImplTests {
           + "    </logData>\n"
           + "  </log>\n"
           + "</logs>";
+  @Autowired private StoreImpl witsmlServer;
 
   @Test
-  public void contextLoads() {
+  void contextLoads() {
     assertThat(witsmlServer).isNotNull();
   }
 
   @Test
-  public void addToStoreShouldHandleBadInput() {
+  void addToStoreShouldHandleBadInput() {
     assertThat(
             this.witsmlServer
                 .addToStore("WMLtypeIn", "XMLin", "OptionsIn", "CapabilitiesIn")
@@ -85,22 +85,22 @@ public class StoreImplTests {
   }
 
   @Test
-  public void getVersionShouldReturnDefaultVersion() {
+  void getVersionShouldReturnDefaultVersion() {
     assertThat(this.witsmlServer.getVersion().getResult()).contains("1.3.1.1,1.4.1.1");
   }
 
-  @Test
-  public void getBaseMsgShouldReturnATextualDescription() {
-    assertThat(this.witsmlServer.getBaseMsg((short) 412).getResult()).contains("add");
-  }
+  //  @Test
+  //  void getBaseMsgShouldReturnATextualDescription() {
+  //    assertThat(this.witsmlServer.getBaseMsg((short) 412).getResult()).contains("add");
+  //  }
 
   @Test
-  public void getBaseMsgShouldReturnATextualDescriptionForANegativeNumber() {
+  void getBaseMsgShouldReturnATextualDescriptionForANegativeNumber() {
     assertThat(this.witsmlServer.getBaseMsg((short) -412).getResult()).contains("add");
   }
 
   @Test
-  public void getCapShouldReturnAnXMLForACorrectVersion() {
+  void getCapShouldReturnAnXMLForACorrectVersion() {
     WmlsGetCapResponse resp = this.witsmlServer.getCap("dataVersion=1.3.1.1");
     assertThat(resp).isNotNull();
     assertThat(resp.getCapabilitiesOut()).contains("<name>");
@@ -108,7 +108,7 @@ public class StoreImplTests {
   }
 
   @Test
-  public void getCapShouldReturn424ForAnIncorrectVersion() {
+  void getCapShouldReturn424ForAnIncorrectVersion() {
     WmlsGetCapResponse resp = this.witsmlServer.getCap("dataValue=7");
     assertThat(resp).isNotNull();
     assertThat(resp.getResult()).isEqualTo((short) -424);
@@ -116,7 +116,7 @@ public class StoreImplTests {
   }
 
   @Test
-  public void getCapShouldReturnTheCorrectErrorForAnEmptyValue() {
+  void getCapShouldReturnTheCorrectErrorForAnEmptyValue() {
     WmlsGetCapResponse resp = this.witsmlServer.getCap("");
     assertThat(resp).isNotNull();
     assertThat(resp.getResult()).isEqualTo((short) -424);
@@ -125,7 +125,7 @@ public class StoreImplTests {
 
   // ***************** GET FROM STORE TESTS ***************** //
   @Test
-  public void getFrStoreRespWellTrueSucceed() {
+  void getFrStoreRespWellTrueSucceed() {
     WmlsGetFromStoreResponse resp =
         this.witsmlServer.getFromStore(
             "well", minWellQueryTemplate, "requestObjectSelectionCapability=true", "");
@@ -136,7 +136,7 @@ public class StoreImplTests {
   }
 
   @Test
-  public void getFrStoreRespWellboreTrueSucceed() {
+  void getFrStoreRespWellboreTrueSucceed() {
     WmlsGetFromStoreResponse resp =
         this.witsmlServer.getFromStore(
             "wellbore", minWellQueryTemplate, "requestObjectSelectionCapability=true", "");
@@ -147,7 +147,7 @@ public class StoreImplTests {
   }
 
   @Test
-  public void getFrStoreRespTrajTrueSucceed() {
+  void getFrStoreRespTrajTrueSucceed() {
     WmlsGetFromStoreResponse resp =
         this.witsmlServer.getFromStore(
             "trajectory", minWellQueryTemplate, "requestObjectSelectionCapability=true", "");
@@ -158,7 +158,7 @@ public class StoreImplTests {
   }
 
   @Test
-  public void getFrStoreRespInvalidTypeFail() {
+  void getFrStoreRespInvalidTypeFail() {
     WmlsGetFromStoreResponse resp =
         this.witsmlServer.getFromStore(
             "trapezoid", minWellQueryTemplate, "requestObjectSelectionCapability=true", "");
@@ -167,7 +167,7 @@ public class StoreImplTests {
   }
 
   @Test
-  public void getFrStoreRespTrajValueOtherThanTrueOrNoneFail() {
+  void getFrStoreRespTrajValueOtherThanTrueOrNoneFail() {
     WmlsGetFromStoreResponse resp =
         this.witsmlServer.getFromStore(
             "trajectory", minWellQueryTemplate, "requestObjectSelectionCapability=notTrue", "");
@@ -176,7 +176,7 @@ public class StoreImplTests {
   }
 
   @Test
-  public void getFrStoreRespNoMinQueryTemplateFail() {
+  void getFrStoreRespNoMinQueryTemplateFail() {
     WmlsGetFromStoreResponse resp =
         this.witsmlServer.getFromStore(
             "trajectory", "", "requestObjectSelectionCapability=true", "");
@@ -185,7 +185,7 @@ public class StoreImplTests {
   }
 
   @Test
-  public void getFrStoreRespNoTypeInFail() {
+  void getFrStoreRespNoTypeInFail() {
     WmlsGetFromStoreResponse resp =
         this.witsmlServer.getFromStore(
             "", minWellQueryTemplate, "requestObjectSelectionCapability=true", "");
@@ -194,7 +194,7 @@ public class StoreImplTests {
   }
 
   @Test
-  public void getFrStoreRespNoVersionFail() {
+  void getFrStoreRespNoVersionFail() {
     WmlsGetFromStoreResponse resp =
         this.witsmlServer.getFromStore(
             "well",
@@ -210,7 +210,7 @@ public class StoreImplTests {
   }
 
   @Test
-  public void getFrStoreRespNullKeyFail() {
+  void getFrStoreRespNullKeyFail() {
     // This test will succeed for any valid type; just alternating value of
     // requestObjectSelectionCapability.
     WmlsGetFromStoreResponse resp =
@@ -223,7 +223,7 @@ public class StoreImplTests {
   }
 
   @Test
-  public void getFrStoreRespWhitespaceKeyFail() {
+  void getFrStoreRespWhitespaceKeyFail() {
     // This test will succeed for any valid type; just alternating value of
     // requestObjectSelectionCapability.
     WmlsGetFromStoreResponse resp =
@@ -235,7 +235,7 @@ public class StoreImplTests {
   }
 
   @Test
-  public void getFrStoreRespXMLHasUIDFail() {
+  void getFrStoreRespXMLHasUIDFail() {
     WmlsGetFromStoreResponse resp =
         this.witsmlServer.getFromStore(
             "trajectory",
@@ -274,7 +274,7 @@ public class StoreImplTests {
   }
 
   @Test
-  public void getFrStoreRespMoreThanOneOptionsInFail() {
+  void getFrStoreRespMoreThanOneOptionsInFail() {
     WmlsGetFromStoreResponse resp =
         this.witsmlServer.getFromStore(
             "well",

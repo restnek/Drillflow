@@ -20,47 +20,30 @@ import com.hashmapinc.tempus.witsml.server.api.StoreImpl;
 import java.io.IOException;
 import java.net.URL;
 import javax.xml.ws.Endpoint;
+import lombok.RequiredArgsConstructor;
 import org.apache.cxf.Bus;
-import org.apache.cxf.bus.spring.SpringBus;
 import org.apache.cxf.ext.logging.LoggingFeature;
 import org.apache.cxf.feature.transform.XSLTOutInterceptor;
 import org.apache.cxf.interceptor.StaxOutInterceptor;
 import org.apache.cxf.jaxws.EndpointImpl;
 import org.apache.cxf.phase.Phase;
 import org.apache.cxf.transport.common.gzip.GZIPOutInterceptor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 
 @Configuration
+@RequiredArgsConstructor
 public class WitsmlApiConfig {
 
   private static final String XSLT_REQUEST_PATH = "interceptor/removeReturn.xsl";
 
-  private Bus bus;
-  private Environment env;
-  private StoreImpl storeImpl;
+  private final Bus bus;
+  private final StoreImpl storeImpl;
 
   @Value("${wmls.compression}")
   private boolean compression;
-
-  @Autowired
-  private void setEnv(Environment env) {
-    this.env = env;
-  }
-
-  @Autowired
-  private void setBus(Bus bus) {
-    this.bus = bus;
-  }
-
-  @Autowired
-  private void setStoreImpl(StoreImpl storeImpl) {
-    this.storeImpl = storeImpl;
-  }
 
   @Bean
   public Endpoint endpoint() throws IOException {
@@ -78,14 +61,5 @@ public class WitsmlApiConfig {
     dumbFeature.setPrettyLogging(false);
     endpoint.getFeatures().add(dumbFeature);
     return endpoint;
-  }
-
-  @Bean(name = Bus.DEFAULT_BUS_ID)
-  public SpringBus springBus() {
-    return new SpringBus();
-  }
-
-  public String getProperty(String pPropertyKey) {
-    return env.getProperty(pPropertyKey);
   }
 }
