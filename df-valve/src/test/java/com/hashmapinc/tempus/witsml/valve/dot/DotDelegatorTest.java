@@ -41,20 +41,13 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.request.HttpRequest;
 import com.mashape.unirest.request.HttpRequestWithBody;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.exceptions.misusing.InvalidUseOfMatchersException;
-
-/*import com.hashmapinc.tempus.witsml.valve.dot.model.log.DotLogDataHelper;
-import com.hashmapinc.tempus.witsml.valve.dot.model.log.channel.Channel;
-import com.hashmapinc.tempus.witsml.valve.dot.model.log.channelset.ChannelSet;
-import org.mockito.exceptions.misusing.InvalidUseOfMatchersException;*/
-
-// import java.security.SecureRandom;
 
 public class DotDelegatorTest {
 
@@ -365,7 +358,6 @@ public class DotDelegatorTest {
 
     ObjWells queryObject = WitsmlMarshal.deserialize(query, ObjWells.class);
     AbstractWitsmlObject singleWell = queryObject.getWell().get(0);
-    GraphQLQueryConverter converter = new GraphQLQueryConverter();
     String jsonQuery = GraphQLQueryConverter.getQuery(singleWell);
     assertNotNull(jsonQuery);
     String endpoint = this.url + this.graphQlWellPath;
@@ -388,7 +380,7 @@ public class DotDelegatorTest {
             anyString()))
         .thenReturn(resp);
 
-    ArrayList<AbstractWitsmlObject> foundObjects =
+    List<AbstractWitsmlObject> foundObjects =
         this.delegator.search(
             singleWell,
             "goodUsername",

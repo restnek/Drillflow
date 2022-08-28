@@ -32,32 +32,28 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Logger;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContexts;
 
+@Slf4j
 public class DotClient {
-  private static final Logger LOG = Logger.getLogger(DotClient.class.getName());
-  // private final String URL;
-  private final String TOKEN_PATH;
+
+  private final String tokenPath;
   private final ConcurrentHashMap<String, DecodedJWT> cache;
 
   /**
    * DotClient constructor
-   *
-   * @param API_KEY
-   * @throws ValveAuthException
    */
   public DotClient(String tokenPath) throws ValveAuthException {
-    this.TOKEN_PATH = tokenPath;
+    this.tokenPath = tokenPath;
     // changed to ConcurrentHashMap to make thread safe
-    this.cache = new ConcurrentHashMap<String, DecodedJWT>();
+    this.cache = new ConcurrentHashMap<>();
     try {
       buildHttpClient();
     } catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException e) {
@@ -67,9 +63,6 @@ public class DotClient {
 
   /**
    * Generate Token for given creds and save the token in cache
-   *
-   * @param username
-   * @param password
    */
   private void refreshToken(String username, String password, String exchangeId)
       throws ValveAuthException {
@@ -77,7 +70,7 @@ public class DotClient {
       // build payload for authentication
       String payload = "{\"account\":\"" + username + "\", \"password\":\"" + password + "\"}";
       // build request
-      HttpRequestWithBody req = Unirest.post(this.TOKEN_PATH);
+      HttpRequestWithBody req = Unirest.post(this.tokenPath);
       req.header("Content-Type", "application/json").body(payload);
 
       // send request
@@ -86,10 +79,10 @@ public class DotClient {
       // validate response
       int status = response.getStatus();
 
-      LOG.fine(
+      LOGGER.debug(
           "refreshToken call for " + username
               + "returned REST status: " + status); // fine = debug I guess.
-      LOG.info(ValveLogging.getLogMsg(exchangeId, "Refreshing Token")); // Stupid JDK 11
+      LOGGER.info(ValveLogging.getLogMsg(exchangeId, "Refreshing Token")); // Stupid JDK 11
       if (201 == status || 200 == status) {
         // get JWT from response
         String tokenString = new JsonNode(response.getBody()).getObject().getString("jwt");
@@ -106,10 +99,7 @@ public class DotClient {
   /**
    * Refresh the cache if necessary then return the JWT
    *
-   * @param username
-   * @param password
    * @return JWT from auth endpoint
-   * @throws ValveAuthException
    */
   public DecodedJWT getJWT(String username, String password, String exchangeId)
       throws ValveAuthException {
@@ -123,19 +113,18 @@ public class DotClient {
   /**
    * Check if JWT Token will expire in the next BUFFER milliseconds
    *
-   * @param username
    * @return true if token expires in the next BUFFER milliseconds
    */
   private boolean isTokenExpired(String username) {
     // create buffer
-    long JWT_TOKEN_EXPIRY_BUFFER = 5 * 60 * 1000; // 5 minute buffer
+    long jwtTokenExpiryBuffer = 5 * 60 * 1000L; // 5 minute buffer
 
     // get time until token expires
     long timeUntilExpiration =
         cache.get(username).getExpiresAt().getTime() - (new Date()).getTime();
 
     // return true if token expires within the BUFFER time
-    return timeUntilExpiration <= JWT_TOKEN_EXPIRY_BUFFER;
+    return timeUntilExpiration <= jwtTokenExpiryBuffer;
   }
 
   /**
@@ -152,13 +141,7 @@ public class DotClient {
     SSLContext sslcontext =
         SSLContexts.custom().loadTrustMaterial(null, new TrustSelfSignedStrategy()).build();
 
-    HostnameVerifier verifier =
-        new HostnameVerifier() {
-          @Override
-          public boolean verify(String hostname, SSLSession session) {
-            return true;
-          }
-        };
+    HostnameVerifier verifier = (hostname, session) -> true;
 
     SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslcontext, verifier);
     CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(sslsf).build();
@@ -196,7 +179,7 @@ public class DotClient {
     // get jwt
     String tokenString = this.getJWT(username, password, exchangeId).getToken();
 
-    LOG.info(ValveLogging.getLogMsg(exchangeId, "Making call to DOT", req));
+    LOGGER.info(ValveLogging.getLogMsg(exchangeId, "Making call to DOT", req));
     // execute request.
     req.header("Authorization", "Bearer " + tokenString); // add auth header
     HttpResponse<String> response = new DotRestCommand(req).run();
@@ -204,12 +187,12 @@ public class DotClient {
     // ensure response is not null
     if (null == response) throw new ValveException("Circuit broken for DoT REST requests");
 
-    LOG.info(ValveLogging.getLogRespMsg(exchangeId, "Received response from DoT", response));
+    LOGGER.info(ValveLogging.getLogRespMsg(exchangeId, "Received response from DoT", response));
 
     // check for auth errors.
     int status = response.getStatus();
     if (401 == status) {
-      LOG.warning(
+      LOGGER.warn(
           ValveLogging.getLogMsg(
               exchangeId, "Auth token invalid, remove from cache and request new."));
       this.removeFromCache(username); // uncache the jwt for this user
@@ -218,7 +201,7 @@ public class DotClient {
       if (numRetries > 0) {
         HttpResponse<String> resp =
             this.makeRequest(req, username, password, exchangeId, numRetries - 1);
-        LOG.info(ValveLogging.getLogRespMsg(exchangeId, "Received response from DoT", resp));
+        LOGGER.info(ValveLogging.getLogRespMsg(exchangeId, "Received response from DoT", resp));
         return resp;
       } else {
         throw new ValveAuthException("Bad JWT");

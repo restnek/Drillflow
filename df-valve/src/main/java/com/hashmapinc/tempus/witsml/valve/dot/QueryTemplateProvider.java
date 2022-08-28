@@ -16,8 +16,10 @@
 
 package com.hashmapinc.tempus.witsml.valve.dot;
 
+import lombok.experimental.UtilityClass;
 import org.json.JSONObject;
 
+@UtilityClass
 public class QueryTemplateProvider {
   public static JSONObject getIDOnly(String wmlObjectType) {
     switch (wmlObjectType) {
@@ -27,8 +29,9 @@ public class QueryTemplateProvider {
         return getWellboreIDOnly();
       case "trajectory":
         return getTrajectoryIDOnly();
+      default:
+        return null;
     }
-    return null;
   }
 
   private static JSONObject getWellIDOnly() {

@@ -24,7 +24,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"identifier", "description", "authority"})
 public class Alias {
@@ -38,37 +42,8 @@ public class Alias {
   @JsonProperty("authority")
   private String authority;
 
-  @JsonIgnore private final Map<String, Object> additionalProperties = new HashMap<String, Object>();
-
-  @JsonProperty("identifier")
-  public String getIdentifier() {
-    return identifier;
-  }
-
-  @JsonProperty("identifier")
-  public void setIdentifier(String identifier) {
-    this.identifier = identifier;
-  }
-
-  @JsonProperty("description")
-  public String getDescription() {
-    return description;
-  }
-
-  @JsonProperty("description")
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
-  @JsonProperty("authority")
-  public String getAuthority() {
-    return authority;
-  }
-
-  @JsonProperty("authority")
-  public void setAuthority(String authority) {
-    this.authority = authority;
-  }
+  @JsonIgnore
+  private final Map<String, Object> additionalProperties = new HashMap<>();
 
   @JsonAnyGetter
   public Map<String, Object> getAdditionalProperties() {

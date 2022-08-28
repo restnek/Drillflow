@@ -33,7 +33,7 @@ import org.junit.Test;
 public class LogHelperTest {
 
   @Test
-  public void shouldConvert1411LogtoDot() throws JAXBException {
+  public void shouldConvert1411LogtoDot() {
     ObjLog log = new ObjLog();
     CsLogData logData = new CsLogData();
     List<String> data = new ArrayList<>();
@@ -93,7 +93,6 @@ public class LogHelperTest {
   @Test
   public void shouldConvertDotTo1411() throws IOException {
     String dotLogData = TestUtilities.getResourceAsString("dotConversion/dotLogData.json");
-    String csvLogData = TestUtilities.getResourceAsString("dotConversion/sourceLogCsv.csv");
     String indexType = "depth";
     String indexCurve = "Mdepth";
     String indexUnit = "m";
@@ -106,15 +105,9 @@ public class LogHelperTest {
   @Test
   public void shouldConvertDotTo1311() throws IOException {
     String dotLogData = TestUtilities.getResourceAsString("dotConversion/dotLogData.json");
-    String csvLogData = TestUtilities.getResourceAsString("dotConversion/sourceLogCsv.csv");
     String indexCurve = "Mdepth";
     com.hashmapinc.tempus.WitsmlObjects.v1311.CsLogData data =
         DotLogDataHelper.convertTo1311FromDot(new JSONObject(dotLogData), indexCurve);
     assertNotNull(data);
-  }
-
-  @Test
-  public void shouldCreateDotTimeDataRequestObject() throws IOException {
-    String dotLogData = TestUtilities.getResourceAsString("dotConversion/log1411Time.xml");
   }
 }

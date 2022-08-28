@@ -23,12 +23,17 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"indexType", "uom", "direction", "mnemonic", "datumReference"})
 public class Index {
@@ -48,57 +53,8 @@ public class Index {
   @JsonProperty("datumReference")
   private String datumReference;
 
-  @JsonIgnore private final Map<String, Object> additionalProperties = new HashMap<String, Object>();
-
-  @JsonProperty("indexType")
-  public String getIndexType() {
-    return indexType;
-  }
-
-  @JsonProperty("indexType")
-  public void setIndexType(String indexType) {
-    this.indexType = indexType;
-  }
-
-  @JsonProperty("uom")
-  public String getUom() {
-    return uom;
-  }
-
-  @JsonProperty("uom")
-  public void setUom(String uom) {
-    this.uom = uom;
-  }
-
-  @JsonProperty("direction")
-  public String getDirection() {
-    return direction;
-  }
-
-  @JsonProperty("direction")
-  public void setDirection(String direction) {
-    this.direction = direction;
-  }
-
-  @JsonProperty("mnemonic")
-  public String getMnemonic() {
-    return mnemonic;
-  }
-
-  @JsonProperty("mnemonic")
-  public void setMnemonic(String mnemonic) {
-    this.mnemonic = mnemonic;
-  }
-
-  @JsonProperty("datumReference")
-  public String getDatumReference() {
-    return datumReference;
-  }
-
-  @JsonProperty("datumReference")
-  public void setDatumReference(String datumReference) {
-    this.datumReference = datumReference;
-  }
+  @JsonIgnore
+  private final Map<String, Object> additionalProperties = new HashMap<>();
 
   @JsonAnyGetter
   public Map<String, Object> getAdditionalProperties() {
@@ -111,9 +67,8 @@ public class Index {
   }
 
   public static List<Index> from1411(com.hashmapinc.tempus.WitsmlObjects.v1411.ObjLog log) {
-
     if (log == null) {
-      return null;
+      return Collections.emptyList();
     }
 
     Index index = new Index();
@@ -129,10 +84,8 @@ public class Index {
                         && p.getMnemonic().getValue().equals(log.getIndexCurve()))
             .findFirst();
 
-    if (!matchingObject.isEmpty()) {
-      index.setUom(matchingObject.get().getUnit());
-    }
-    List<Index> indices = new ArrayList<Index>();
+    matchingObject.ifPresent(csLogCurveInfo -> index.setUom(csLogCurveInfo.getUnit()));
+    List<Index> indices = new ArrayList<>();
     indices.add(index);
 
     return indices;
@@ -140,14 +93,8 @@ public class Index {
 
   public static List<Index> from1311(com.hashmapinc.tempus.WitsmlObjects.v1311.ObjLog log) {
     if (log == null) {
-      return null;
+      return Collections.emptyList();
     }
-
-    /*
-    String indexType = "Depth";
-    if (log.getIndexType().contains("time"))
-        indexType = "Time";
-    */
 
     Index index = new Index();
     index.setDirection(log.getDirection());
@@ -158,10 +105,8 @@ public class Index {
         log.getLogCurveInfo().stream()
             .filter(p -> p.getMnemonic().equals(log.getIndexCurve().getValue()))
             .findFirst();
-    if (!matchingObject.isEmpty()) {
-      index.setUom(matchingObject.get().getUnit());
-    }
-    List<Index> indices = new ArrayList<Index>();
+    matchingObject.ifPresent(csLogCurveInfo -> index.setUom(csLogCurveInfo.getUnit()));
+    List<Index> indices = new ArrayList<>();
     indices.add(index);
 
     return indices;

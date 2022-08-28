@@ -16,34 +16,25 @@
 
 package com.hashmapinc.tempus.witsml.valve;
 
+import lombok.Getter;
+
 /**
  * Catch-all exception for any valve exception.
  *
  * <p>"Only you can prevent bad exception messages!"
  */
+@Getter
 public class ValveException extends Exception {
 
-  private Short errorCode = -1;
+  public static final short DEFAULT_ERROR_CODE = -1;
 
-  /**
-   * @return the errorCode
-   */
-  public Short getErrorCode() {
-    return errorCode;
-  }
-
-  /**
-   * @param errorCode the errorCode to set
-   */
-  public void setErrorCode(Short errorCode) {
-    this.errorCode = errorCode;
-  }
+  private final short errorCode;
 
   public ValveException(String errorMessage) {
-    super(errorMessage);
+    this(errorMessage, DEFAULT_ERROR_CODE);
   }
 
-  public ValveException(String errorMessage, Short errorCode) {
+  public ValveException(String errorMessage, short errorCode) {
     super(errorMessage);
     this.errorCode = errorCode;
   }

@@ -16,24 +16,8 @@
 
 package com.hashmapinc.tempus.witsml.valve;
 
+import lombok.experimental.StandardException;
+
+@StandardException
 public class ValveAuthException extends Exception {
-
-  /**
-   * Exception thrown if user is not authenticated
-   *
-   * @param message
-   */
-  public ValveAuthException(String message) {
-    super(message);
-  }
-
-  /**
-   * Exception thrown if user is not authenticated
-   *
-   * @param message
-   * @param cause
-   */
-  public ValveAuthException(String message, Throwable cause) {
-    super(message, cause);
-  }
 }

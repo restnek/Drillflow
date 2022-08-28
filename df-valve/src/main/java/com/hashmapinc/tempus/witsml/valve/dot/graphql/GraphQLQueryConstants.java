@@ -16,6 +16,9 @@
 
 package com.hashmapinc.tempus.witsml.valve.dot.graphql;
 
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
 public class GraphQLQueryConstants {
   // =========================================================================
   // TRAJECTORY QUERY

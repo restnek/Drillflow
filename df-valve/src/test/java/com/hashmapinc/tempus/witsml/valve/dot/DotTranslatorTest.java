@@ -34,7 +34,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import javax.xml.bind.JAXBException;
-import javax.xml.datatype.DatatypeConfigurationException;
 import org.junit.Test;
 
 public class DotTranslatorTest {
@@ -95,7 +94,8 @@ public class DotTranslatorTest {
 
   @Test
   public void stationLocationOnlyTrajectoryTest()
-      throws JAXBException, IOException, ValveException, DatatypeConfigurationException {
+      throws JAXBException, IOException, ValveException {
+
     // Load the strings from the test resources
     String dotResponse = TestUtilities.getResourceAsString("trajectory1411.xml");
     String soapQuery =
@@ -128,8 +128,7 @@ public class DotTranslatorTest {
         DotTranslator.translateQueryResponse(trajQuerySingular, respJson, optionsIn);
 
     // Cast it to the concrete traj object as the response...since the query was 1411 the result of
-    // the
-    // translation should be 1411
+    // the translation should be 1411
     com.hashmapinc.tempus.WitsmlObjects.v1411.ObjTrajectory resultTraj =
         (com.hashmapinc.tempus.WitsmlObjects.v1411.ObjTrajectory) resp;
 
@@ -150,7 +149,8 @@ public class DotTranslatorTest {
 
   @Test
   public void headerOnlyTrajectoryTests()
-      throws JAXBException, IOException, ValveException, DatatypeConfigurationException {
+      throws JAXBException, IOException, ValveException {
+
     // Load the strings from the test resources
     String dotResponse = TestUtilities.getResourceAsString("trajectory1411.xml");
     String soapQuery =

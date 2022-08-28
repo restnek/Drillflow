@@ -18,14 +18,17 @@ package com.hashmapinc.tempus.witsml.valve;
 
 import com.hashmapinc.tempus.witsml.valve.dot.DotValve;
 import java.util.Map;
+import lombok.experimental.UtilityClass;
 
+@UtilityClass
 public class ValveFactory {
 
   public static IValve buildValve(String valveType, Map<String, String> config)
       throws ValveAuthException {
-      if ("DoT".equals(valveType)) {
-          return new DotValve(config);
-      }
-      return null;
+
+    if ("DoT".equals(valveType)) {
+      return new DotValve(config);
+    }
+    return null;
   }
 }

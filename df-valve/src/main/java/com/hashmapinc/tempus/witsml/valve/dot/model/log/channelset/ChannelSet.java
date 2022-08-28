@@ -22,15 +22,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
 import com.hashmapinc.tempus.WitsmlObjects.v1311.GenericMeasure;
 import com.hashmapinc.tempus.WitsmlObjects.v1311.IndexCurve;
-import com.hashmapinc.tempus.witsml.valve.dot.model.log.channel.Channel;
 import java.io.IOException;
 import java.text.ParseException;
 import java.time.Instant;
@@ -45,7 +42,11 @@ import java.util.Objects;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
   "uuid",
@@ -203,376 +204,17 @@ public class ChannelSet {
   @JsonProperty("wellboreId")
   private String wellboreId;
 
-  @JsonIgnore private final Map<String, Object> additionalProperties = new HashMap<String, Object>();
+  @JsonIgnore
+  private final Map<String, Object> additionalProperties = new HashMap<>();
 
-  @JsonProperty("uuid")
-  public String getUuid() {
-    return uuid;
+  @JsonAnyGetter
+  public Map<String, Object> getAdditionalProperties() {
+    return this.additionalProperties;
   }
 
-  @JsonProperty("uuid")
-  public void setUuid(String uuid) {
-    this.uuid = uuid;
-  }
-
-  @JsonProperty("bhaRunNumber")
-  public Short getBhaRunNumber() {
-    return bhaRunNumber;
-  }
-
-  @JsonProperty("bhaRunNumber")
-  public void setBhaRunNumber(Short bhaRunNumber) {
-    this.bhaRunNumber = bhaRunNumber;
-  }
-
-  @JsonProperty("aliases")
-  public List<Alias> getAliases() {
-    return aliases;
-  }
-
-  @JsonProperty("aliases")
-  public void setAliases(List<Alias> aliases) {
-    this.aliases = aliases;
-  }
-
-  @JsonProperty("citation")
-  public Citation getCitation() {
-    return citation;
-  }
-
-  @JsonProperty("citation")
-  public void setCitation(Citation citation) {
-    this.citation = citation;
-  }
-
-  @JsonProperty("customData")
-  public String getCustomData() {
-    return customData;
-  }
-
-  @JsonProperty("customData")
-  public void setCustomData(String customData) {
-    this.customData = customData;
-  }
-
-  @JsonProperty("extensionNameValue")
-  public List<ExtensionNameValue> getExtensionNameValue() {
-    return extensionNameValue;
-  }
-
-  @JsonProperty("extensionNameValue")
-  public void setExtensionNameValue(List<ExtensionNameValue> extensionNameValue) {
-    this.extensionNameValue = extensionNameValue;
-  }
-
-  @JsonProperty("objectVersion")
-  public String getObjectVersion() {
-    return objectVersion;
-  }
-
-  @JsonProperty("objectVersion")
-  public void setObjectVersion(String objectVersion) {
-    this.objectVersion = objectVersion;
-  }
-
-  @JsonProperty("existenceKind")
-  public String getExistenceKind() {
-    return existenceKind;
-  }
-
-  @JsonProperty("existenceKind")
-  public void setExistenceKind(String existenceKind) {
-    this.existenceKind = existenceKind;
-  }
-
-  @JsonProperty("index")
-  public List<Index> getIndex() {
-    return index;
-  }
-
-  @JsonProperty("index")
-  public void setIndex(List<Index> index) {
-    this.index = index;
-  }
-
-  @JsonProperty("objectGrowing")
-  public String getObjectGrowing() {
-    return objectGrowing;
-  }
-
-  @JsonProperty("objectGrowing")
-  public void setObjectGrowing(String objectGrowing) {
-    this.objectGrowing = objectGrowing;
-  }
-
-  @JsonProperty("dataUpateRate")
-  public Integer getDataUpateRate() {
-    return dataUpateRate;
-  }
-
-  @JsonProperty("dataUpateRate")
-  public void setDataUpateRate(Integer dataUpateRate) {
-    this.dataUpateRate = dataUpateRate;
-  }
-
-  @JsonProperty("curveSensorsAligned")
-  public String getCurveSensorsAligned() {
-    return curveSensorsAligned;
-  }
-
-  @JsonProperty("curveSensorsAligned")
-  public void setCurveSensorsAligned(String curveSensorsAligned) {
-    this.curveSensorsAligned = curveSensorsAligned;
-  }
-
-  @JsonProperty("dataGroup")
-  public String getDataGroup() {
-    return dataGroup;
-  }
-
-  @JsonProperty("dataGroup")
-  public void setDataGroup(String dataGroup) {
-    this.dataGroup = dataGroup;
-  }
-
-  @JsonProperty("stepIncrement")
-  public StepIncrement getStepIncrement() {
-    return stepIncrement;
-  }
-
-  @JsonProperty("stepIncrement")
-  public void setStepIncrement(StepIncrement stepIncrement) {
-    this.stepIncrement = stepIncrement;
-  }
-
-  @JsonProperty("logParam")
-  public List<LogParam> getLogParam() {
-    return logParam;
-  }
-
-  @JsonProperty("logParam")
-  public void setLogParam(List<LogParam> logParam) {
-    this.logParam = logParam;
-  }
-
-  @JsonProperty("dataDelimiter")
-  public String getDataDelimiter() {
-    return dataDelimiter;
-  }
-
-  @JsonProperty("dataDelimiter")
-  public void setDataDelimiter(String dataDelimiter) {
-    this.dataDelimiter = dataDelimiter;
-  }
-
-  @JsonProperty("nullValue")
-  public String getNullValue() {
-    return nullValue;
-  }
-
-  @JsonProperty("nullValue")
-  public void setNullValue(String nullValue) {
-    this.nullValue = nullValue;
-  }
-
-  @JsonProperty("channelState")
-  public String getChannelState() {
-    return channelState;
-  }
-
-  @JsonProperty("channelState")
-  public void setChannelState(String channelState) {
-    this.channelState = channelState;
-  }
-
-  @JsonProperty("timeDepth")
-  public String getTimeDepth() {
-    return timeDepth;
-  }
-
-  @JsonProperty("timeDepth")
-  public void setTimeDepth(String timeDepth) {
-    this.timeDepth = timeDepth;
-  }
-
-  @JsonProperty("channelClass")
-  public ChannelClass getChannelClass() {
-    return channelClass;
-  }
-
-  @JsonProperty("channelClass")
-  public void setChannelClass(ChannelClass channelClass) {
-    this.channelClass = channelClass;
-  }
-
-  @JsonProperty("runNumber")
-  public String getRunNumber() {
-    return runNumber;
-  }
-
-  @JsonProperty("runNumber")
-  public void setRunNumber(String runNumber) {
-    this.runNumber = runNumber;
-  }
-
-  @JsonProperty("passNumber")
-  public String getPassNumber() {
-    return passNumber;
-  }
-
-  @JsonProperty("passNumber")
-  public void setPassNumber(String passNumber) {
-    this.passNumber = passNumber;
-  }
-
-  @JsonProperty("startIndex")
-  public String getStartIndex() {
-    return startIndex;
-  }
-
-  @JsonProperty("startIndex")
-  public void setStartIndex(String startIndex) {
-    this.startIndex = startIndex;
-  }
-
-  @JsonProperty("endIndex")
-  public String getEndIndex() {
-    return endIndex;
-  }
-
-  @JsonProperty("endIndex")
-  public void setEndIndex(String endIndex) {
-    this.endIndex = endIndex;
-  }
-
-  @JsonProperty("loggingCompanyName")
-  public String getLoggingCompanyName() {
-    return loggingCompanyName;
-  }
-
-  @JsonProperty("loggingCompanyName")
-  public void setLoggingCompanyName(String loggingCompanyName) {
-    this.loggingCompanyName = loggingCompanyName;
-  }
-
-  @JsonProperty("loggingCompanyCode")
-  public String getLoggingCompanyCode() {
-    return loggingCompanyCode;
-  }
-
-  @JsonProperty("loggingCompanyCode")
-  public void setLoggingCompanyCode(String loggingCompanyCode) {
-    this.loggingCompanyCode = loggingCompanyCode;
-  }
-
-  @JsonProperty("toolName")
-  public String getToolName() {
-    return toolName;
-  }
-
-  @JsonProperty("toolName")
-  public void setToolName(String toolName) {
-    this.toolName = toolName;
-  }
-
-  @JsonProperty("toolClass")
-  public String getToolClass() {
-    return toolClass;
-  }
-
-  @JsonProperty("toolClass")
-  public void setToolClass(String toolClass) {
-    this.toolClass = toolClass;
-  }
-
-  @JsonProperty("derivation")
-  public String getDerivation() {
-    return derivation;
-  }
-
-  @JsonProperty("derivation")
-  public void setDerivation(String derivation) {
-    this.derivation = derivation;
-  }
-
-  @JsonProperty("loggingMethod")
-  public String getLoggingMethod() {
-    return loggingMethod;
-  }
-
-  @JsonProperty("loggingMethod")
-  public void setLoggingMethod(String loggingMethod) {
-    this.loggingMethod = loggingMethod;
-  }
-
-  @JsonProperty("nominalHoleSize")
-  public NominalHoleSize getNominalHoleSize() {
-    return nominalHoleSize;
-  }
-
-  @JsonProperty("nominalHoleSize")
-  public void setNominalHoleSize(NominalHoleSize nominalHoleSize) {
-    this.nominalHoleSize = nominalHoleSize;
-  }
-
-  @JsonProperty("dataContext")
-  public String getDataContext() {
-    return dataContext;
-  }
-
-  @JsonProperty("dataContext")
-  public void setDataContext(String dataContext) {
-    this.dataContext = dataContext;
-  }
-
-  @JsonProperty("commonData")
-  public CommonData getCommonData() {
-    return commonData;
-  }
-
-  @JsonProperty("commonData")
-  public void setCommonData(CommonData commonData) {
-    this.commonData = commonData;
-  }
-
-  @JsonProperty("uid")
-  public String getUid() {
-    return uid;
-  }
-
-  @JsonProperty("uid")
-  public void setUid(String uid) {
-    this.uid = uid;
-  }
-
-  @JsonProperty("uidWell")
-  public String getUidWell() {
-    return uidWell;
-  }
-
-  @JsonProperty("uidWell")
-  public void setUidWell(String uidWell) {
-    this.uidWell = uidWell;
-  }
-
-  @JsonProperty("uidWellbore")
-  public String getUidWellbore() {
-    return uidWellbore;
-  }
-
-  @JsonProperty("uidWellbore")
-  public void setUidWellbore(String uidWellbore) {
-    this.uidWellbore = uidWellbore;
-  }
-
-  @JsonProperty("wellId")
-  public String getWellId() {
-    return wellId;
-  }
-
-  @JsonProperty("wellId")
-  public void setWellId(String wellId) {
-    this.wellId = wellId;
+  @JsonAnySetter
+  public void setAdditionalProperty(String name, Object value) {
+    this.additionalProperties.put(name, value);
   }
 
   @Override
@@ -653,26 +295,6 @@ public class ChannelSet {
         wellboreId);
   }
 
-  @JsonProperty("wellboreId")
-  public String getWellboreId() {
-    return wellboreId;
-  }
-
-  @JsonProperty("wellboreId")
-  public void setWellboreId(String wellboreId) {
-    this.wellboreId = wellboreId;
-  }
-
-  @JsonAnyGetter
-  public Map<String, Object> getAdditionalProperties() {
-    return this.additionalProperties;
-  }
-
-  @JsonAnySetter
-  public void setAdditionalProperty(String name, Object value) {
-    this.additionalProperties.put(name, value);
-  }
-
   public String toJson() throws JsonProcessingException {
     ObjectMapper om = new ObjectMapper();
     om.setDateFormat(new StdDateFormat());
@@ -684,10 +306,8 @@ public class ChannelSet {
    * DoT.
    *
    * @param witsmlObj This is the v
-   * @return
    */
   public static ChannelSet from1411(com.hashmapinc.tempus.WitsmlObjects.v1411.ObjLog witsmlObj) {
-
     ChannelSet cs = new ChannelSet();
     Citation citation = new Citation();
     citation.setTitle(witsmlObj.getName());
@@ -773,18 +393,10 @@ public class ChannelSet {
   }
 
   public static com.hashmapinc.tempus.WitsmlObjects.v1411.ObjLog to1411LogData(
-      ChannelSet channelSet, List<Channel> channels)
-      throws DatatypeConfigurationException, ParseException {
+      ChannelSet channelSet) throws DatatypeConfigurationException {
+
     com.hashmapinc.tempus.WitsmlObjects.v1411.ObjLog wmlLog =
         new com.hashmapinc.tempus.WitsmlObjects.v1411.ObjLog();
-    // get max startIndex from channels
-
-    String maxStartIndex =
-        channels.stream()
-            .filter(emp -> emp.getStartIndex() != null)
-            .map(Channel::getStartIndex)
-            .max(String::compareTo)
-            .get();
 
     wmlLog.setUid(channelSet.getUid());
     wmlLog.setCurveSensorsAligned(channelSet.getCurveSensorsAligned());
@@ -796,7 +408,6 @@ public class ChannelSet {
     wmlLog.setBhaRunNumber(channelSet.getBhaRunNumber());
     wmlLog.setPass(channelSet.getPassNumber());
     wmlLog.setDescription(channelSet.getCitation().getDescription());
-    // wmlLog.setIndexType(channelSet.getTimeDepth());
     wmlLog.setStepIncrement(StepIncrement.to1411(channelSet.getStepIncrement()));
     if (channelSet.getIndex() != null && channelSet.getIndex().size() > 0) {
       wmlLog.setIndexType(channelSet.getIndex().get(0).getIndexType());
@@ -851,7 +462,6 @@ public class ChannelSet {
     wmlLog.setBhaRunNumber(channelSet.getBhaRunNumber());
     wmlLog.setPass(channelSet.getPassNumber());
     wmlLog.setDescription(channelSet.getCitation().getDescription());
-    // wmlLog.setIndexType(channelSet.getTimeDepth());
     wmlLog.setStepIncrement(StepIncrement.to1411(channelSet.getStepIncrement()));
     if (channelSet.getIndex() != null && channelSet.getIndex().size() > 0) {
       wmlLog.setIndexType(channelSet.getIndex().get(0).getIndexType());
@@ -898,8 +508,7 @@ public class ChannelSet {
     return wmlLog;
   }
 
-  public static com.hashmapinc.tempus.WitsmlObjects.v1311.ObjLog to1311(ChannelSet channelSet)
-      throws DatatypeConfigurationException, ParseException {
+  public static com.hashmapinc.tempus.WitsmlObjects.v1311.ObjLog to1311(ChannelSet channelSet) {
     com.hashmapinc.tempus.WitsmlObjects.v1311.ObjLog wmlLog =
         new com.hashmapinc.tempus.WitsmlObjects.v1311.ObjLog();
 
@@ -910,7 +519,6 @@ public class ChannelSet {
     wmlLog.setBhaRunNumber(channelSet.getBhaRunNumber());
     wmlLog.setPass(channelSet.getPassNumber());
     wmlLog.setDescription(channelSet.getCitation().getDescription());
-    // wmlLog.setIndexType(channelSet.getTimeDepth());
     wmlLog.setStepIncrement(StepIncrement.to1311(channelSet.getStepIncrement()));
     if (channelSet.getIndex() != null && channelSet.getIndex().size() > 0) {
       IndexCurve curve = new IndexCurve();
@@ -941,7 +549,8 @@ public class ChannelSet {
   }
 
   public static List<ChannelSet> jsonToChannelSetList(String channelsList) {
-    return fromJSON(new TypeReference<List<ChannelSet>>() {}, channelsList);
+    return fromJSON(new TypeReference<>() {
+    }, channelsList);
   }
 
   public static <T> T fromJSON(final TypeReference<T> type, final String jsonPacket) {
@@ -961,10 +570,7 @@ public class ChannelSet {
   }
 
   private static XMLGregorianCalendar convertIsoDateToXML(String dateTime)
-      throws DatatypeConfigurationException, ParseException {
-    // DateFormat format = new SimpleDateFormat("yyyy-MM-ddThh:mm:ss.SSSXXX");
-    // Date date = format.parse("2014-04-24 11:15:00");
-    // Date date = format.parse(dateTime);
+      throws DatatypeConfigurationException {
     DateTimeFormatter timeFormatter = DateTimeFormatter.ISO_DATE_TIME;
     TemporalAccessor accessor = timeFormatter.parse(dateTime);
 

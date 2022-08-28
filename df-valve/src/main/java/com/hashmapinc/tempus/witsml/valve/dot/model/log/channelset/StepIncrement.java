@@ -25,7 +25,11 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"uom", "value", "numerator", "denominator"})
 public class StepIncrement {
@@ -42,47 +46,8 @@ public class StepIncrement {
   @JsonProperty("denominator")
   private Double denominator;
 
-  @JsonIgnore private final Map<String, Object> additionalProperties = new HashMap<String, Object>();
-
-  @JsonProperty("uom")
-  public String getUom() {
-    return uom;
-  }
-
-  @JsonProperty("uom")
-  public void setUom(String uom) {
-    this.uom = uom;
-  }
-
-  @JsonProperty("value")
-  public String getValue() {
-    return value;
-  }
-
-  @JsonProperty("value")
-  public void setValue(String value) {
-    this.value = value;
-  }
-
-  @JsonProperty("numerator")
-  public Double getNumerator() {
-    return numerator;
-  }
-
-  @JsonProperty("numerator")
-  public void setNumerator(Double numerator) {
-    this.numerator = numerator;
-  }
-
-  @JsonProperty("denominator")
-  public Double getDenominator() {
-    return denominator;
-  }
-
-  @JsonProperty("denominator")
-  public void setDenominator(Double denominator) {
-    this.denominator = denominator;
-  }
+  @JsonIgnore
+  private final Map<String, Object> additionalProperties = new HashMap<>();
 
   @JsonAnyGetter
   public Map<String, Object> getAdditionalProperties() {

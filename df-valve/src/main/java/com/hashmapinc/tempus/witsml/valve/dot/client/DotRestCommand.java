@@ -22,10 +22,11 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.HttpRequest;
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
-import java.util.logging.Logger;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class DotRestCommand extends HystrixCommand<HttpResponse<String>> {
-  private static final Logger LOG = Logger.getLogger(DotRestCommand.class.getName());
+
   private final HttpRequest request;
 
   /**
@@ -42,7 +43,6 @@ public class DotRestCommand extends HystrixCommand<HttpResponse<String>> {
    * Hystrix run command for executing rest requests
    *
    * @return - response from executing the http request
-   * @throws UnirestException
    */
   @Override
   protected HttpResponse<String> run() throws UnirestException {
@@ -57,7 +57,7 @@ public class DotRestCommand extends HystrixCommand<HttpResponse<String>> {
    */
   @Override
   protected HttpResponse<String> getFallback() {
-    LOG.warning(
+    LOGGER.warn(
         ValveLogging.getLogMsg(
             "DotRestCommand encountered broken circuit. Getting Fallback now..."));
     return null; // fail silently

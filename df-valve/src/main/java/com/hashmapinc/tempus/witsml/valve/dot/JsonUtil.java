@@ -18,9 +18,11 @@ package com.hashmapinc.tempus.witsml.valve.dot;
 
 import java.util.ArrayList;
 import java.util.Set;
+import lombok.experimental.UtilityClass;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+@UtilityClass
 public class JsonUtil {
 
   public static JSONObject merge(JSONObject req, JSONObject resp) {

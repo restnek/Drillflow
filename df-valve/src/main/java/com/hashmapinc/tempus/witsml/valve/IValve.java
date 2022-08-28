@@ -47,18 +47,10 @@ public interface IValve {
   /**
    * Gets an XML string with the corresponding type specified
    *
-   * @param WMLtypeIn - The WITSML type in from the API query
+   * @param wmlTypeIn - The WITSML type in from the API query
    * @return An XML string with the corresponding type
    */
-  String getObjectSelectionCapability(String WMLtypeIn);
-
-  /**
-   * Gets a collection of objects based on the WITSML Query
-   *
-   * @param qc - QueryContext needed to execute the executeGraphQL query
-   * @return The resultant object from the query in XML string format
-   */
-  // public String getObjects(QueryContext qc) throws ValveException;
+  String getObjectSelectionCapability(String wmlTypeIn);
 
   /**
    * Creates an object
@@ -79,7 +71,7 @@ public interface IValve {
    * Updates an already existing object
    *
    * @param qc - QueryContext needed to execute the updateObject querying
-   * @return
+   * @return status - boolean value; true = success, false = failure
    */
   CompletableFuture<Boolean> updateObject(QueryContext qc) throws ValveException;
 
@@ -88,8 +80,6 @@ public interface IValve {
    *
    * @param userName - basic auth username for authentication
    * @param password - basic auth password for authentication
-   * @return status - boolean value; true = success, false = failure
-   * @throws ValveAuthException
    */
   void authenticate(String userName, String password) throws ValveAuthException;
 

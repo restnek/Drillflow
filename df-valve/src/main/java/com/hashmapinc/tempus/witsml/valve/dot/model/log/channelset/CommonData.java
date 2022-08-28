@@ -28,7 +28,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
   "itemState",
@@ -78,117 +82,8 @@ public class CommonData {
   @JsonProperty("dTimLastChange")
   private String dTimLastChange;
 
-  @JsonIgnore private final Map<String, Object> additionalProperties = new HashMap<String, Object>();
-
-  @JsonProperty("itemState")
-  public String getItemState() {
-    return itemState;
-  }
-
-  @JsonProperty("itemState")
-  public void setItemState(String itemState) {
-    this.itemState = itemState;
-  }
-
-  @JsonProperty("serviceCategory")
-  public String getServiceCategory() {
-    return serviceCategory;
-  }
-
-  @JsonProperty("serviceCategory")
-  public void setServiceCategory(String serviceCategory) {
-    this.serviceCategory = serviceCategory;
-  }
-
-  @JsonProperty("comments")
-  public String getComments() {
-    return comments;
-  }
-
-  @JsonProperty("comments")
-  public void setComments(String comments) {
-    this.comments = comments;
-  }
-
-  @JsonProperty("acquisitionTimeZone")
-  public List<AcquisitionTimeZone> getAcquisitionTimeZone() {
-    return acquisitionTimeZone;
-  }
-
-  @JsonProperty("acquisitionTimeZone")
-  public void setAcquisitionTimeZone(List<AcquisitionTimeZone> acquisitionTimeZone) {
-    this.acquisitionTimeZone = acquisitionTimeZone;
-  }
-
-  @JsonProperty("defaultDatum")
-  public DefaultDatum getDefaultDatum() {
-    return defaultDatum;
-  }
-
-  @JsonProperty("defaultDatum")
-  public void setDefaultDatum(DefaultDatum defaultDatum) {
-    this.defaultDatum = defaultDatum;
-  }
-
-  @JsonProperty("privateGroupOnly")
-  public Boolean getPrivateGroupOnly() {
-    return privateGroupOnly;
-  }
-
-  @JsonProperty("privateGroupOnly")
-  public void setPrivateGroupOnly(Boolean privateGroupOnly) {
-    this.privateGroupOnly = privateGroupOnly;
-  }
-
-  @JsonProperty("extensionAny")
-  public String getExtensionAny() {
-    return extensionAny;
-  }
-
-  @JsonProperty("extensionAny")
-  public void setExtensionAny(String extensionAny) {
-    this.extensionAny = extensionAny;
-  }
-
-  @JsonProperty("extensionNameValue")
-  public List<ExtensionNameValue> getExtensionNameValue() {
-    return extensionNameValue;
-  }
-
-  @JsonProperty("extensionNameValue")
-  public void setExtensionNameValue(List<ExtensionNameValue> extensionNameValue) {
-    this.extensionNameValue = extensionNameValue;
-  }
-
-  @JsonProperty("sourceName")
-  public String getSourceName() {
-    return sourceName;
-  }
-
-  @JsonProperty("sourceName")
-  public void setSourceName(String sourceName) {
-    this.sourceName = sourceName;
-  }
-
-  @JsonProperty("dTimCreation")
-  public String getDTimCreation() {
-    return dTimCreation;
-  }
-
-  @JsonProperty("dTimCreation")
-  public void setDTimCreation(String dTimCreation) {
-    this.dTimCreation = dTimCreation;
-  }
-
-  @JsonProperty("dTimLastChange")
-  public String getDTimLastChange() {
-    return dTimLastChange;
-  }
-
-  @JsonProperty("dTimLastChange")
-  public void setDTimLastChange(String dTimLastChange) {
-    this.dTimLastChange = dTimLastChange;
-  }
+  @JsonIgnore
+  private final Map<String, Object> additionalProperties = new HashMap<>();
 
   @JsonAnyGetter
   public Map<String, Object> getAdditionalProperties() {

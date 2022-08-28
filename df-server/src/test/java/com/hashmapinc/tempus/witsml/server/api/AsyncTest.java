@@ -94,7 +94,7 @@ public class AsyncTest {
 
     // mock delegator behavior
     when(this.mockDelegator.createObject(
-            wellboreA, qc.USERNAME, qc.PASSWORD, qc.EXCHANGE_ID, this.mockClient))
+            wellboreA, qc.getUsername(), qc.getPassword(), qc.getExchangeId(), this.mockClient))
         .thenReturn(wellboreA.getUid());
 
     // test

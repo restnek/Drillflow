@@ -18,21 +18,19 @@ package com.hashmapinc.tempus.witsml.valve.dot.graphql;
 
 import com.hashmapinc.tempus.WitsmlObjects.AbstractWitsmlObject;
 import com.hashmapinc.tempus.witsml.valve.dot.JsonUtil;
-import java.io.IOException;
-import org.json.JSONArray;
+import lombok.experimental.UtilityClass;
 import org.json.JSONObject;
 
 // This class takes a WITSML Query search and converts it to a GraphQL search
+@UtilityClass
 public class GraphQLQueryConverter {
 
   /**
    * Converts a WITSML search query to GraphQL
    *
    * @param wmlObject The search object
-   * @return the object
-   * @throws IOException Thrown if there is an error in creation of the query
    */
-  public static String getQuery(AbstractWitsmlObject wmlObject) throws IOException {
+  public static String getQuery(AbstractWitsmlObject wmlObject) {
     switch (wmlObject.getObjectType()) {
       case "well":
         return getWellQuery(wmlObject);
@@ -109,22 +107,7 @@ public class GraphQLQueryConverter {
     // get trajectory station query fields
     // ====================================================================
     JSONObject stationQueryFields = new JSONObject();
-    JSONArray stationsJson =
-        (trajectoryJson.has("trajectoryStation")
-            ? trajectoryJson.getJSONArray("trajectoryStation")
-            : new JSONArray());
 
-    // support query by uid OR query by filters, not both
-    // uid-based station query
-    /*if (!JsonUtil.isEmpty(stationsJson) && stationsJson.getJSONObject(0).get("uid") != null) {
-        // get list of UIDs
-        JSONArray stationUids = new JSONArray();
-        for (int i = 0; i < stationsJson.length(); i++) {
-            stationUids.put(stationsJson.getJSONObject(i).getString("uid"));
-        }
-        stationQueryFields.put("uids", stationUids);
-    // non uid-based station query
-    } else {*/
     // lastUpdateTimeUtc
     if (trajectoryJson.has("lastUpdateTimeUtc")
         && !JsonUtil.isEmpty(trajectoryJson.get("lastUpdateTimeUtc")))
@@ -137,7 +120,6 @@ public class GraphQLQueryConverter {
     // mdMx
     if (trajectoryJson.has("mdMx") && !JsonUtil.isEmpty(trajectoryJson.get("mdMx")))
       stationQueryFields.put("mdMx", trajectoryJson.get("mdMx"));
-    // }
 
     // ====================================================================
 
@@ -184,7 +166,7 @@ public class GraphQLQueryConverter {
 
     // dTimLastChange
     if (wellJson.has("commonData")) {
-      JSONObject commonData = (JSONObject) wellJson.get("commonData");
+      JSONObject commonData = wellJson.getJSONObject("commonData");
       if (commonData.has("dTimLastChange") && !JsonUtil.isEmpty(commonData.get("dTimLastChange")))
         wellQueryFields.put("lastUpdateTimeUtc", commonData.get("dTimLastChange"));
     }

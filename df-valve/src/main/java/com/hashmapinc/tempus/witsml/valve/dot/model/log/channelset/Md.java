@@ -25,7 +25,11 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"uom", "value", "datum"})
 public class Md {
@@ -39,37 +43,8 @@ public class Md {
   @JsonProperty("datum")
   private String datum;
 
-  @JsonIgnore private final Map<String, Object> additionalProperties = new HashMap<String, Object>();
-
-  @JsonProperty("uom")
-  public String getUom() {
-    return uom;
-  }
-
-  @JsonProperty("uom")
-  public void setUom(String uom) {
-    this.uom = uom;
-  }
-
-  @JsonProperty("value")
-  public String getValue() {
-    return value;
-  }
-
-  @JsonProperty("value")
-  public void setValue(String value) {
-    this.value = value;
-  }
-
-  @JsonProperty("datum")
-  public String getDatum() {
-    return datum;
-  }
-
-  @JsonProperty("datum")
-  public void setDatum(String datum) {
-    this.datum = datum;
-  }
+  @JsonIgnore
+  private final Map<String, Object> additionalProperties = new HashMap<>();
 
   @JsonAnyGetter
   public Map<String, Object> getAdditionalProperties() {

@@ -51,7 +51,6 @@ public class GraphQLQueryConverterTest {
     JSONObject wellboreJson = new JSONObject(singularObject.getJSONString("1.4.1.1"));
 
     // Get what the code-under-test produces...
-    GraphQLQueryConverter converter = new GraphQLQueryConverter();
     String graphQLQuery = GraphQLQueryConverter.getQuery(singularObject);
 
     // Perform the tests...
@@ -104,7 +103,6 @@ public class GraphQLQueryConverterTest {
   @Test
   public void generateProperWellboreResponseFromGraphQL() throws Exception {
     String queryResp = TestUtilities.getResourceAsString("GraphQLResponse.json");
-    GraphQLRespConverter converter = new GraphQLRespConverter();
     List<AbstractWitsmlObject> objs = GraphQLRespConverter.convert(queryResp, "wellbore");
     assertNotNull(objs);
   }
@@ -117,7 +115,6 @@ public class GraphQLQueryConverterTest {
         ((ObjTrajectorys) WitsmlMarshal.deserialize(queryXML, ObjTrajectorys.class))
             .getTrajectory()
             .get(0);
-    GraphQLQueryConverter converter = new GraphQLQueryConverter();
     String graphQLQuery = GraphQLQueryConverter.getQuery(obj, "test");
     assertNotNull(graphQLQuery);
     assertTrue(graphQLQuery.contains("title"));

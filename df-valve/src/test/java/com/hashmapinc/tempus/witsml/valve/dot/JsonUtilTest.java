@@ -20,21 +20,16 @@ import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.IOException;
 import org.json.JSONObject;
 import org.junit.Test;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.reflect.Whitebox;
 
 public class JsonUtilTest {
 
   @Test
   public void shouldProperlyMerge1311Well() throws Exception {
-    String destString =
-        new String(Files.readAllBytes(Paths.get("src/test/resources/utilTest/well1311dest.json")));
-    String srcString =
-        new String(Files.readAllBytes(Paths.get("src/test/resources/utilTest/well1311src.json")));
+    String destString = TestUtilities.getResourceAsString("utilTest/well1311dest.json");
+    String srcString = TestUtilities.getResourceAsString("utilTest/well1311src.json");
 
     JSONObject dest = new JSONObject(destString);
     JSONObject src = new JSONObject(srcString);
@@ -42,9 +37,7 @@ public class JsonUtilTest {
     JSONObject merged = JsonUtil.merge(dest, src);
 
     String actual = merged.toString(2);
-    String expected =
-        new String(
-            Files.readAllBytes(Paths.get("src/test/resources/utilTest/well1311merged.json")));
+    String expected = TestUtilities.getResourceAsString("utilTest/well1311merged.json");
 
     assertEquals(expected, actual);
   }
@@ -52,8 +45,7 @@ public class JsonUtilTest {
   @Test
   public void shouldReturnEmptyMergeObject() throws Exception {
     String destString = "{\"fakeField\": null}";
-    String srcString =
-        new String(Files.readAllBytes(Paths.get("src/test/resources/utilTest/well1311src.json")));
+    String srcString = TestUtilities.getResourceAsString("utilTest/well1311src.json");
 
     JSONObject dest = new JSONObject(destString);
     JSONObject src = new JSONObject(srcString);
@@ -66,19 +58,18 @@ public class JsonUtilTest {
   }
 
   @Test
-  public void checkIsEmpty() throws Exception {
-    JsonUtil spy = PowerMockito.spy(new JsonUtil());
-    String methodToTest = "isEmpty";
-
-    String srcString =
-        new String(Files.readAllBytes(Paths.get("src/test/resources/utilTest/well1311src.json")));
+  public void shouldNotBeEmpty() throws IOException {
+    String srcString = TestUtilities.getResourceAsString("utilTest/well1311src.json");
     JSONObject src = new JSONObject(srcString);
-    boolean result = Whitebox.invokeMethod(spy, methodToTest, src);
-      assertFalse(result);
+    boolean isEmpty = JsonUtil.isEmpty(src);
+    assertFalse(isEmpty);
+  }
 
+  @Test
+  public void shouldBeEmpty() {
     String destString = "{\"fakeField\": null}";
     JSONObject dest = new JSONObject(destString);
-    result = Whitebox.invokeMethod(spy, methodToTest, dest);
-      assertTrue(result);
+    boolean isEmpty = JsonUtil.isEmpty(dest);
+    assertTrue(isEmpty);
   }
 }

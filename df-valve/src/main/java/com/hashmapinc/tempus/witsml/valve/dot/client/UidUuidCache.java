@@ -17,6 +17,7 @@
 package com.hashmapinc.tempus.witsml.valve.dot.client;
 
 import java.util.concurrent.ConcurrentHashMap;
+import lombok.experimental.UtilityClass;
 
 /**
  * This cache stores mappings between uid/uuid pairs. The same hashmap is used for uid->uuid and for
@@ -26,7 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * 2: objects with a single parent, but no grandparent 3: objects with a parent and a grandparent,
  * but no more
  *
- * <p>UUID values always map directly to a uid string. However, uid's are only guaranteed to be
+ * <p>UUID values always map directly to an uid string. However, uid's are only guaranteed to be
  * unique within a same parent. Therefore, to ensure no uid->uuid collisions, composite keys must be
  * used to map to UUID values.
  *
@@ -39,13 +40,15 @@ import java.util.concurrent.ConcurrentHashMap;
  * <p>This class can be easily update to support external caching (like REDIS) by replacing the
  * concurrent hashmap with calls to an external service.
  */
+@UtilityClass
 public class UidUuidCache {
+
   // cache used for uid->uuid AND uuid->uid mapping
   private static final ConcurrentHashMap<String, String> cache = new ConcurrentHashMap<>();
   private static final String SEPARATOR = "|===|"; // separator used when building composite keys
 
   /**
-   * This function stores a mapping between a uid and uuid.
+   * This function stores a mapping between an uid and uuid.
    *
    * <p>This function is used for parentless objects
    *
@@ -59,7 +62,7 @@ public class UidUuidCache {
   }
 
   /**
-   * This function stores a mapping between a uid and uuid.
+   * This function stores a mapping between an uid and uuid.
    *
    * <p>This function is used for parent-only objects
    *
@@ -77,7 +80,7 @@ public class UidUuidCache {
   }
 
   /**
-   * This function stores a mapping between a uid and uuid.
+   * This function stores a mapping between an uid and uuid.
    *
    * <p>This function is used for grandparent-only objects
    *
@@ -115,7 +118,7 @@ public class UidUuidCache {
    * returns the uuid for a parentless object with given uid.
    *
    * @param uid - string identifier for the object uuid being requested
-   * @return - uuid string if a uuid can be found, otherwise null is returned
+   * @return - uuid string if an uuid can be found, otherwise null is returned
    */
   public static String getUuid(String uid) {
     // check cache
@@ -129,7 +132,7 @@ public class UidUuidCache {
    *
    * @param uid - string identifier for the object uuid being requested
    * @param parentUid - string uid of the parent of the object UUID being requested
-   * @return - uuid string if a uuid can be found, otherwise null is returned
+   * @return - uuid string if an uuid can be found, otherwise null is returned
    */
   public static String getUuid(String uid, String parentUid) {
     // build composite key
@@ -147,7 +150,7 @@ public class UidUuidCache {
    *
    * @param uid - string identifier for the object uuid being requested
    * @param parentUid - string uid of the parent of the object UUID being requested
-   * @return - uuid string if a uuid can be found, otherwise null is returned
+   * @return - uuid string if an uuid can be found, otherwise null is returned
    */
   public static String getUuid(String uid, String parentUid, String grandparentUid) {
     // build composite key

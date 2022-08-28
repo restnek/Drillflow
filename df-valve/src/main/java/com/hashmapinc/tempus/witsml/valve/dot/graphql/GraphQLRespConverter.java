@@ -24,29 +24,29 @@ import com.hashmapinc.tempus.WitsmlObjects.v1411.ObjWellbore;
 import com.hashmapinc.tempus.WitsmlObjects.v20.Trajectory;
 import java.io.IOException;
 import java.util.ArrayList;
-import javax.xml.datatype.DatatypeConfigurationException;
+import java.util.Collections;
+import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class GraphQLRespConverter {
 
   /**
-   * Converts a GraphQL repopnse from DoT to a list of singular Abstract witsml objects
+   * Converts a GraphQL response from DoT to a list of singular Abstract witsml objects
    *
    * @param response the GraphQL response from DoT
    * @param objectType the Type of the object received
    * @return An ArrayList of singular objects found
-   * @throws IOException
    */
-  public static ArrayList<AbstractWitsmlObject> convert(String response, String objectType)
-      throws IOException, DatatypeConfigurationException {
+  public static List<AbstractWitsmlObject> convert(String response, String objectType)
+      throws IOException {
     JSONObject responseJSON = new JSONObject(response);
 
     if (!responseJSON.has("data")) {
-      return null;
+      return Collections.emptyList();
     }
 
-    JSONObject data = (JSONObject) responseJSON.get("data");
+    JSONObject data = responseJSON.getJSONObject("data");
     switch (objectType) {
       case "well":
         return getWells(data);
@@ -55,22 +55,22 @@ public class GraphQLRespConverter {
       case "trajectory":
         return getTrajectories(data);
       default:
-        return null;
+        return Collections.emptyList();
     }
   }
 
-  private static ArrayList<AbstractWitsmlObject> getWells(JSONObject data) throws IOException {
+  private static List<AbstractWitsmlObject> getWells(JSONObject data) throws IOException {
     ArrayList<AbstractWitsmlObject> foundObjects = new ArrayList<>();
     JSONObject commonData = new JSONObject();
     if (!data.has("wells")) {
-      return null;
+      return Collections.emptyList();
     }
-    if (data.get("wells") == null) return null;
-    JSONArray wells = (JSONArray) data.get("wells");
+    if (data.get("wells") == null) return Collections.emptyList();
+    JSONArray wells = data.getJSONArray("wells");
 
     for (int i = 0; i < wells.length(); i++) {
       // Added code to build commonData and map lastUpdateTimeUtc to dTimLastChange
-      JSONObject xformedWell = (JSONObject) wells.get(i);
+      JSONObject xformedWell = wells.getJSONObject(i);
       commonData.put("dTimLastChange", xformedWell.get("lastUpdateTimeUtc"));
       xformedWell.put("commonData", commonData);
       ObjWell foundWell = WitsmlMarshal.deserializeFromJSON(xformedWell.toString(), ObjWell.class);
@@ -82,13 +82,13 @@ public class GraphQLRespConverter {
     return foundObjects;
   }
 
-  private static ArrayList<AbstractWitsmlObject> getWellbores(JSONObject data) throws IOException {
+  private static List<AbstractWitsmlObject> getWellbores(JSONObject data) throws IOException {
     ArrayList<AbstractWitsmlObject> foundObjects = new ArrayList<>();
     if (!data.has("wellbores")) {
-      return null;
+      return Collections.emptyList();
     }
-    if (data.get("wellbores") == null) return null;
-    JSONArray wells = (JSONArray) data.get("wellbores");
+    if (data.get("wellbores") == null) return Collections.emptyList();
+    JSONArray wells = data.getJSONArray("wellbores");
 
     for (int i = 0; i < wells.length(); i++) {
       ObjWellbore foundWell =
@@ -101,21 +101,20 @@ public class GraphQLRespConverter {
     return foundObjects;
   }
 
-  private static ArrayList<AbstractWitsmlObject> getTrajectories(JSONObject data)
-      throws IOException, DatatypeConfigurationException {
+  private static List<AbstractWitsmlObject> getTrajectories(JSONObject data) {
     ArrayList<AbstractWitsmlObject> foundObjects = new ArrayList<>();
 
-    if (!data.has("trajectories")) return null;
+    if (!data.has("trajectories")) return Collections.emptyList();
 
-    JSONArray trajectories = (JSONArray) data.get("trajectories");
-    if (trajectories == null) return null;
+    JSONArray trajectories = data.getJSONArray("trajectories");
+    if (trajectories == null) return Collections.emptyList();
 
     for (int i = 0; i < trajectories.length(); i++) {
       try {
         Trajectory trajectory =
             WitsmlMarshal.deserializeFromJSON(trajectories.get(i).toString(), Trajectory.class);
         foundObjects.add(TrajectoryConverter.convertTo1411(trajectory));
-      } catch (Exception e) {
+      } catch (Exception ignored) {
         // TODO: Remove
       }
     }
@@ -126,9 +125,6 @@ public class GraphQLRespConverter {
   /**
    * This function accepts the JSONObject wellbore graphql response representation and extracts the
    * wellbore's UUID
-   *
-   * @param response
-   * @return
    */
   public static String getWellboreUuidFromGraphqlResponse(JSONObject response) {
     // check that the response has data
@@ -148,9 +144,6 @@ public class GraphQLRespConverter {
   /**
    * This function accepts the JSONObject wellbore graphql response representation and extracts the
    * wellbore's name
-   *
-   * @param response
-   * @return
    */
   public static String getWellboreNameFromGraphqlResponse(JSONObject response) {
     // check that the response has data
@@ -168,9 +161,6 @@ public class GraphQLRespConverter {
   /**
    * This function accepts the JSONObject well graphql response representation and extracts the
    * well's name
-   *
-   * @param response
-   * @return
    */
   public static String getWellNameFromGraphqlResponse(JSONObject response) {
     // check that the response has data

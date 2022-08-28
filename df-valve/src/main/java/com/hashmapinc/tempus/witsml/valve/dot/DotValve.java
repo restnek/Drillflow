@@ -26,44 +26,33 @@ import com.hashmapinc.tempus.witsml.valve.ValveException;
 import com.hashmapinc.tempus.witsml.valve.dot.client.DotClient;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONObject;
 import org.springframework.scheduling.annotation.Async;
 
+@Slf4j
+@RequiredArgsConstructor
 public class DotValve implements IValve {
-  private static final Logger LOG = Logger.getLogger(DotValve.class.getName());
-  private final DotClient CLIENT;
-  private final DotDelegator DELEGATOR;
+  private final DotClient client;
+  private final DotDelegator delegator;
 
   /**
    * Constructor that accepts a config map and builds the client and delegator fields
-   *
-   * @param config
-   * @throws ValveAuthException
    */
   public DotValve(Map<String, String> config) throws ValveAuthException {
     String tokenPath = config.get("token.path");
 
-    this.CLIENT = new DotClient(tokenPath);
-    this.DELEGATOR = new DotDelegator(config);
+    this.client = new DotClient(tokenPath);
+    this.delegator = new DotDelegator(config);
 
-    LOG.info(ValveLogging.getLogMsg("Creating valve pointing to url: " + tokenPath));
-  }
-
-  /**
-   * Constructor for directly injecting a client and delegator
-   *
-   * @param client - dotClient for auth and request execution
-   * @param delegator - dotDelegator for executing valve methods
-   */
-  public DotValve(DotClient client, DotDelegator delegator) {
-    this.CLIENT = client;
-    this.DELEGATOR = delegator;
+    LOGGER.info(ValveLogging.getLogMsg("Creating valve pointing to url: " + tokenPath));
   }
 
   /**
@@ -91,13 +80,13 @@ public class DotValve implements IValve {
   /**
    * Gets the object based on the query from the WITSML STORE API
    *
-   * @param WMLtypeIn - The WITSML type in from the API query
+   * @param wmlTypeIn - The WITSML type in from the API query
    * @return The resultant object from the query in xml string format NULL if invalid (unsupported)
    *     WITSML type
    */
   @Override
-  public String getObjectSelectionCapability(String WMLtypeIn) {
-    switch (WMLtypeIn) {
+  public String getObjectSelectionCapability(String wmlTypeIn) {
+    switch (wmlTypeIn) {
       case "well":
         return ObjectSelectionConstants.WELL_OBJ_SELECTION;
       case "wellbore":
@@ -119,16 +108,16 @@ public class DotValve implements IValve {
   @Async("asyncCustomTaskExecutor")
   public CompletableFuture<String> getObject(QueryContext qc) throws ValveException {
     // get query responses
-    ArrayList<AbstractWitsmlObject> queryResponses;
+    List<AbstractWitsmlObject> queryResponses;
 
     // IF  this is a singular object AND a UID is NOT provided ...
-    if (qc.WITSML_OBJECTS.size() == 1
-        && (qc.WITSML_OBJECTS.get(0).getUid() == null
-            || "".equals(qc.WITSML_OBJECTS.get(0).getUid()))) {
+    if (qc.getWitsmlObjects().size() == 1
+        && (qc.getWitsmlObjects().get(0).getUid() == null
+            || "".equals(qc.getWitsmlObjects().get(0).getUid()))) {
       // ... query using a search
       queryResponses = doSearch(qc);
     } else {
-      if ("trajectory".equals(qc.OBJECT_TYPE) && trajHasSearchQueryArgs(qc)) {
+      if ("trajectory".equals(qc.getObjectType()) && trajHasSearchQueryArgs(qc)) {
         // ... query using a search
         queryResponses = doSearch(qc);
       } else {
@@ -139,7 +128,8 @@ public class DotValve implements IValve {
 
     // build xml response from query response
     String xmlResponse =
-        DotTranslator.consolidateObjectsToXML(queryResponses, qc.CLIENT_VERSION, qc.OBJECT_TYPE);
+        DotTranslator.consolidateObjectsToXML(
+            queryResponses, qc.getClientVersion(), qc.getObjectType());
 
     // return xml
     return CompletableFuture.completedFuture(xmlResponse);
@@ -152,11 +142,12 @@ public class DotValve implements IValve {
    */
   public static boolean trajHasSearchQueryArgs(QueryContext qc) {
     // Trajectory object must have a UID.
-    if (qc.WITSML_OBJECTS.get(0).getUid() == null || "".equals(qc.WITSML_OBJECTS.get(0).getUid()))
+    if (qc.getWitsmlObjects().get(0).getUid() == null
+        || "".equals(qc.getWitsmlObjects().get(0).getUid()))
       return false;
 
     // Get AbstractWitsmlObject to get at trajectory query args...
-    AbstractWitsmlObject wmlObject = qc.WITSML_OBJECTS.get(0);
+    AbstractWitsmlObject wmlObject = qc.getWitsmlObjects().get(0);
 
     // Needed for some query args since some fields are lost in 2.0
     String jsonString1411 = wmlObject.getJSONString("1.4.1.1");
@@ -179,22 +170,26 @@ public class DotValve implements IValve {
    *
    * @param qc - query context for getting singular object
    * @return - array list of abstract witsml object responses
-   * @throws ValveException
    */
   private ArrayList<AbstractWitsmlObject> getSingularObject(QueryContext qc) throws ValveException {
     // handle each object
-    ArrayList<AbstractWitsmlObject> queryResponses = new ArrayList<AbstractWitsmlObject>();
+    ArrayList<AbstractWitsmlObject> queryResponses = new ArrayList<>();
     try {
-      for (AbstractWitsmlObject witsmlObject : qc.WITSML_OBJECTS) {
+      for (AbstractWitsmlObject witsmlObject : qc.getWitsmlObjects()) {
         AbstractWitsmlObject response =
-            this.DELEGATOR.getObject(
-                witsmlObject, qc.USERNAME, qc.PASSWORD, qc.EXCHANGE_ID, this.CLIENT, qc.OPTIONS_IN);
+            this.delegator.getObject(
+                witsmlObject,
+                qc.getUsername(),
+                qc.getPassword(),
+                qc.getExchangeId(),
+                this.client,
+                qc.getOptionsIn());
         if (null != response) queryResponses.add(response);
       }
     } catch (Exception e) {
-      LOG.warning(
+      LOGGER.warn(
           ValveLogging.getLogMsg(
-              qc.EXCHANGE_ID, "Exception in DotValve getSingularObject: " + e.getMessage()));
+              qc.getExchangeId(), "Exception in DotValve getSingularObject: " + e.getMessage()));
       throw new ValveException(e.getMessage());
     }
 
@@ -207,30 +202,29 @@ public class DotValve implements IValve {
    *
    * @param qc - query context to use for searching
    * @return - array list of abstract witsml object responses
-   * @throws ValveException
    */
-  private ArrayList<AbstractWitsmlObject> doSearch(QueryContext qc) throws ValveException {
+  private List<AbstractWitsmlObject> doSearch(QueryContext qc) throws ValveException {
     // handle each object
-    if (qc.WITSML_OBJECTS.size() > 1)
-      LOG.info(
+    if (qc.getWitsmlObjects().size() > 1)
+      LOGGER.info(
           ValveLogging.getLogMsg(
-              qc.EXCHANGE_ID, "Query received with more than one singular object, not supported"));
+              qc.getExchangeId(), "Query received with more than one singular object, not supported"));
     // TODO: Throw exception here
     // handle search
-    ArrayList<AbstractWitsmlObject> queryResponses;
+    List<AbstractWitsmlObject> queryResponses;
     try {
       queryResponses =
-          this.DELEGATOR.search(
-              qc.WITSML_OBJECTS.get(0),
-              qc.USERNAME,
-              qc.PASSWORD,
-              qc.EXCHANGE_ID,
-              this.CLIENT,
-              qc.OPTIONS_IN);
+          this.delegator.search(
+              qc.getWitsmlObjects().get(0),
+              qc.getUsername(),
+              qc.getPassword(),
+              qc.getExchangeId(),
+              this.client,
+              qc.getOptionsIn());
     } catch (Exception e) {
-      LOG.warning(
+      LOGGER.warn(
           ValveLogging.getLogMsg(
-              qc.EXCHANGE_ID, "Exception in DotValve doSearch: " + e.getMessage()));
+              qc.getExchangeId(), "Exception in DotValve doSearch: " + e.getMessage()));
       throw new ValveException(e.getMessage());
     }
 
@@ -249,24 +243,24 @@ public class DotValve implements IValve {
   public CompletableFuture<String> createObject(QueryContext qc) throws ValveException {
     // create each object
     ArrayList<String> uids = new ArrayList<>();
-    LOG.fine(ValveLogging.getLogMsg(qc.EXCHANGE_ID, "Async create object"));
+    LOGGER.debug(ValveLogging.getLogMsg(qc.getExchangeId(), "Async create object"));
 
     try {
-      for (AbstractWitsmlObject witsmlObject : qc.WITSML_OBJECTS) {
+      for (AbstractWitsmlObject witsmlObject : qc.getWitsmlObjects()) {
         uids.add(
-            this.DELEGATOR.createObject(
-                witsmlObject, qc.USERNAME, qc.PASSWORD, qc.EXCHANGE_ID, this.CLIENT));
+            this.delegator.createObject(
+                witsmlObject, qc.getUsername(), qc.getPassword(), qc.getExchangeId(), this.client));
       }
 
     } catch (ValveException e) {
-      LOG.warning(
+      LOGGER.warn(
           ValveLogging.getLogMsg(
-              qc.EXCHANGE_ID, "Exception in DotValve createObject: " + e.getMessage()));
+              qc.getExchangeId(), "Exception in DotValve createObject: " + e.getMessage()));
       throw new ValveException(e.getMessage(), e.getErrorCode());
     } catch (Exception e) {
-      LOG.warning(
+      LOGGER.warn(
           ValveLogging.getLogMsg(
-              qc.EXCHANGE_ID, "Exception in DotValve createObject: " + e.getMessage()));
+              qc.getExchangeId(), "Exception in DotValve createObject: " + e.getMessage()));
       throw new ValveException(e.getMessage());
     }
     // return the uids created, comma separated
@@ -277,47 +271,45 @@ public class DotValve implements IValve {
    * Deletes an object
    *
    * @param qc - QueryContext with information needed to delete object
-   * @return
    */
   @Override
   @Async("asyncCustomTaskExecutor")
   public CompletableFuture<Boolean> deleteObject(QueryContext qc) throws ValveException {
     // delete each object with 1 retry for bad token errors
-    boolean result = false;
+    boolean result;
     // According to the WITSML Spec you cannot delete more than one object (or sub elements of more
     // than one object)
     // at a time, so we do this check
-    if (qc.WITSML_OBJECTS.size() > 1)
+    if (qc.getWitsmlObjects().size() > 1)
       throw new ValveException(
           "Delete cannot have more than one singular object per query", (short) -444);
     // This is rare but a check must be made
-    if (qc.WITSML_OBJECTS.size() == 0)
+    if (qc.getWitsmlObjects().isEmpty())
       throw new ValveException(
           "Delete must have exactly one singluar object, but found 0 in the query");
     try {
       // Should be a safe assumption as we check above
-      AbstractWitsmlObject wmlObject = qc.WITSML_OBJECTS.get(0);
+      AbstractWitsmlObject wmlObject = qc.getWitsmlObjects().get(0);
 
       if (wmlObject.getUid() == null || "".equals(wmlObject.getUid())) {
         throw new ValveException(
             "Delete cannot have more than one singular object per query", (short) -415);
       }
 
-      if (!isObjectDelete(wmlObject.getObjectType().toLowerCase(), qc.QUERY_XML.toLowerCase())) {
+      if (!isObjectDelete(wmlObject.getObjectType().toLowerCase(), qc.getQueryXml().toLowerCase())) {
         // This is an element delete so re-route to delegator update
-        this.DELEGATOR.performElementDelete(
-            wmlObject, qc.USERNAME, qc.PASSWORD, qc.EXCHANGE_ID, this.CLIENT);
-        result = true;
+        this.delegator.performElementDelete(
+            wmlObject, qc.getUsername(), qc.getPassword(), qc.getExchangeId(), this.client);
       } else {
         // This is an object delete, so straight delete
-        this.DELEGATOR.deleteObject(
-            wmlObject, qc.USERNAME, qc.PASSWORD, qc.EXCHANGE_ID, this.CLIENT);
-        result = true;
+        this.delegator.deleteObject(
+            wmlObject, qc.getUsername(), qc.getPassword(), qc.getExchangeId(), this.client);
       }
+      result = true;
     } catch (Exception e) {
-      LOG.warning(
+      LOGGER.warn(
           ValveLogging.getLogMsg(
-              qc.EXCHANGE_ID, "Exception in DotValve deleteObject: " + e.getMessage()));
+              qc.getExchangeId(), "Exception in DotValve deleteObject: " + e.getMessage()));
       if (e.getClass() == ValveException.class) throw ((ValveException) e);
       throw new ValveException(e.getMessage());
     }
@@ -356,17 +348,17 @@ public class DotValve implements IValve {
   @Async("asyncCustomTaskExecutor")
   public CompletableFuture<Boolean> updateObject(QueryContext qc) throws ValveException {
     // update each object with 1 retry for bad tokens
-    boolean result = false;
+    boolean result;
     try {
-      for (AbstractWitsmlObject witsmlObject : qc.WITSML_OBJECTS) {
-        this.DELEGATOR.updateObject(
-            witsmlObject, qc.USERNAME, qc.PASSWORD, qc.EXCHANGE_ID, this.CLIENT);
+      for (AbstractWitsmlObject witsmlObject : qc.getWitsmlObjects()) {
+        this.delegator.updateObject(
+            witsmlObject, qc.getUsername(), qc.getPassword(), qc.getExchangeId(), this.client);
       }
       result = true;
     } catch (Exception e) {
-      LOG.warning(
+      LOGGER.warn(
           ValveLogging.getLogMsg(
-              qc.EXCHANGE_ID, "Exception in DotValve updateObject: " + e.getMessage()));
+              qc.getExchangeId(), "Exception in DotValve updateObject: " + e.getMessage()));
       throw new ValveException(e.getMessage());
     }
     return CompletableFuture.completedFuture(result);
@@ -375,13 +367,12 @@ public class DotValve implements IValve {
   /**
    * Authenticates with the DotAuth class
    *
-   * @param username The user name to authenticate with
+   * @param username The username to authenticate with
    * @param password The password to authenticate with
-   * @throws ValveAuthException
    */
   @Override
   public void authenticate(String username, String password) throws ValveAuthException {
-    this.CLIENT.getJWT(username, password, "n/a");
+    this.client.getJWT(username, password, "n/a");
   }
 
   /**

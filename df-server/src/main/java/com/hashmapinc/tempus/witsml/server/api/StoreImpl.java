@@ -312,10 +312,8 @@ public class StoreImpl implements IStore {
       resp.setResult((short) 1);
     } catch (ValveException e) {
       resp.setSuppMsgOut(e.getMessage());
-      if (e.getErrorCode() != null) {
-        resp.setResult(e.getErrorCode());
-        resp.setSuppMsgOut(witsmlApiConfigUtil.getProperty("basemessages." + e.getErrorCode()));
-      }
+      resp.setResult(e.getErrorCode());
+      resp.setSuppMsgOut(witsmlApiConfigUtil.getProperty("basemessages." + e.getErrorCode()));
       return resp;
     } catch (Exception ex) {
       resp.setSuppMsgOut(ex.getMessage());
@@ -485,7 +483,7 @@ public class StoreImpl implements IStore {
         if (qc != null)
           LOGGER.warn(
               ValveLogging.getLogMsg(
-                  qc.EXCHANGE_ID, "Valve Exception in GetFromStore: " + ve.getMessage()));
+                  qc.getExchangeId(), "Valve Exception in GetFromStore: " + ve.getMessage()));
         else
           LOGGER.warn(
               ValveLogging.getLogMsg("Valve Exception in GetFromStore: " + ve.getMessage()));

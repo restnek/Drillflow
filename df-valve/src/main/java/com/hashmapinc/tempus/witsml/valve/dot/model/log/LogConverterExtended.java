@@ -21,7 +21,6 @@ import com.hashmapinc.tempus.WitsmlObjects.v1411.ObjLog;
 import com.hashmapinc.tempus.witsml.ValveLogging;
 import com.hashmapinc.tempus.witsml.valve.ValveAuthException;
 import com.hashmapinc.tempus.witsml.valve.ValveException;
-import com.hashmapinc.tempus.witsml.valve.dot.DotDelegator;
 import com.hashmapinc.tempus.witsml.valve.dot.client.DotClient;
 import com.hashmapinc.tempus.witsml.valve.dot.graphql.GraphQLQueryConverter;
 import com.hashmapinc.tempus.witsml.valve.dot.graphql.GraphQLRespConverter;
@@ -34,12 +33,12 @@ import com.mashape.unirest.request.HttpRequestWithBody;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 import javax.xml.datatype.DatatypeConfigurationException;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 
+@Slf4j
 public class LogConverterExtended extends com.hashmapinc.tempus.WitsmlObjects.Util.LogConverter {
-  private static final Logger LOG = Logger.getLogger(DotDelegator.class.getName());
 
   /**
    * convertToChannelSet1311 takes in a v1.3.1.1 JSON string that was produced client-side from SOAP
@@ -113,7 +112,7 @@ public class LogConverterExtended extends com.hashmapinc.tempus.WitsmlObjects.Ut
     String query;
     try {
       query = GraphQLQueryConverter.getWellNameQuery(witsmlObject);
-      LOG.fine(
+      LOGGER.debug(
           ValveLogging.getLogMsg(
               exchangeID, System.lineSeparator() + "Graph QL Query: " + query, witsmlObject));
     } catch (Exception ex) {
@@ -122,11 +121,9 @@ public class LogConverterExtended extends com.hashmapinc.tempus.WitsmlObjects.Ut
 
     // build request
 
-    // String endpoint = this.getEndpoint("wellboresearch");
     HttpRequestWithBody request = Unirest.post(wellSearchEndpoint);
     request.header("Content-Type", "application/json");
     request.body(query);
-    // LOG.info(ValveLogging.getLogMsg(exchangeID, logRequest(request), witsmlObject));
 
     // get response
     HttpResponse<String> response = client.makeRequest(request, username, password, exchangeID);
@@ -137,11 +134,6 @@ public class LogConverterExtended extends com.hashmapinc.tempus.WitsmlObjects.Ut
       // get the wellborename of the first wellbore in the response
       wellName =
           GraphQLRespConverter.getWellNameFromGraphqlResponse(new JSONObject(response.getBody()));
-
-      // cache the wellbore uuid/uid
-      // UidUuidCache.putInCache(wellName, witsmlObject.getParentUid(),
-      // witsmlObject.getGrandParentUid());
-
     }
     return wellName;
   }
@@ -159,7 +151,7 @@ public class LogConverterExtended extends com.hashmapinc.tempus.WitsmlObjects.Ut
     String query;
     try {
       query = GraphQLQueryConverter.getWellboreNameQuery(witsmlObject);
-      LOG.fine(
+      LOGGER.debug(
           ValveLogging.getLogMsg(
               exchangeID, System.lineSeparator() + "Graph QL Query: " + query, witsmlObject));
     } catch (Exception ex) {
@@ -167,11 +159,9 @@ public class LogConverterExtended extends com.hashmapinc.tempus.WitsmlObjects.Ut
     }
 
     // build request
-    // String endpoint = this.getEndpoint("wellboresearch");
     HttpRequestWithBody request = Unirest.post(wellBoreSearchEndpoint);
     request.header("Content-Type", "application/json");
     request.body(query);
-    // LOG.info(ValveLogging.getLogMsg(exchangeID, logRequest(request), witsmlObject));
 
     // get response
     HttpResponse<String> response = client.makeRequest(request, username, password, exchangeID);
@@ -183,11 +173,6 @@ public class LogConverterExtended extends com.hashmapinc.tempus.WitsmlObjects.Ut
       wellboreName =
           GraphQLRespConverter.getWellboreNameFromGraphqlResponse(
               new JSONObject(response.getBody()));
-
-      // cache the wellbore uuid/uid
-      // UidUuidCache.putInCache(wellboreName, witsmlObject.getParentUid(),
-      // witsmlObject.getGrandParentUid());
-
     }
     return wellboreName;
   }

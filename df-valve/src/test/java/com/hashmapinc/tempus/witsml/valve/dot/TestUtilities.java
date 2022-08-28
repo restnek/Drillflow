@@ -24,8 +24,8 @@ import org.custommonkey.xmlunit.DetailedDiff;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Assert;
 
-/** Created by Chris on 6/29/17. */
 public class TestUtilities {
+
   public static void assertXMLEquals(String expectedXML, String actualXML) throws Exception {
     XMLUnit.setIgnoreWhitespace(true);
     XMLUnit.setIgnoreDiffBetweenTextAndCDATA(true);

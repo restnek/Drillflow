@@ -27,6 +27,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -36,7 +37,11 @@ import java.util.Objects;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
   "name",
@@ -78,97 +83,8 @@ public class ExtensionNameValue {
   @JsonProperty("uid")
   private String uid;
 
-  @JsonIgnore private final Map<String, Object> additionalProperties = new HashMap<String, Object>();
-
-  @JsonProperty("name")
-  public String getName() {
-    return name;
-  }
-
-  @JsonProperty("name")
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  @JsonProperty("value")
-  public Value getValue() {
-    return value;
-  }
-
-  @JsonProperty("value")
-  public void setValue(Value value) {
-    this.value = value;
-  }
-
-  @JsonProperty("measureClass")
-  public String getMeasureClass() {
-    return measureClass;
-  }
-
-  @JsonProperty("measureClass")
-  public void setMeasureClass(String measureClass) {
-    this.measureClass = measureClass;
-  }
-
-  @JsonProperty("dTim")
-  public String getDTim() {
-    return dTim;
-  }
-
-  @JsonProperty("dTim")
-  public void setDTim(String dTim) {
-    this.dTim = dTim;
-  }
-
-  @JsonProperty("index")
-  public Long getIndex() {
-    return index;
-  }
-
-  @JsonProperty("index")
-  public void setIndex(Long index) {
-    this.index = index;
-  }
-
-  @JsonProperty("description")
-  public String getDescription() {
-    return description;
-  }
-
-  @JsonProperty("description")
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
-  @JsonProperty("dataType")
-  public String getDataType() {
-    return dataType;
-  }
-
-  @JsonProperty("dataType")
-  public void setDataType(String dataType) {
-    this.dataType = dataType;
-  }
-
-  @JsonProperty("md")
-  public Md getMd() {
-    return md;
-  }
-
-  @JsonProperty("md")
-  public void setMd(Md md) {
-    this.md = md;
-  }
-
-  @JsonProperty("uid")
-  public String getUid() {
-    return uid;
-  }
-
-  @JsonProperty("uid")
-  public void setUid(String uid) {
-    this.uid = uid;
-  }
+  @JsonIgnore
+  private final Map<String, Object> additionalProperties = new HashMap<>();
 
   @JsonAnyGetter
   public Map<String, Object> getAdditionalProperties() {
@@ -184,10 +100,10 @@ public class ExtensionNameValue {
       List<com.hashmapinc.tempus.WitsmlObjects.v1411.CsExtensionNameValue> extensionNameValues) {
 
     if (extensionNameValues == null) {
-      return null;
+      return Collections.emptyList();
     }
 
-    List<ExtensionNameValue> envs = new ArrayList<ExtensionNameValue>();
+    List<ExtensionNameValue> envs = new ArrayList<>();
 
     for (com.hashmapinc.tempus.WitsmlObjects.v1411.CsExtensionNameValue wmlEnv :
         extensionNameValues) {
@@ -222,7 +138,7 @@ public class ExtensionNameValue {
 
   public static List<com.hashmapinc.tempus.WitsmlObjects.v1411.CsExtensionNameValue> to1411(
       List<ExtensionNameValue> enValues) throws DatatypeConfigurationException, ParseException {
-    if (enValues == null) return null;
+    if (enValues == null) return Collections.emptyList();
 
     List<com.hashmapinc.tempus.WitsmlObjects.v1411.CsExtensionNameValue> wmlEnvs =
         new ArrayList<>();
@@ -256,15 +172,12 @@ public class ExtensionNameValue {
   private static XMLGregorianCalendar convertIsoDateToXML(String dateTime)
       throws DatatypeConfigurationException, ParseException {
     DateFormat format = new SimpleDateFormat("yyyy-MM-ddThh:mm:ss.SSSXXX");
-    // Date date = format.parse("2014-04-24 11:15:00");
     Date date = format.parse(dateTime);
 
     GregorianCalendar cal = new GregorianCalendar();
     cal.setTime(date);
 
-    XMLGregorianCalendar xmlGregCal = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
-
-    return xmlGregCal;
+    return DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
   }
 
   @Override

@@ -23,11 +23,16 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"index", "name", "uom", "description", "uid", "value"})
 public class LogParam {
@@ -50,26 +55,17 @@ public class LogParam {
   @JsonProperty("value")
   private String value;
 
-  @JsonIgnore private final Map<String, Object> additionalProperties = new HashMap<String, Object>();
+  @JsonIgnore
+  private final Map<String, Object> additionalProperties = new HashMap<>();
 
-  @JsonProperty("index")
-  public String getIndex() {
-    return index;
+  @JsonAnyGetter
+  public Map<String, Object> getAdditionalProperties() {
+    return this.additionalProperties;
   }
 
-  @JsonProperty("index")
-  public void setIndex(String index) {
-    this.index = index;
-  }
-
-  @JsonProperty("name")
-  public String getName() {
-    return name;
-  }
-
-  @JsonProperty("name")
-  public void setName(String name) {
-    this.name = name;
+  @JsonAnySetter
+  public void setAdditionalProperty(String name, Object value) {
+    this.additionalProperties.put(name, value);
   }
 
   @Override
@@ -90,59 +86,9 @@ public class LogParam {
     return Objects.hash(index, name, uom, description, uid, value);
   }
 
-  @JsonProperty("uom")
-  public String getUom() {
-    return uom;
-  }
-
-  @JsonProperty("uom")
-  public void setUom(String uom) {
-    this.uom = uom;
-  }
-
-  @JsonProperty("description")
-  public String getDescription() {
-    return description;
-  }
-
-  @JsonProperty("description")
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
-  @JsonProperty("uid")
-  public String getUid() {
-    return uid;
-  }
-
-  @JsonProperty("uid")
-  public void setUid(String uid) {
-    this.uid = uid;
-  }
-
-  @JsonProperty("value")
-  public String getValue() {
-    return value;
-  }
-
-  @JsonProperty("value")
-  public void setValue(String value) {
-    this.value = value;
-  }
-
-  @JsonAnyGetter
-  public Map<String, Object> getAdditionalProperties() {
-    return this.additionalProperties;
-  }
-
-  @JsonAnySetter
-  public void setAdditionalProperty(String name, Object value) {
-    this.additionalProperties.put(name, value);
-  }
-
   public static List<LogParam> from1411(
       List<com.hashmapinc.tempus.WitsmlObjects.v1411.IndexedObject> logParams) {
-    if (logParams == null) return null;
+    if (logParams == null) return Collections.emptyList();
 
     List<LogParam> params = new ArrayList<>();
     for (com.hashmapinc.tempus.WitsmlObjects.v1411.IndexedObject logParam : logParams) {
@@ -161,7 +107,7 @@ public class LogParam {
 
   public static List<LogParam> from1311(
       List<com.hashmapinc.tempus.WitsmlObjects.v1311.IndexedObject> logParams) {
-    if (logParams == null) return null;
+    if (logParams == null) return Collections.emptyList();
 
     List<LogParam> params = new ArrayList<>();
     for (com.hashmapinc.tempus.WitsmlObjects.v1311.IndexedObject logParam : logParams) {
@@ -179,7 +125,7 @@ public class LogParam {
 
   public static List<com.hashmapinc.tempus.WitsmlObjects.v1311.IndexedObject> to1311(
       List<LogParam> logParams) {
-    if (logParams == null) return null;
+    if (logParams == null) return Collections.emptyList();
 
     List<com.hashmapinc.tempus.WitsmlObjects.v1311.IndexedObject> params = new ArrayList<>();
     for (LogParam logParam : logParams) {
@@ -198,7 +144,7 @@ public class LogParam {
 
   public static List<com.hashmapinc.tempus.WitsmlObjects.v1411.IndexedObject> to1411(
       List<LogParam> logParams) {
-    if (logParams == null) return null;
+    if (logParams == null) return Collections.emptyList();
 
     List<com.hashmapinc.tempus.WitsmlObjects.v1411.IndexedObject> params = new ArrayList<>();
     for (LogParam logParam : logParams) {

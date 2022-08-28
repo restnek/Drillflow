@@ -24,13 +24,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.hashmapinc.tempus.witsml.valve.dot.model.log.channelset.ExtensionNameValue;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
   "axisStart",
@@ -80,117 +85,8 @@ public class AxisDefinition {
   @JsonProperty("extensionNameValue")
   private List<ExtensionNameValue> extensionNameValue = null;
 
-  @JsonIgnore private final Map<String, Object> additionalProperties = new HashMap<String, Object>();
-
-  @JsonProperty("axisStart")
-  public Double getAxisStart() {
-    return axisStart;
-  }
-
-  @JsonProperty("axisStart")
-  public void setAxisStart(Double axisStart) {
-    this.axisStart = axisStart;
-  }
-
-  @JsonProperty("axisSpacing")
-  public Double getAxisSpacing() {
-    return axisSpacing;
-  }
-
-  @JsonProperty("axisSpacing")
-  public void setAxisSpacing(Double axisSpacing) {
-    this.axisSpacing = axisSpacing;
-  }
-
-  @JsonProperty("axisCount")
-  public Short getAxisCount() {
-    return axisCount;
-  }
-
-  @JsonProperty("axisCount")
-  public void setAxisCount(Short axisCount) {
-    this.axisCount = axisCount;
-  }
-
-  @JsonProperty("axisName")
-  public String getAxisName() {
-    return axisName;
-  }
-
-  @JsonProperty("axisName")
-  public void setAxisName(String axisName) {
-    this.axisName = axisName;
-  }
-
-  @JsonProperty("axisPropertyKind")
-  public String getAxisPropertyKind() {
-    return axisPropertyKind;
-  }
-
-  @JsonProperty("axisPropertyKind")
-  public void setAxisPropertyKind(String axisPropertyKind) {
-    this.axisPropertyKind = axisPropertyKind;
-  }
-
-  @JsonProperty("axisUom")
-  public String getAxisUom() {
-    return axisUom;
-  }
-
-  @JsonProperty("axisUom")
-  public void setAxisUom(String axisUom) {
-    this.axisUom = axisUom;
-  }
-
-  @JsonProperty("uid")
-  public String getUid() {
-    return uid;
-  }
-
-  @JsonProperty("uid")
-  public void setUid(String uid) {
-    this.uid = uid;
-  }
-
-  @JsonProperty("order")
-  public Short getOrder() {
-    return order;
-  }
-
-  @JsonProperty("order")
-  public void setOrder(Short order) {
-    this.order = order;
-  }
-
-  @JsonProperty("doubleValues")
-  public String getDoubleValues() {
-    return doubleValues;
-  }
-
-  @JsonProperty("doubleValues")
-  public void setDoubleValues(String doubleValues) {
-    this.doubleValues = doubleValues;
-  }
-
-  @JsonProperty("stringValues")
-  public String getStringValues() {
-    return stringValues;
-  }
-
-  @JsonProperty("stringValues")
-  public void setStringValues(String stringValues) {
-    this.stringValues = stringValues;
-  }
-
-  @JsonProperty("extensionNameValue")
-  public List<ExtensionNameValue> getExtensionNameValue() {
-    return extensionNameValue;
-  }
-
-  @JsonProperty("extensionNameValue")
-  public void setExtensionNameValue(List<ExtensionNameValue> extensionNameValue) {
-    this.extensionNameValue = extensionNameValue;
-  }
+  @JsonIgnore
+  private final Map<String, Object> additionalProperties = new HashMap<>();
 
   @JsonAnyGetter
   public Map<String, Object> getAdditionalProperties() {
@@ -205,7 +101,7 @@ public class AxisDefinition {
   public static List<AxisDefinition> from1411(
       List<com.hashmapinc.tempus.WitsmlObjects.v1411.CsAxisDefinition> axisDefinitions) {
     if (axisDefinitions == null) {
-      return null;
+      return Collections.emptyList();
     }
     List<AxisDefinition> axes = new ArrayList<>();
 
@@ -235,7 +131,7 @@ public class AxisDefinition {
   public static List<AxisDefinition> from1311(
       List<com.hashmapinc.tempus.WitsmlObjects.v1311.CsAxisDefinition> axisDefinitions) {
     if (axisDefinitions == null) {
-      return null;
+      return Collections.emptyList();
     }
     List<AxisDefinition> axes = new ArrayList<>();
 
@@ -268,7 +164,7 @@ public class AxisDefinition {
   public static List<com.hashmapinc.tempus.WitsmlObjects.v1311.CsAxisDefinition> to1311(
       List<AxisDefinition> axisDefinitions) {
     if (axisDefinitions == null) {
-      return null;
+      return Collections.emptyList();
     }
 
     List<com.hashmapinc.tempus.WitsmlObjects.v1311.CsAxisDefinition> wmlAxes = new ArrayList<>();
@@ -304,7 +200,7 @@ public class AxisDefinition {
   public static List<com.hashmapinc.tempus.WitsmlObjects.v1411.CsAxisDefinition> to1411(
       List<AxisDefinition> axisDefinitions) {
     if (axisDefinitions == null) {
-      return null;
+      return Collections.emptyList();
     }
 
     List<com.hashmapinc.tempus.WitsmlObjects.v1411.CsAxisDefinition> wmlAxes = new ArrayList<>();

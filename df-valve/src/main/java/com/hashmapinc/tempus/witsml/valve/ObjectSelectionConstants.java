@@ -16,6 +16,9 @@
 
 package com.hashmapinc.tempus.witsml.valve;
 
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
 public class ObjectSelectionConstants {
 
   // =========================================================================

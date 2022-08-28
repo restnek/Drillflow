@@ -17,16 +17,13 @@
 package com.hashmapinc.tempus.witsml.valve.dot.model.log.channel;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
 
 public class ClassIndexDeserializer extends JsonDeserializer<Short> {
   @Override
-  public Short deserialize(JsonParser jp, DeserializationContext ctxt)
-      throws IOException {
-
+  public Short deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
     String text = jp.getText();
     if (text == null || text.isEmpty()) {
       return null;

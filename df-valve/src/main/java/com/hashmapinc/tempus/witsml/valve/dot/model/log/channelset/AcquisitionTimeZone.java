@@ -25,7 +25,11 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"dTim", "value"})
 public class AcquisitionTimeZone {
@@ -36,27 +40,8 @@ public class AcquisitionTimeZone {
   @JsonProperty("value")
   private String value;
 
-  @JsonIgnore private final Map<String, Object> additionalProperties = new HashMap<String, Object>();
-
-  @JsonProperty("dTim")
-  public String getDTim() {
-    return dTim;
-  }
-
-  @JsonProperty("dTim")
-  public void setDTim(String dTim) {
-    this.dTim = dTim;
-  }
-
-  @JsonProperty("value")
-  public String getValue() {
-    return value;
-  }
-
-  @JsonProperty("value")
-  public void setValue(String value) {
-    this.value = value;
-  }
+  @JsonIgnore
+  private final Map<String, Object> additionalProperties = new HashMap<>();
 
   @JsonAnyGetter
   public Map<String, Object> getAdditionalProperties() {
