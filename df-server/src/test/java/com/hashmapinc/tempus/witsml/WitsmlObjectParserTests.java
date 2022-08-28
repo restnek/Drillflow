@@ -20,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
 import com.hashmapinc.tempus.WitsmlObjects.AbstractWitsmlObject;
+import com.hashmapinc.tempus.witsml.service.WitsmlObjectParser;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;

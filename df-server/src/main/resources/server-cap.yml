@@ -1,0 +1,11 @@
+# Contact information
+wmls:
+  contact-name: Randy
+  contact-email: serverAdministrator@serverCompany.com
+  contact-phone: 281-135-7924
+  change-detection-period: 57
+  description: Server description
+  name: John Smith
+  support-uom-conversion: false
+  compression-method: gzip
+  cascaded-delete: false

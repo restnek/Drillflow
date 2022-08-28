@@ -18,6 +18,7 @@ package com.hashmapinc.tempus.witsml;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.hashmapinc.tempus.witsml.service.WitsmlUtil;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Test;

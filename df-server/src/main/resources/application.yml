@@ -52,7 +52,7 @@ logging:
 
 spring:
     config:
-        import: classpath:base-messages.yml
+        import: classpath:base-messages.yml, classpath:server-cap.yml
     main:
         banner-mode: off
     devtools:
