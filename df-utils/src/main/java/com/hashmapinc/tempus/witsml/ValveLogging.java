@@ -25,14 +25,16 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.stream.Collectors;
+import lombok.experimental.UtilityClass;
 
+@UtilityClass
 public class ValveLogging {
 
-  private static final String delimiter = " ";
+  private static final String DELIMITER = " ";
 
   public static String getLogMsg(String id, String message, AbstractWitsmlObject abstObject) {
-    return "ExchangeId: " + id + delimiter
-        + "Message: " + message + delimiter
+    return "ExchangeId: " + id + DELIMITER
+        + "Message: " + message + DELIMITER
         + "For Object: " + abstObject.toString();
   }
 
@@ -41,7 +43,7 @@ public class ValveLogging {
   }
 
   public static String getLogMsg(String id, String message) {
-    return "ExchangeId: " + id + delimiter + "Message: " + message;
+    return "ExchangeId: " + id + DELIMITER + "Message: " + message;
   }
 
   public static String getLogMsg(String id, String message, HttpRequest request) {
@@ -53,11 +55,11 @@ public class ValveLogging {
       } catch (IOException e) {
         req = "Could not parse request";
       }
-      return "ExchangeId: " + id + delimiter
-          + "Message: " + message + delimiter
-          + "Address: " + request.getUrl() + delimiter
-          + "Headers: " + request.getHeaders() + delimiter
-          + "Method: " + request.getHttpMethod().name() + delimiter
+      return "ExchangeId: " + id + DELIMITER
+          + "Message: " + message + DELIMITER
+          + "Address: " + request.getUrl() + DELIMITER
+          + "Headers: " + request.getHeaders() + DELIMITER
+          + "Method: " + request.getHttpMethod().name() + DELIMITER
           + "Payload: " + req;
     } catch (Exception ex) {
       return "done";
@@ -71,18 +73,17 @@ public class ValveLogging {
     } else {
       body = "";
     }
-    return "ExchangeId: " + id + delimiter
-        + "Message: " + message + delimiter
-        + "Headers: " + response.getHeaders() + delimiter
-        + "Status Code:" + response.getStatus() + delimiter
-        + "Status Text: " + response.getStatusText() + delimiter
+    return "ExchangeId: " + id + DELIMITER
+        + "Message: " + message + DELIMITER
+        + "Headers: " + response.getHeaders() + DELIMITER
+        + "Status Code:" + response.getStatus() + DELIMITER
+        + "Status Text: " + response.getStatusText() + DELIMITER
         + "Response Body: " + body;
   }
 
   private static String convert(InputStream inputStream, Charset charset) throws IOException {
-
     try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, charset))) {
-      return br.lines().collect(Collectors.joining(delimiter));
+      return br.lines().collect(Collectors.joining(DELIMITER));
     } catch (Exception ex) {
       return "Could not parse request";
     }
