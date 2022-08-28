@@ -16,9 +16,18 @@
     limitations under the License.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
 	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.7.3</version>
+		<relativePath/>
+	</parent>
 
 	<groupId>com.hashmapinc.tempus.witsml</groupId>
 	<artifactId>DrillFlow</artifactId>
@@ -30,13 +39,6 @@
     <url>https://hashmapinc.com</url>
     <inceptionYear>2018</inceptionYear>
 
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.1.0.RC1</version>
-		<relativePath/>
-	</parent>
-
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -44,14 +46,96 @@
         <main.dir>${basedir}</main.dir>
 		<skipITs>true</skipITs>
 		<owasp.skip>true</owasp.skip>
+
+		<WitsmlObjects.version>1.1.46</WitsmlObjects.version>
+		<jackson-dataformat-xml.version>2.13.3</jackson-dataformat-xml.version>
+		<jaxb-api.version>2.4.0-b180830.0359</jaxb-api.version>
+		<lombok.version>1.18.24</lombok.version>
+
+		<jacoco-maven-plugin.version>0.8.8</jacoco-maven-plugin.version>
+		<license-maven-plugin.version>3.0</license-maven-plugin.version>
+		<maven-failsafe-plugin.version>3.0.0-M5</maven-failsafe-plugin.version>
+		<dependency-check-maven.version>5.0.0-M2</dependency-check-maven.version>
 	</properties>
+
+	<modules>
+		<module>df-valve</module>
+		<module>df-server</module>
+		<module>df-utils</module>
+	</modules>
+
+	<dependencies>
+		<!-- used for witsml object ser/de -->
+		<dependency>
+			<groupId>com.hashmapinc.tempus</groupId>
+			<artifactId>WitsmlObjects</artifactId>
+			<version>${WitsmlObjects.version}</version>
+		</dependency>
+
+		<!-- TMS -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-xml</artifactId>
+			<version>${jackson-dataformat-xml.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>${jaxb-api.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>${lombok.version}</version>
+			<optional>true</optional>
+		</dependency>
+	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>spring-snapshots</id>
+			<name>Spring Snapshots</name>
+			<url>https://repo.spring.io/snapshot</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>spring-milestones</id>
+			<name>Spring Milestones</name>
+			<url>https://repo.spring.io/milestone</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>spring-snapshots</id>
+			<name>Spring Snapshots</name>
+			<url>https://repo.spring.io/snapshot</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</pluginRepository>
+		<pluginRepository>
+			<id>spring-milestones</id>
+			<name>Spring Milestones</name>
+			<url>https://repo.spring.io/milestone</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
 
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.2</version>
+				<version>${jacoco-maven-plugin.version}</version>
 				<executions>
 					<execution>
 						<goals>
@@ -70,7 +154,7 @@
 			<plugin>
 				<groupId>com.mycila</groupId>
 				<artifactId>license-maven-plugin</artifactId>
-				<version>3.0</version>
+				<version>${license-maven-plugin.version}</version>
 				<configuration>
 					<header>${main.dir}/license-header-template.txt</header>
 					<properties>
@@ -119,6 +203,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>${maven-failsafe-plugin.version}</version>
 				<configuration>
 					<skipTests>${skipITs}</skipTests>
 				</configuration>
@@ -134,7 +219,7 @@
 			<plugin>
                 <groupId>org.owasp</groupId>
                 <artifactId>dependency-check-maven</artifactId>
-                <version>5.0.0-M2</version>
+                <version>${dependency-check-maven.version}</version>
 				<configuration>
         			<skip>${owasp.skip}</skip>
     			</configuration>
@@ -146,81 +231,7 @@
 					</execution>
 				</executions>
             </plugin>
-
 		</plugins>
 	</build>
 
-	<dependencies>
-		<!-- used for witsml object ser/de -->
-		<dependency>
-			<groupId>com.hashmapinc.tempus</groupId>
-			<artifactId>WitsmlObjects</artifactId>
-			<version>1.1.46</version>
-		</dependency>
-
-		<!-- TMS -->
-		<dependency>
-			<groupId>com.fasterxml.jackson.dataformat</groupId>
-			<artifactId>jackson-dataformat-xml</artifactId>
-			<version>2.9.8</version>
-		</dependency>
-
-		<dependency>
-			<groupId>javax.xml.bind</groupId>
-			<artifactId>jaxb-api</artifactId>
-			<version>2.2.11</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<version>1.18.24</version>
-			<optional>true</optional>
-		</dependency>
-
-	</dependencies>
-
-	<modules>
-        <module>df-valve</module>
-        <module>df-server</module>
-		<module>df-utils</module>
-	</modules>
-
-    <repositories>
-        <repository>
-            <id>spring-snapshots</id>
-            <name>Spring Snapshots</name>
-            <url>https://repo.spring.io/snapshot</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>spring-milestones</id>
-            <name>Spring Milestones</name>
-            <url>https://repo.spring.io/milestone</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>spring-snapshots</id>
-            <name>Spring Snapshots</name>
-            <url>https://repo.spring.io/snapshot</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </pluginRepository>
-        <pluginRepository>
-            <id>spring-milestones</id>
-            <name>Spring Milestones</name>
-            <url>https://repo.spring.io/milestone</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
 </project>
