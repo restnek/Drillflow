@@ -16,9 +16,10 @@
 
 package com.hashmapinc.tempus.witsml.valve.dot;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertFalse;
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.eq;
@@ -46,15 +47,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class DotValveTest {
+class DotValveTest {
   private DotClient mockClient;
   private DotDelegator mockDelegator;
   private DotValve valve;
 
-  @Before
+  @BeforeEach
   public void doSetup() {
     this.mockClient = mock(DotClient.class);
     this.mockDelegator = mock(DotDelegator.class);
@@ -62,17 +63,18 @@ public class DotValveTest {
   }
 
   @Test
-  public void shouldGetName() {
+  void shouldGetName() {
     assertEquals("DoT", this.valve.getName());
   }
 
   @Test
-  public void shouldGetDescription() {
-    assertEquals("Valve for interaction with Drillops Town", this.valve.getDescription());
+  void shouldGetDescription() {
+    assertEquals("Valve for interaction with Drillops Town",
+        this.valve.getDescription());
   }
 
   @Test
-  public void shouldGetSingleObject() throws Exception {
+  void shouldGetSingleObject() throws Exception {
     // build well list
     ArrayList<AbstractWitsmlObject> witsmlObjects;
     witsmlObjects = new ArrayList<>();
@@ -107,7 +109,7 @@ public class DotValveTest {
 
   // code to test getFromStore for Log
   @Test
-  public void shouldGetLogSingleObject() throws Exception {
+  void shouldGetLogSingleObject() throws Exception {
     // build well list
     ArrayList<AbstractWitsmlObject> witsmlObjects;
     witsmlObjects = new ArrayList<>();
@@ -142,7 +144,7 @@ public class DotValveTest {
   }
 
   @Test
-  public void shouldGetEmptyObject() throws Exception {
+  void shouldGetEmptyObject() throws Exception {
     // build well list
     ArrayList<AbstractWitsmlObject> witsmlObjects;
     witsmlObjects = new ArrayList<>();
@@ -176,7 +178,7 @@ public class DotValveTest {
   }
 
   @Test
-  public void shouldGetPluralObject() throws Exception {
+  void shouldGetPluralObject() throws Exception {
     // build witsmlObjects list
     ArrayList<AbstractWitsmlObject> witsmlObjects;
     witsmlObjects = new ArrayList<>();
@@ -230,8 +232,7 @@ public class DotValveTest {
   }
 
   @Test
-  public void shouldSearchWellsWithEmptyUID() throws Exception {
-
+  void shouldSearchWellsWithEmptyUID() throws Exception {
     String query = TestUtilities.getResourceAsString("well1311FullEmptyQueryNoUid.xml");
     String response = TestUtilities.getResourceAsString("well1311FullEmptyQueryNoUidResponse.xml");
     String completeResponse =
@@ -273,7 +274,7 @@ public class DotValveTest {
   }
 
   @Test
-  public void shouldCreateSingleObject() throws Exception {
+  void shouldCreateSingleObject() throws Exception {
     // build witsmlObjects list
     ArrayList<AbstractWitsmlObject> witsmlObjects;
     witsmlObjects = new ArrayList<>();
@@ -308,7 +309,7 @@ public class DotValveTest {
   }
 
   @Test
-  public void shouldCreateTrajectory() throws Exception {
+  void shouldCreateTrajectory() throws Exception {
     // build witsmlObjects list
     ArrayList<AbstractWitsmlObject> witsmlObjects;
     witsmlObjects = new ArrayList<>();
@@ -344,7 +345,7 @@ public class DotValveTest {
   }
 
   @Test
-  public void shouldCreatePluralObject() throws Exception {
+  void shouldCreatePluralObject() throws Exception {
     // build witsmlObjects list
     ArrayList<AbstractWitsmlObject> witsmlObjects;
     witsmlObjects = new ArrayList<>();
@@ -387,7 +388,7 @@ public class DotValveTest {
   }
 
   @Test
-  public void shouldDeleteSingleObject() throws Exception {
+  void shouldDeleteSingleObject() throws Exception {
     // build witsmlObjects list
     ArrayList<AbstractWitsmlObject> witsmlObjects;
     witsmlObjects = new ArrayList<>();
@@ -421,7 +422,7 @@ public class DotValveTest {
   }
 
   @Test
-  public void shouldDeleteLogRecurringElement() throws Exception {
+  void shouldDeleteLogRecurringElement() throws Exception {
     // build witsmlObjects lists
     ArrayList<AbstractWitsmlObject> logs1311 = new ArrayList<>();
     ArrayList<AbstractWitsmlObject> logs1411 = new ArrayList<>();
@@ -496,7 +497,7 @@ public class DotValveTest {
   }
 
   @Test
-  public void shouldDeleteLogSubNode() throws Exception {
+  void shouldDeleteLogSubNode() throws Exception {
     // build witsmlObjects lists
     ArrayList<AbstractWitsmlObject> logs1311 = new ArrayList<>();
     ArrayList<AbstractWitsmlObject> logs1411 = new ArrayList<>();
@@ -565,7 +566,7 @@ public class DotValveTest {
   }
 
   @Test
-  public void shouldDeleteTrajectory() throws Exception {
+  void shouldDeleteTrajectory() throws Exception {
     // build witsmlObjects lists
     ArrayList<AbstractWitsmlObject> trajs1311 = new ArrayList<>();
     ArrayList<AbstractWitsmlObject> trajs1411 = new ArrayList<>();
@@ -625,8 +626,8 @@ public class DotValveTest {
     verifyNoMoreInteractions(this.mockDelegator);
   }
 
-  @Test(expected = ValveException.class)
-  public void shouldNotDeletePluralObjectAndThrowException() throws Exception {
+  @Test
+  void shouldNotDeletePluralObjectAndThrowException() throws Exception {
     // build witsmlObjects list
     ArrayList<AbstractWitsmlObject> witsmlObjects;
     witsmlObjects = new ArrayList<>();
@@ -657,18 +658,18 @@ public class DotValveTest {
             );
 
     // test getObject
-    this.valve.deleteObject(qc);
+    assertThrows(ValveException.class, () -> this.valve.deleteObject(qc));
 
     // verify
-    verify(this.mockDelegator)
-        .deleteObject(wellboreA, qc.getUsername(), qc.getPassword(), qc.getExchangeId(), this.mockClient);
-    verify(this.mockDelegator)
-        .deleteObject(wellboreB, qc.getUsername(), qc.getPassword(), qc.getExchangeId(), this.mockClient);
-    verifyNoMoreInteractions(this.mockDelegator);
+    // verify(this.mockDelegator)
+    //     .deleteObject(wellboreA, qc.getUsername(), qc.getPassword(), qc.getExchangeId(), this.mockClient);
+    // verify(this.mockDelegator)
+    //     .deleteObject(wellboreB, qc.getUsername(), qc.getPassword(), qc.getExchangeId(), this.mockClient);
+    // verifyNoMoreInteractions(this.mockDelegator);
   }
 
   @Test
-  public void shouldUpdateObject() throws Exception {
+  void shouldUpdateObject() throws Exception {
     // build witsmlObjects list
     ArrayList<AbstractWitsmlObject> witsmlObjects;
     witsmlObjects = new ArrayList<>();
@@ -701,7 +702,7 @@ public class DotValveTest {
   }
 
   @Test
-  public void shouldSearchTrajStationMdMn() throws Exception {
+  void shouldSearchTrajStationMdMn() throws Exception {
     // =============================================================================
     // Creation of search objects...
     // =============================================================================
@@ -731,7 +732,7 @@ public class DotValveTest {
   }
 
   @Test
-  public void shouldSearchTrajStationMdMx() throws Exception {
+  void shouldSearchTrajStationMdMx() throws Exception {
     // =============================================================================
     // Creation of search objects...
     // =============================================================================
@@ -759,7 +760,7 @@ public class DotValveTest {
   }
 
   @Test
-  public void shouldSearchTrajStationMdMnANDMdMx() throws Exception {
+  void shouldSearchTrajStationMdMnANDMdMx() throws Exception {
     // =============================================================================
     // Creation of search objects...
     // =============================================================================
@@ -794,7 +795,7 @@ public class DotValveTest {
   // ================================================================================
 
   @Test
-  public void shouldNotSearchTrajStation() throws Exception {
+  void shouldNotSearchTrajStation() throws Exception {
     // =============================================================================
     // Creation of search objects...
     // =============================================================================
@@ -862,7 +863,7 @@ public class DotValveTest {
   }
 
   @Test
-  public void shouldUpdateTrajectory() throws Exception {
+  void shouldUpdateTrajectory() throws Exception {
     // build witsmlObjects lists
     ArrayList<AbstractWitsmlObject> trajs1311 = new ArrayList<>();
     ArrayList<AbstractWitsmlObject> trajs1411 = new ArrayList<>();
@@ -919,7 +920,7 @@ public class DotValveTest {
   }
 
   @Test
-  public void shouldSucceedAuthenticate() throws Exception {
+  void shouldSucceedAuthenticate() throws Exception {
     // mock behavior
     when(this.mockClient.getJWT(eq("goodUsername"), eq("goodPassword"), anyString()))
         .thenReturn(
@@ -934,18 +935,20 @@ public class DotValveTest {
     verifyNoMoreInteractions(this.mockClient);
   }
 
-  @Test(expected = ValveAuthException.class)
-  public void shouldFailAuthenticate() throws ValveAuthException {
+  @Test
+  void shouldFailAuthenticate() throws ValveAuthException {
     // add mock behavior
-    when(this.mockClient.getJWT(eq("badUsername"), eq("badPassword"), eq("n/a")))
-        .thenThrow(new ValveAuthException(""));
+    when(this.mockClient.getJWT("badUsername", "badPassword", "n/a"))
+        .thenThrow(ValveAuthException.class);
 
     // test
-    this.valve.authenticate("badUsername", "badPassword");
+    assertThrows(
+        ValveAuthException.class,
+        () -> this.valve.authenticate("badUsername", "badPassword"));
   }
 
   @Test
-  public void shouldGetCap() {
+  void shouldGetCap() {
     // get cap
     Map<String, AbstractWitsmlObject[]> cap = this.valve.getCap();
 

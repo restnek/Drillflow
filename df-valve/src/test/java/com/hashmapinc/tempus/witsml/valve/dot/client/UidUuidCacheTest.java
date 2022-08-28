@@ -16,14 +16,14 @@
 
 package com.hashmapinc.tempus.witsml.valve.dot.client;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class UidUuidCacheTest {
+class UidUuidCacheTest {
   @Test
-  public void shouldCacheParentlessObjects() {
+  void shouldCacheParentlessObjects() {
     // set test values
     String uid = "cool_uid_A";
     String uuid = "cool_uuid_A";
@@ -41,7 +41,7 @@ public class UidUuidCacheTest {
   }
 
   @Test
-  public void shouldCacheParentOnlyObjects() {
+  void shouldCacheParentOnlyObjects() {
     // set test values
     String uid = "cool_uid_B";
     String parentUid = "cool_parent_uid_B";
@@ -60,7 +60,7 @@ public class UidUuidCacheTest {
   }
 
   @Test
-  public void shouldCacheGrandprentOnlyObjects() {
+  void shouldCacheGrandprentOnlyObjects() {
     // set test values
     String uid = "cool_uid_C";
     String parentUid = "cool_parent_uid_C";

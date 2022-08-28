@@ -16,10 +16,12 @@
 
 package com.hashmapinc.tempus.witsml.valve.dot;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.hashmapinc.tempus.WitsmlObjects.AbstractWitsmlObject;
 import com.hashmapinc.tempus.WitsmlObjects.Util.WitsmlMarshal;
@@ -34,13 +36,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import javax.xml.bind.JAXBException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class DotTranslatorTest {
+class DotTranslatorTest {
 
-  @Test(expected = ValveException.class)
-  public void consolidateObjectsToXMLFailTest() throws ValveException {
-
+  @Test
+  void consolidateObjectsToXMLFailTest() {
     // build well list
     ArrayList<AbstractWitsmlObject> witsmlObjects = new ArrayList<>();
     ObjWell well = new ObjWell();
@@ -51,12 +52,13 @@ public class DotTranslatorTest {
     String clientVersion = "InvalidVersion";
     String objectType = "well";
 
-    DotTranslator.consolidateObjectsToXML(witsmlObjects, clientVersion, objectType);
+    assertThrows(
+        ValveException.class,
+        () -> DotTranslator.consolidateObjectsToXML(witsmlObjects, clientVersion, objectType));
   }
 
   @Test
-  public void consolidateObjectsToXMLWellTest() throws ValveException {
-
+  void consolidateObjectsToXMLWellTest() throws ValveException {
     // build well list
     ArrayList<AbstractWitsmlObject> witsmlObjects = new ArrayList<>();
     ObjWell well = new ObjWell();
@@ -93,7 +95,7 @@ public class DotTranslatorTest {
   }
 
   @Test
-  public void stationLocationOnlyTrajectoryTest()
+  void stationLocationOnlyTrajectoryTest()
       throws JAXBException, IOException, ValveException {
 
     // Load the strings from the test resources
@@ -148,8 +150,7 @@ public class DotTranslatorTest {
   }
 
   @Test
-  public void headerOnlyTrajectoryTests()
-      throws JAXBException, IOException, ValveException {
+  void headerOnlyTrajectoryTests() throws JAXBException, IOException, ValveException {
 
     // Load the strings from the test resources
     String dotResponse = TestUtilities.getResourceAsString("trajectory1411.xml");
@@ -192,7 +193,7 @@ public class DotTranslatorTest {
   }
 
   @Test
-  public void consolidateObjectsToXMLWellBoreTest() throws ValveException {
+  void consolidateObjectsToXMLWellBoreTest() throws ValveException {
 
     // build well list
     ArrayList<AbstractWitsmlObject> witsmlObjects = new ArrayList<>();
@@ -232,7 +233,7 @@ public class DotTranslatorTest {
   }
 
   @Test
-  public void consolidateObjectsToXMLTrajectoryTest() throws ValveException {
+  void consolidateObjectsToXMLTrajectoryTest() throws ValveException {
 
     // build well list
     ArrayList<AbstractWitsmlObject> witsmlObjects = new ArrayList<>();
@@ -272,7 +273,7 @@ public class DotTranslatorTest {
   }
 
   @Test
-  public void translateQueryResponseTest() throws Exception {
+  void translateQueryResponseTest() throws Exception {
     AbstractWitsmlObject wmlObject =
         WitsmlMarshal.deserializeFromJSON(
             "{\"country\":\"\",\"numLicense\":\"\",\"groundElevation\":{\"datum\":null,\"uom\":null,\"value\":null},\"commonData\":{\"privateGroupOnly\":null,\"comments\":\"\",\"acquisitionTimeZone\":[],\"dTimLastChange\":null,\"extensionAny\":null,\"defaultDatum\":{\"value\":\"\",\"uidRef\":\"\"},\"itemState\":null,\"sourceName\":null,\"extensionNameValue\":[],\"serviceCategory\":null,\"dTimCreation\":null},\"county\":\"\",\"timeZone\":\"\",\"waterDepth\":{\"uom\":\"\",\"value\":null},\"numAPI\":\"\",\"operator\":\"\",\"pcInterest\":{\"uom\":\"\",\"value\":null},\"referencePoint\":[{\"elevation\":{\"datum\":\"\",\"uom\":null,\"value\":null},\"uid\":\"\",\"measuredDepth\":{\"datum\":\"\",\"uom\":null,\"value\":null},\"name\":\"\",\"location\":[{\"uid\":\"\",\"easting\":{\"uom\":\"\",\"value\":null},\"wellCRS\":{\"value\":\"\",\"uidRef\":\"\"},\"latitude\":{\"uom\":\"\",\"value\":null},\"localY\":{\"uom\":\"\",\"value\":null},\"description\":\"\",\"localX\":{\"uom\":\"\",\"value\":null},\"extensionNameValue\":[],\"northing\":{\"uom\":\"\",\"value\":null},\"longitude\":{\"uom\":\"\",\"value\":null}}],\"type\":\"\",\"extensionNameValue\":[]}],\"wellLocation\":[{\"uid\":\"\",\"easting\":{\"uom\":\"\",\"value\":null},\"wellCRS\":{\"value\":\"\",\"uidRef\":\"\"},\"description\":\"\",\"extensionNameValue\":[],\"northing\":{\"uom\":\"\",\"value\":null}}],\"uid\":\"randy\",\"wellheadElevation\":{\"datum\":null,\"uom\":null,\"value\":null},\"field\":\"\",\"wellCRS\":[{\"uid\":\"\",\"localCRS\":{\"yAxisAzimuth\":{\"uom\":\"\",\"northDirection\":null,\"value\":null}},\"mapProjectionCRS\":{\"value\":\"\",\"uidRef\":\"\"},\"geodeticCRS\":{\"value\":\"\",\"uidRef\":\"\"},\"name\":\"\",\"description\":\"\",\"extensionNameValue\":[]}],\"nameLegal\":\"\",\"district\":\"\",\"numGovt\":\"\",\"block\":\"\",\"state\":\"\",\"region\":\"\",\"operatorDiv\":\"\",\"wellDatum\":[{\"elevation\":{\"datum\":\"\",\"uom\":null,\"value\":null},\"uid\":\"\",\"datumName\":{\"namingSystem\":\"\",\"code\":\"\",\"value\":\"\"},\"kind\":[],\"name\":\"\",\"extensionNameValue\":[]}]}",
@@ -291,14 +292,14 @@ public class DotTranslatorTest {
         (com.hashmapinc.tempus.WitsmlObjects.v1411.ObjWell) abstractWitsmlObject;
 
     assertEquals("Block Name", objWell.getBlock());
-    assertTrue(objWell.getCommonData() instanceof CsCommonData);
-    assertTrue(objWell.getGroundElevation() instanceof WellElevationCoord);
+    assertThat(objWell.getCommonData()).isInstanceOf(CsCommonData.class);
+    assertThat(objWell.getGroundElevation()).isInstanceOf(WellElevationCoord.class);
     assertEquals("Montgomery", objWell.getCounty());
     assertEquals("123-543-987AZ", objWell.getNumAPI());
   }
 
   @Test
-  public void translateQueryResponseTestIdOnly() throws Exception {
+  void translateQueryResponseTestIdOnly() throws Exception {
     AbstractWitsmlObject wmlObject =
         WitsmlMarshal.deserializeFromJSON(
             "{\"country\":\"\",\"groundElevation\":{\"datum\":null,\"uom\":null,\"value\":null},\"commonData\":{\"privateGroupOnly\":null,\"comments\":\"\",\"acquisitionTimeZone\":[],\"dTimLastChange\":null,\"extensionAny\":null,\"defaultDatum\":{\"value\":\"\",\"uidRef\":\"\"},\"itemState\":null,\"sourceName\":null,\"extensionNameValue\":[],\"serviceCategory\":null,\"dTimCreation\":null},\"county\":\"\",\"timeZone\":\"\",\"waterDepth\":{\"uom\":\"\",\"value\":null},\"numAPI\":\"\",\"operator\":\"\",\"pcInterest\":{\"uom\":\"\",\"value\":null},\"referencePoint\":[{\"elevation\":{\"datum\":\"\",\"uom\":null,\"value\":null},\"uid\":\"\",\"measuredDepth\":{\"datum\":\"\",\"uom\":null,\"value\":null},\"name\":\"\",\"location\":[{\"uid\":\"\",\"easting\":{\"uom\":\"\",\"value\":null},\"wellCRS\":{\"value\":\"\",\"uidRef\":\"\"},\"latitude\":{\"uom\":\"\",\"value\":null},\"localY\":{\"uom\":\"\",\"value\":null},\"description\":\"\",\"localX\":{\"uom\":\"\",\"value\":null},\"extensionNameValue\":[],\"northing\":{\"uom\":\"\",\"value\":null},\"longitude\":{\"uom\":\"\",\"value\":null}}],\"type\":\"\",\"extensionNameValue\":[]}],\"wellLocation\":[{\"uid\":\"\",\"easting\":{\"uom\":\"\",\"value\":null},\"wellCRS\":{\"value\":\"\",\"uidRef\":\"\"},\"description\":\"\",\"extensionNameValue\":[],\"northing\":{\"uom\":\"\",\"value\":null}}],\"uid\":\"randy\",\"wellheadElevation\":{\"datum\":null,\"uom\":null,\"value\":null},\"field\":\"\",\"wellCRS\":[{\"uid\":\"\",\"localCRS\":{\"yAxisAzimuth\":{\"uom\":\"\",\"northDirection\":null,\"value\":null}},\"mapProjectionCRS\":{\"value\":\"\",\"uidRef\":\"\"},\"geodeticCRS\":{\"value\":\"\",\"uidRef\":\"\"},\"name\":\"\",\"description\":\"\",\"extensionNameValue\":[]}],\"nameLegal\":\"\",\"district\":\"\",\"numGovt\":\"\",\"block\":\"\",\"state\":\"\",\"region\":\"\",\"operatorDiv\":\"\",\"wellDatum\":[{\"elevation\":{\"datum\":\"\",\"uom\":null,\"value\":null},\"uid\":\"\",\"datumName\":{\"namingSystem\":\"\",\"code\":\"\",\"value\":\"\"},\"kind\":[],\"name\":\"\",\"extensionNameValue\":[]}]}",
@@ -325,7 +326,7 @@ public class DotTranslatorTest {
   }
 
   @Test
-  public void translateQueryResponseTestWithReturnElementsAll() throws Exception {
+  void translateQueryResponseTestWithReturnElementsAll() throws Exception {
     AbstractWitsmlObject wmlObject =
         WitsmlMarshal.deserializeFromJSON(
             "{\"country\":\"\",\"groundElevation\":{\"datum\":null,\"uom\":null,\"value\":null},\"commonData\":{\"privateGroupOnly\":null,\"comments\":\"\",\"acquisitionTimeZone\":[],\"dTimLastChange\":null,\"extensionAny\":null,\"defaultDatum\":{\"value\":\"\",\"uidRef\":\"\"},\"itemState\":null,\"sourceName\":null,\"extensionNameValue\":[],\"serviceCategory\":null,\"dTimCreation\":null},\"county\":\"\",\"timeZone\":\"\",\"waterDepth\":{\"uom\":\"\",\"value\":null},\"numAPI\":\"\",\"operator\":\"\",\"pcInterest\":{\"uom\":\"\",\"value\":null},\"referencePoint\":[{\"elevation\":{\"datum\":\"\",\"uom\":null,\"value\":null},\"uid\":\"\",\"measuredDepth\":{\"datum\":\"\",\"uom\":null,\"value\":null},\"name\":\"\",\"location\":[{\"uid\":\"\",\"easting\":{\"uom\":\"\",\"value\":null},\"wellCRS\":{\"value\":\"\",\"uidRef\":\"\"},\"latitude\":{\"uom\":\"\",\"value\":null},\"localY\":{\"uom\":\"\",\"value\":null},\"description\":\"\",\"localX\":{\"uom\":\"\",\"value\":null},\"extensionNameValue\":[],\"northing\":{\"uom\":\"\",\"value\":null},\"longitude\":{\"uom\":\"\",\"value\":null}}],\"type\":\"\",\"extensionNameValue\":[]}],\"wellLocation\":[{\"uid\":\"\",\"easting\":{\"uom\":\"\",\"value\":null},\"wellCRS\":{\"value\":\"\",\"uidRef\":\"\"},\"description\":\"\",\"extensionNameValue\":[],\"northing\":{\"uom\":\"\",\"value\":null}}],\"uid\":\"randy\",\"wellheadElevation\":{\"datum\":null,\"uom\":null,\"value\":null},\"field\":\"\",\"wellCRS\":[{\"uid\":\"\",\"localCRS\":{\"yAxisAzimuth\":{\"uom\":\"\",\"northDirection\":null,\"value\":null}},\"mapProjectionCRS\":{\"value\":\"\",\"uidRef\":\"\"},\"geodeticCRS\":{\"value\":\"\",\"uidRef\":\"\"},\"name\":\"\",\"description\":\"\",\"extensionNameValue\":[]}],\"nameLegal\":\"\",\"district\":\"\",\"numGovt\":\"\",\"block\":\"\",\"state\":\"\",\"region\":\"\",\"operatorDiv\":\"\",\"wellDatum\":[{\"elevation\":{\"datum\":\"\",\"uom\":null,\"value\":null},\"uid\":\"\",\"datumName\":{\"namingSystem\":\"\",\"code\":\"\",\"value\":\"\"},\"kind\":[],\"name\":\"\",\"extensionNameValue\":[]}]}",
@@ -351,7 +352,7 @@ public class DotTranslatorTest {
   }
 
   @Test
-  public void translateQueryResponseTestWithReturnElementsIdOnly() throws Exception {
+  void translateQueryResponseTestWithReturnElementsIdOnly() throws Exception {
     AbstractWitsmlObject wmlObject =
         WitsmlMarshal.deserializeFromJSON(
             "{\"country\":\"\",\"groundElevation\":{\"datum\":null,\"uom\":null,\"value\":null},\"commonData\":{\"privateGroupOnly\":null,\"comments\":\"\",\"acquisitionTimeZone\":[],\"dTimLastChange\":null,\"extensionAny\":null,\"defaultDatum\":{\"value\":\"\",\"uidRef\":\"\"},\"itemState\":null,\"sourceName\":null,\"extensionNameValue\":[],\"serviceCategory\":null,\"dTimCreation\":null},\"county\":\"\",\"timeZone\":\"\",\"waterDepth\":{\"uom\":\"\",\"value\":null},\"numAPI\":\"\",\"operator\":\"\",\"pcInterest\":{\"uom\":\"\",\"value\":null},\"referencePoint\":[{\"elevation\":{\"datum\":\"\",\"uom\":null,\"value\":null},\"uid\":\"\",\"measuredDepth\":{\"datum\":\"\",\"uom\":null,\"value\":null},\"name\":\"\",\"location\":[{\"uid\":\"\",\"easting\":{\"uom\":\"\",\"value\":null},\"wellCRS\":{\"value\":\"\",\"uidRef\":\"\"},\"latitude\":{\"uom\":\"\",\"value\":null},\"localY\":{\"uom\":\"\",\"value\":null},\"description\":\"\",\"localX\":{\"uom\":\"\",\"value\":null},\"extensionNameValue\":[],\"northing\":{\"uom\":\"\",\"value\":null},\"longitude\":{\"uom\":\"\",\"value\":null}}],\"type\":\"\",\"extensionNameValue\":[]}],\"wellLocation\":[{\"uid\":\"\",\"easting\":{\"uom\":\"\",\"value\":null},\"wellCRS\":{\"value\":\"\",\"uidRef\":\"\"},\"description\":\"\",\"extensionNameValue\":[],\"northing\":{\"uom\":\"\",\"value\":null}}],\"uid\":\"randy\",\"wellheadElevation\":{\"datum\":null,\"uom\":null,\"value\":null},\"field\":\"\",\"wellCRS\":[{\"uid\":\"\",\"localCRS\":{\"yAxisAzimuth\":{\"uom\":\"\",\"northDirection\":null,\"value\":null}},\"mapProjectionCRS\":{\"value\":\"\",\"uidRef\":\"\"},\"geodeticCRS\":{\"value\":\"\",\"uidRef\":\"\"},\"name\":\"\",\"description\":\"\",\"extensionNameValue\":[]}],\"nameLegal\":\"\",\"district\":\"\",\"numGovt\":\"\",\"block\":\"\",\"state\":\"\",\"region\":\"\",\"operatorDiv\":\"\",\"wellDatum\":[{\"elevation\":{\"datum\":\"\",\"uom\":null,\"value\":null},\"uid\":\"\",\"datumName\":{\"namingSystem\":\"\",\"code\":\"\",\"value\":\"\"},\"kind\":[],\"name\":\"\",\"extensionNameValue\":[]}]}",
@@ -377,7 +378,7 @@ public class DotTranslatorTest {
   }
 
   @Test
-  public void translateQueryResponseTestWithSubSelect() throws Exception {
+  void translateQueryResponseTestWithSubSelect() throws Exception {
     AbstractWitsmlObject wmlObject =
         WitsmlMarshal.deserializeFromJSON(
             "{\"country\":\"\",\"groundElevation\":{\"datum\":null,\"uom\":null,\"value\":null},\"commonData\":{\"privateGroupOnly\":null,\"comments\":\"\",\"acquisitionTimeZone\":[],\"dTimLastChange\":null,\"extensionAny\":null,\"defaultDatum\":{\"value\":\"\",\"uidRef\":\"\"},\"itemState\":null,\"sourceName\":null,\"extensionNameValue\":[],\"serviceCategory\":null,\"dTimCreation\":null},\"county\":\"\",\"timeZone\":\"\",\"waterDepth\":{\"uom\":\"\",\"value\":null},\"numAPI\":\"\",\"operator\":\"\",\"pcInterest\":{\"uom\":\"\",\"value\":null},\"referencePoint\":[{\"elevation\":{\"datum\":\"\",\"uom\":null,\"value\":null},\"uid\":\"\",\"measuredDepth\":{\"datum\":\"\",\"uom\":null,\"value\":null},\"name\":\"\",\"location\":[{\"uid\":\"\",\"easting\":{\"uom\":\"\",\"value\":null},\"wellCRS\":{\"value\":\"\",\"uidRef\":\"\"},\"latitude\":{\"uom\":\"\",\"value\":null},\"localY\":{\"uom\":\"\",\"value\":null},\"description\":\"\",\"localX\":{\"uom\":\"\",\"value\":null},\"extensionNameValue\":[],\"northing\":{\"uom\":\"\",\"value\":null},\"longitude\":{\"uom\":\"\",\"value\":null}}],\"type\":\"\",\"extensionNameValue\":[]}],\"wellLocation\":[{\"uid\":\"\",\"easting\":{\"uom\":\"\",\"value\":null},\"wellCRS\":{\"value\":\"\",\"uidRef\":\"\"},\"description\":\"\",\"extensionNameValue\":[],\"northing\":{\"uom\":\"\",\"value\":null}}],\"uid\":\"randy\",\"wellheadElevation\":{\"datum\":null,\"uom\":null,\"value\":null},\"field\":\"\",\"wellCRS\":[{\"uid\":\"\",\"localCRS\":{\"yAxisAzimuth\":{\"uom\":\"\",\"northDirection\":null,\"value\":null}},\"mapProjectionCRS\":{\"value\":\"\",\"uidRef\":\"\"},\"geodeticCRS\":{\"value\":\"\",\"uidRef\":\"\"},\"name\":\"\",\"description\":\"\",\"extensionNameValue\":[]}],\"nameLegal\":\"\",\"district\":\"\",\"numGovt\":\"\",\"block\":\"\",\"state\":\"\",\"region\":\"\",\"operatorDiv\":\"\",\"wellDatum\":[{\"elevation\":{\"datum\":\"\",\"uom\":null,\"value\":null},\"uid\":\"\",\"datumName\":{\"namingSystem\":\"\",\"code\":\"\",\"value\":\"\"},\"kind\":[],\"name\":\"\",\"extensionNameValue\":[]}]}",

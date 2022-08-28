@@ -16,18 +16,18 @@
 
 package com.hashmapinc.tempus.witsml.valve.dot;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertFalse;
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import org.json.JSONObject;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class JsonUtilTest {
+class JsonUtilTest {
 
   @Test
-  public void shouldProperlyMerge1311Well() throws Exception {
+  void shouldProperlyMerge1311Well() throws Exception {
     String destString = TestUtilities.getResourceAsString("utilTest/well1311dest.json");
     String srcString = TestUtilities.getResourceAsString("utilTest/well1311src.json");
 
@@ -43,7 +43,7 @@ public class JsonUtilTest {
   }
 
   @Test
-  public void shouldReturnEmptyMergeObject() throws Exception {
+  void shouldReturnEmptyMergeObject() throws Exception {
     String destString = "{\"fakeField\": null}";
     String srcString = TestUtilities.getResourceAsString("utilTest/well1311src.json");
 
@@ -58,7 +58,7 @@ public class JsonUtilTest {
   }
 
   @Test
-  public void shouldNotBeEmpty() throws IOException {
+  void shouldNotBeEmpty() throws IOException {
     String srcString = TestUtilities.getResourceAsString("utilTest/well1311src.json");
     JSONObject src = new JSONObject(srcString);
     boolean isEmpty = JsonUtil.isEmpty(src);
@@ -66,7 +66,7 @@ public class JsonUtilTest {
   }
 
   @Test
-  public void shouldBeEmpty() {
+  void shouldBeEmpty() {
     String destString = "{\"fakeField\": null}";
     JSONObject dest = new JSONObject(destString);
     boolean isEmpty = JsonUtil.isEmpty(dest);

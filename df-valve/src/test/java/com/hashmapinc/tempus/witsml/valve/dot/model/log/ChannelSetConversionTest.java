@@ -16,8 +16,8 @@
 
 package com.hashmapinc.tempus.witsml.valve.dot.model.log;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.hashmapinc.tempus.WitsmlObjects.Util.WitsmlMarshal;
 import com.hashmapinc.tempus.witsml.valve.dot.TestUtilities;
@@ -26,11 +26,11 @@ import com.hashmapinc.tempus.witsml.valve.dot.model.log.channelset.ChannelSet;
 import java.io.IOException;
 import java.util.List;
 import javax.xml.bind.JAXBException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ChannelSetConversionTest {
+class ChannelSetConversionTest {
   @Test
-  public void shouldCovertChannelSetFrom1411() throws JAXBException, IOException {
+  void shouldCovertChannelSetFrom1411() throws JAXBException, IOException {
     String logXml = TestUtilities.getResourceAsString("log1411.xml");
     com.hashmapinc.tempus.WitsmlObjects.v1411.ObjLogs logs =
         WitsmlMarshal.deserialize(logXml, com.hashmapinc.tempus.WitsmlObjects.v1411.ObjLogs.class);
@@ -63,7 +63,7 @@ public class ChannelSetConversionTest {
   }
 
   @Test
-  public void shouldCovertTimeChannelSetFrom1411() throws JAXBException, IOException {
+  void shouldCovertTimeChannelSetFrom1411() throws JAXBException, IOException {
     String logXml = TestUtilities.getResourceAsString("dotConversion/log1411Time.xml");
     com.hashmapinc.tempus.WitsmlObjects.v1411.ObjLogs logs =
         WitsmlMarshal.deserialize(logXml, com.hashmapinc.tempus.WitsmlObjects.v1411.ObjLogs.class);
@@ -96,7 +96,7 @@ public class ChannelSetConversionTest {
   }
 
   @Test
-  public void shouldConvertChannelsFrom1411() throws JAXBException, IOException {
+  void shouldConvertChannelsFrom1411() throws JAXBException, IOException {
     String logXml = TestUtilities.getResourceAsString("log1411.xml");
     com.hashmapinc.tempus.WitsmlObjects.v1411.ObjLogs logs =
         WitsmlMarshal.deserialize(logXml, com.hashmapinc.tempus.WitsmlObjects.v1411.ObjLogs.class);
@@ -107,7 +107,7 @@ public class ChannelSetConversionTest {
   }
 
   @Test
-  public void shouldConvertTimeChannelsFrom1411() throws JAXBException, IOException {
+  void shouldConvertTimeChannelsFrom1411() throws JAXBException, IOException {
     String logXml = TestUtilities.getResourceAsString("dotConversion/log1411Time.xml");
     com.hashmapinc.tempus.WitsmlObjects.v1411.ObjLogs logs =
         WitsmlMarshal.deserialize(logXml, com.hashmapinc.tempus.WitsmlObjects.v1411.ObjLogs.class);
@@ -118,7 +118,7 @@ public class ChannelSetConversionTest {
   }
 
   @Test
-  public void shouldConvertChannelsListToJson() throws JAXBException, IOException {
+  void shouldConvertChannelsListToJson() throws JAXBException, IOException {
     String logXml = TestUtilities.getResourceAsString("log1411.xml");
     com.hashmapinc.tempus.WitsmlObjects.v1411.ObjLogs logs =
         WitsmlMarshal.deserialize(logXml, com.hashmapinc.tempus.WitsmlObjects.v1411.ObjLogs.class);

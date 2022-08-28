@@ -16,9 +16,9 @@
 
 package com.hashmapinc.tempus.witsml.valve.dot.graphql;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hashmapinc.tempus.WitsmlObjects.AbstractWitsmlObject;
@@ -32,12 +32,12 @@ import com.hashmapinc.tempus.witsml.valve.dot.TestUtilities;
 import java.util.List;
 import java.util.Map;
 import org.json.JSONObject;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class GraphQLQueryConverterTest {
+class GraphQLQueryConverterTest {
 
   @Test
-  public void generateProperGraphQLQueryForWellbore() throws Exception {
+  void generateProperGraphQLQueryForWellbore() throws Exception {
     final String variablesNodeName = "variables";
     final String queryNodeName = "query";
     final String wellboreArgNodeName = "wellboreArgument";
@@ -101,14 +101,14 @@ public class GraphQLQueryConverterTest {
   }
 
   @Test
-  public void generateProperWellboreResponseFromGraphQL() throws Exception {
+  void generateProperWellboreResponseFromGraphQL() throws Exception {
     String queryResp = TestUtilities.getResourceAsString("GraphQLResponse.json");
     List<AbstractWitsmlObject> objs = GraphQLRespConverter.convert(queryResp, "wellbore");
     assertNotNull(objs);
   }
 
   @Test
-  public void generateProperGraphQLQueryForTrajectory() throws Exception {
+  void generateProperGraphQLQueryForTrajectory() throws Exception {
     String queryXML =
         TestUtilities.getResourceAsString("trajectoryGraphql/trajectoryGraphqlQuery1411.xml");
     ObjTrajectory obj =
@@ -121,7 +121,7 @@ public class GraphQLQueryConverterTest {
   }
 
   @Test
-  public void generateProperGraphQLQueryUUIDUidMapping() throws Exception {
+  void generateProperGraphQLQueryUUIDUidMapping() throws Exception {
     String queryXML =
         TestUtilities.getResourceAsString("trajectoryGraphql/trajectoryGraphqlQuery1411.xml");
     ObjTrajectory obj =
@@ -136,7 +136,7 @@ public class GraphQLQueryConverterTest {
   }
 
   @Test
-  public void generateProperTrajectoryResponseFromGraphQL() throws Exception {
+  void generateProperTrajectoryResponseFromGraphQL() throws Exception {
     String queryResp =
         TestUtilities.getResourceAsString("trajectoryGraphql/trajectoryGraphqlResponse.json");
     List<AbstractWitsmlObject> objs = GraphQLRespConverter.convert(queryResp, "trajectory");

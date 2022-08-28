@@ -16,8 +16,8 @@
 
 package com.hashmapinc.tempus.witsml.valve.dot;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
@@ -45,11 +45,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.json.JSONObject;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.exceptions.misusing.InvalidUseOfMatchersException;
 
-public class DotDelegatorTest {
+class DotDelegatorTest {
 
   private DotDelegator mockDelegator;
   private DotDelegator delegator;
@@ -62,8 +62,8 @@ public class DotDelegatorTest {
   private String logChannelsPath;
   private String logDataPath;
 
-  @Before
-  public void init() {
+  @BeforeEach
+  void init() {
     // instantiate strings
     this.url = "test.com";
     this.trajectoryPath = "/trajectory/";
@@ -101,7 +101,7 @@ public class DotDelegatorTest {
   }
 
   @Test
-  public void shouldCheckDuplicateMnemonicsInRequest() throws Exception {
+  void shouldCheckDuplicateMnemonicsInRequest() throws Exception {
     String channelPayload =
         TestUtilities.getResourceAsString("updateTest/DuplicateMnemonicsChannelPayload.json");
     String dataPayload =
@@ -112,7 +112,7 @@ public class DotDelegatorTest {
   }
 
   @Test
-  public void shouldCreateAnUpdateInStoreQueryWithoutEmptyArrays() throws Exception {
+  void shouldCreateAnUpdateInStoreQueryWithoutEmptyArrays() throws Exception {
     String query = TestUtilities.getResourceAsString("updateTest/WellCountryUpdate1311.xml");
     ObjWells wells = WitsmlMarshal.deserialize(query, ObjWells.class);
     ObjWell well = wells.getWell().get(0);
@@ -130,7 +130,7 @@ public class DotDelegatorTest {
   }
 
   @Test
-  public void shouldCreateTrajectoryWithUid() throws Exception {
+  void shouldCreateTrajectoryWithUid() throws Exception {
     // build object
     ObjTrajectory traj = new ObjTrajectory();
     traj.setUid("traj-a");
@@ -175,7 +175,7 @@ public class DotDelegatorTest {
   }
 
   @Test
-  public void shouldCreateLog1411() throws Exception {
+  void shouldCreateLog1411() throws Exception {
 
     // get the raw WITSML XML request from resource file
     String rawXML = TestUtilities.getResourceAsString("log1411.xml");
@@ -307,7 +307,7 @@ public class DotDelegatorTest {
   }
 
   @Test
-  public void shouldCreateTrajectoryWithoutUid() throws Exception {
+  void shouldCreateTrajectoryWithoutUid() throws Exception {
     // build object
     ObjTrajectory traj = new ObjTrajectory();
     traj.setUid("");
@@ -352,7 +352,7 @@ public class DotDelegatorTest {
   }
 
   @Test
-  public void shouldFindWellsWithEmptyGraphQLQuery() throws Exception {
+  void shouldFindWellsWithEmptyGraphQLQuery() throws Exception {
     String query = TestUtilities.getResourceAsString("well1311FullEmptyQuery.xml");
     String response = TestUtilities.getResourceAsString("WellGraphQLResponseFull.json");
 
@@ -392,7 +392,7 @@ public class DotDelegatorTest {
   }
 
   @Test
-  public void shouldDeleteTrajectory() throws Exception {
+  void shouldDeleteTrajectory() throws Exception {
     // build object
     ObjTrajectory traj = new ObjTrajectory();
     traj.setUid("traj-a");
@@ -440,7 +440,7 @@ public class DotDelegatorTest {
   }
 
   @Test
-  public void shouldUpdateTrajectory1311() throws Exception {
+  void shouldUpdateTrajectory1311() throws Exception {
     // =====================================================================
     // 1.3.1.1
     // =====================================================================
@@ -493,7 +493,7 @@ public class DotDelegatorTest {
   }
 
   @Test
-  public void shouldUpdateTrajectory1411() throws Exception {
+  void shouldUpdateTrajectory1411() throws Exception {
     // =====================================================================
     // 1.4.1.1
     // =====================================================================

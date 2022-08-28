@@ -16,8 +16,8 @@
 
 package com.hashmapinc.tempus.witsml.valve.dot.model.log;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.hashmapinc.tempus.WitsmlObjects.Util.WitsmlMarshal;
 import com.hashmapinc.tempus.WitsmlObjects.v1411.CsLogData;
@@ -28,12 +28,12 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.JAXBException;
 import org.json.JSONObject;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class LogHelperTest {
+class LogHelperTest {
 
   @Test
-  public void shouldConvert1411LogtoDot() {
+  void shouldConvert1411LogtoDot() {
     ObjLog log = new ObjLog();
     CsLogData logData = new CsLogData();
     List<String> data = new ArrayList<>();
@@ -52,7 +52,7 @@ public class LogHelperTest {
   }
 
   @Test
-  public void shouldConvertLegal1411LogToDot() throws IOException, JAXBException {
+  void shouldConvertLegal1411LogToDot() throws IOException, JAXBException {
     String logXml = TestUtilities.getResourceAsString("log1411.xml");
     com.hashmapinc.tempus.WitsmlObjects.v1411.ObjLogs logs =
         WitsmlMarshal.deserialize(logXml, com.hashmapinc.tempus.WitsmlObjects.v1411.ObjLogs.class);
@@ -65,7 +65,7 @@ public class LogHelperTest {
   }
 
   @Test
-  public void shouldConvertLegal1411TimeLogToDot() throws IOException, JAXBException {
+  void shouldConvertLegal1411TimeLogToDot() throws IOException, JAXBException {
     String logXml = TestUtilities.getResourceAsString("dotConversion/log1411Time.xml");
     com.hashmapinc.tempus.WitsmlObjects.v1411.ObjLogs logs =
         WitsmlMarshal.deserialize(logXml, com.hashmapinc.tempus.WitsmlObjects.v1411.ObjLogs.class);
@@ -78,7 +78,7 @@ public class LogHelperTest {
   }
 
   @Test
-  public void shouldConvertLegal1311LogToDot() throws IOException, JAXBException {
+  void shouldConvertLegal1311LogToDot() throws IOException, JAXBException {
     String logXml = TestUtilities.getResourceAsString("log1311.xml");
     com.hashmapinc.tempus.WitsmlObjects.v1311.ObjLogs logs =
         WitsmlMarshal.deserialize(logXml, com.hashmapinc.tempus.WitsmlObjects.v1311.ObjLogs.class);
@@ -91,7 +91,7 @@ public class LogHelperTest {
   }
 
   @Test
-  public void shouldConvertDotTo1411() throws IOException {
+  void shouldConvertDotTo1411() throws IOException {
     String dotLogData = TestUtilities.getResourceAsString("dotConversion/dotLogData.json");
     String indexType = "depth";
     String indexCurve = "Mdepth";
@@ -103,7 +103,7 @@ public class LogHelperTest {
   }
 
   @Test
-  public void shouldConvertDotTo1311() throws IOException {
+  void shouldConvertDotTo1311() throws IOException {
     String dotLogData = TestUtilities.getResourceAsString("dotConversion/dotLogData.json");
     String indexCurve = "Mdepth";
     com.hashmapinc.tempus.WitsmlObjects.v1311.CsLogData data =
