@@ -2,6 +2,7 @@ package com.hashmapinc.tempus.witsml.valve.mock.csv;
 
 import com.hashmapinc.tempus.witsml.valve.mock.Field;
 import java.nio.charset.Charset;
+import java.time.Duration;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ public class CsvConfig {
     private static final String CSV_FIRST_LINE_PARAMETER = "csv.first-line";
     private static final String CSV_LINE_AMOUNT_PARAMETER = "csv.line-amount";
     private static final String CSV_DECIMAL_SEPARATOR_PARAMETER = "csv.decimal-separator";
+    private static final String CSV_TIME_STEP = "csv.time-step";
 
     private static final String FIELD_DEFAULT_VALUE_PARAMETER = "field.default-value";
     private static final String FIELD_ENABLE_RANDOM_IF_UNDEFINED = "field.random.enable-if-undefined";
@@ -57,6 +59,10 @@ public class CsvConfig {
 
     public String getCsvDecimalSeparator() {
         return config.get(CSV_DECIMAL_SEPARATOR_PARAMETER);
+    }
+
+    public Duration getCsvTimeStep() {
+        return Duration.parse(config.get(CSV_TIME_STEP));
     }
 
     public String getFieldDefaultValue() {

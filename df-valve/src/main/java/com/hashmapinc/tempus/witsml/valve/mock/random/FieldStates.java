@@ -32,7 +32,13 @@ public final class FieldStates {
                     Map.entry(Field.TORQUE_ON_MACHINE_KEY, FieldStates::numericState),
                     Map.entry(Field.DISPLACEMENT_VOLUME, FieldStates::numericState),
                     Map.entry(Field.TOPPING_UP_VOLUME, FieldStates::numericState),
-                    Map.entry(Field.LIFTING_SPEED, FieldStates::numericState)
+                    Map.entry(Field.LIFTING_SPEED, FieldStates::numericState),
+                    Map.entry(Field.PUMP_STROKE_FREQUENCY_1, FieldStates::numericState),
+                    Map.entry(Field.PUMP_STROKE_FREQUENCY_2, FieldStates::numericState),
+                    Map.entry(Field.NUMBER_OF_CANDLES, FieldStates::numericState),
+                    Map.entry(Field.TEMPERATURE_INPUT, FieldStates::numericState),
+                    Map.entry(Field.TEMPERATURE_OUTPUT, FieldStates::numericState),
+                    Map.entry(Field.CAPACITY_UNDER_SHALE_SHAKERS, FieldStates::numericState)
             );
 
     public static final EmptyState EMPTY_FIELD_STATE = new EmptyState();

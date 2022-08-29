@@ -32,7 +32,15 @@ public enum Field {
     TORQUE_ON_MACHINE_KEY("17", "Torque on the machine key"),
     DISPLACEMENT_VOLUME("18", "Mud displacement volume"),
     TOPPING_UP_VOLUME("19", "Topping up volume"),
-    LIFTING_SPEED("20", "Lifting speed");
+    LIFTING_SPEED("20", "Lifting speed"),
+    PUMP_STROKE_FREQUENCY_1("21", "Pump 1 - stroke frequency"),
+    PUMP_STROKE_FREQUENCY_2("22", "Pump 2 - stroke frequency"),
+    NUMBER_OF_CANDLES("23", "Number of candles"),
+    TEMPERATURE_INPUT("24", "Input temperature"),
+    TEMPERATURE_OUTPUT("25", "Output temperature"),
+    CAPACITY_UNDER_SHALE_SHAKERS("26", "Capacity under shale shakers"),
+    OPERATION("27", "Operation"),
+    PHASE("28", "Phase");
 
     private static final Map<String, Field> UID_TO_FIELD = Stream.of(Field.values())
             .collect(Collectors.toMap(Field::getUid, Function.identity()));

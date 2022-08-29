@@ -18,7 +18,7 @@ cxf:
     path: /Service
 
 server:
-    port: 7070
+    port: 8082
 
 valve:
     name: mock-csv
@@ -26,13 +26,14 @@ valve:
         csv:
             file: classpath:csv/dump.csv
             charset: utf-8
-            delimiter: ;
+            delimiter: ","
             contains-header: true
             first-line: 0
             line-amount: 86400  # 24 hours
-            decimal-separator: ","
+            decimal-separator: "."
+            time-step: PT1S
         field:
-            default-value: 10
+            default-value: -1
             random:
                 enable-if-undefined: false
                 origin: 0
@@ -56,6 +57,14 @@ valve:
             EQUIVALENT_CIRCULATING_DENSITY: 35
             TOPPING_UP_VOLUME: 11
             LIFTING_SPEED: 24
+            PUMP_STROKE_FREQUENCY_1: 15
+            PUMP_STROKE_FREQUENCY_2: 19
+            NUMBER_OF_CANDLES: 30
+            TEMPERATURE_INPUT: 32
+            TEMPERATURE_OUTPUT: 29
+            CAPACITY_UNDER_SHALE_SHAKERS: 1
+            OPERATION: 51
+            PHASE: 52
 
 wmls:
     version: 1.3.1.1,1.4.1.1

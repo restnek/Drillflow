@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +35,7 @@ public class CsvDrillState {
     private final String csvFile;
     private final Charset csvCharset;
     private final String csvDecimalSeparator;
+    private final Duration csvTimeStep;
 
     private final String fieldDefaultValue;
     private final boolean enableRandomFieldIfUndefined;
@@ -49,6 +51,7 @@ public class CsvDrillState {
         csvFile = config.getCsvFile();
         csvCharset = config.getCsvCharset();
         csvDecimalSeparator = config.getCsvDecimalSeparator();
+        csvTimeStep = config.getCsvTimeStep();
 
         fieldDefaultValue = config.getFieldDefaultValue();
         enableRandomFieldIfUndefined = config.enableRandomFieldIfUndefined();
@@ -127,7 +130,7 @@ public class CsvDrillState {
     private String getDefaultValue(String fieldUid) {
         if (Field.TIME.getUid().equals(fieldUid)) {
             String result = TimeUtil.format(currentTime);
-            currentTime = currentTime.plusSeconds(1);
+            currentTime = currentTime.plus(csvTimeStep);
             return result;
         } else if (enableRandomFieldIfUndefined) {
             return fieldRandomOrigin + Integer.toString(RANDOM.nextInt(fieldRandomBound));
