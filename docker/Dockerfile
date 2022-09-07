@@ -14,13 +14,26 @@
 # limitations under the License.
 #
 
+## STEP 1
+FROM openjdk:11-jdk-slim as build
+
+WORKDIR /workspace/app
+
+COPY df-server df-server
+COPY df-utils df-utils
+COPY df-valve df-valve
+COPY mvnw  mvnw
+COPY .mvn .mvn
+COPY pom.xml pom.xml
+
+RUN ./mvnw clean package
+
+
+## STEP 2
 FROM openjdk:11-jdk-slim
 
-RUN apt-get update \
-    && apt-get -y install ca-certificates \
-    && apt-get install -y --no-install-recommends curl \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* \
-    && curl -fSL https://s3.us-east-2.amazonaws.com/hm-witsml-server/df-server-0.0.1-SNAPSHOT.jar -o df-server-0.0.1-SNAPSHOT.jar
+COPY --from=build /workspace/app/df-server/target/*.jar /app/app.jar
 
-CMD java -jar df-server-0.0.1-SNAPSHOT.jar
+EXPOSE 8082
+
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
